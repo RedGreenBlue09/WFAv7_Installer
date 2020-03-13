@@ -24,7 +24,7 @@ CURRENT SUPPORTED DEVICES:
     * NOKIA Lumia 1520
     * NOKIA Lumia 1520 AT&T
  - No support for Lumia 2520 due to lack of drivers.
- - Future: Add support for Lumia 640 and other Bootloader Spec B Devices.
+ - Future: Add support for other Bootloader Spec A Devices. (I don't have any)
 
 INSTRUCTION:
  - Download Windows 10 for ARMv7 build 15035 to your Computer.
