@@ -1,5 +1,5 @@
     /////////////////////////////////////////////////////////////////////////
-    //               Windows 10 for ARMv7 Installer (VHDX) A2              //
+    //               Windows 10 for ARMv7 Installer (VHDX) A3              //
     //                         by RedGreenBlue123                          //
     //    Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz     //
     /////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,9 @@ INSTRUCTION:
  - Download Drivers for your device
  - Extract Drivers to <InstallerFolder>\Drivers (NEVER create subfolders or Extract Subfolders)
  - Run Installer.bat and follow the Instruction in the installer.
+    * UPDATE YOUR PHONE WILL BREAK WINDOWS 10'S BOOT. Run FixUpdate to fix.
+    * Don't use Vol Down button at the boot menu because it will boot Reset My Phone.
+      And an exclamation mark will apears. This will not cause damage to your phone.
 
 DOWNLOADS:
  - Windows 10 for ARMv7            : https://bit.ly/33ap8dq
@@ -43,13 +46,13 @@ DOWNLOADS:
    C)Lumia 830, 735 & 640XL        : https://github.com/gus33000/MSM8x26-NT-ARM-Drivers
    Thanks to @Gus33000 for these drivers.
  - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
-:===============[ Alpla (A) --> Beta (B) --> Proximal Release (PR) --> Release 1.0 ]===============:
+:===============[ Alpha (A) --> Beta (B) --> Proximal Release (PR) --> Release 1.0 ]===============:
 CHANGELOG:
  - Alpha 1 (A1):
    + Introduce Installer.bat.
    + Introduce README.TXT
    + Added support for Lumia 1520 & AT&T Variation.
-   + Move Install script to Files folder.
+   + Move Install scripts to Files folder.
    + Fixed Patch BCD error.
    + UI Update.
    + Added UEFI Mass Storage Mode status images.
@@ -57,7 +60,7 @@ CHANGELOG:
    - Windows 10 does not boot when press power up.
    - Driver not found error.
    - Batch does not work in dir contains space.
- - Alpla 2 (A2)
+ - Alpha 2 (A2)
    + Fixed Windows 10 does not boot.
    + Fixed Drivers not found error.
    + Fixed batch doesn't works in dir contains space.
@@ -68,5 +71,14 @@ CHANGELOG:
    + Added Support for Snapdragon 400 Spec B Devices.
      Lumia 730 Dual SIM is not supported due to lack of drivers.
   *KNOWN ISSUES:
-   - Installer crashes when you didn't choose any device and press enter
+   - Installer crashes when you didn't choose any device and press enter.
+   - Try and tell me :)
+ - Alpha 3 (A3)
+   + Fixed installer crashes when you didn't choose any device and press enter.
+   + Introduce FixUpdate script.
+   + Improved requirements check at startup.
+   + Loop when MainOS is not valid.
+   + Added Mass Storage Mode UI (thanks to @Gus33000).
+   + Added more notes.
+  *KNOWN ISSUES:
    - Try and tell me :)
