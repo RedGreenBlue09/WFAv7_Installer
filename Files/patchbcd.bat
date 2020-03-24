@@ -1,6 +1,5 @@
 @ECHO OFF
-SET MainOS="%~d0"
-SET bcdLoc="%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
+SET bcdLoc="%~dp0\EFIESP\efi\Microsoft\Boot\BCD"
 SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
 
 bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader"

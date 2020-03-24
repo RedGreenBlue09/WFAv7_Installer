@@ -1,7 +1,7 @@
 @echo off
 title Starting Installer ...
 
-POWERSHELL -?>nul
+POWERSHELL -? >nul
 SET PLV=%ERRORLEVEL%
 IF %PLV% NEQ 0 (
 	TITLE ERROR!
@@ -96,9 +96,22 @@ IF %ERRORLEVEL% NEQ 0 (
 cls
 echo Installer is loading ... [25%%]
 
+powershell -Command "(Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V -Online).State" | findstr /I "Enabled"
+if errorlevel 0 (
+	cls
+	echo Installer is loading ... [30%%]
+) else (
+	TITLE ERROR!
+	COLOR 0C
+	echo.
+	echo  Please enable Hyper-V in Windows Features. [VT-x is not needed]
+	PAUSE
+	EXIT
+)
+
 powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Volume'" | find "True"
 	cls
-	echo Installer is loading ... [40%%]
+	echo Installer is loading ... [45%%]
 if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
@@ -146,9 +159,9 @@ if errorlevel 1 (
 
 cls
 mode con: cols=96 lines=24
-title Windows 10 for ARMv7 Installer (VHDX) Alpha 3
+title Windows 10 for ARMv7 Installer (VHDX) Beta 1
 echo ////////////////////////////////////////////////////////////////////////////////////////////////
-echo //                         Windows 10 for ARMv7 Installer (VHDX) A3                           //
+echo //                         Windows 10 for ARMv7 Installer (VHDX) B1                           //
 echo //                                    by RedGreenBlue123                                      //
 echo //                Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz                //
 echo ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +172,6 @@ echo       thermonuclear war, or you getting fired because the alarm app failed.
 echo     * YOU are choosing to make these modifications,
 echo       and if you point the finger at me for messing up your device, I will laugh at you.
 echo     * Your warranty will be void if you tamper with any part of your device / software.
-echo.
 echo PREPARATION:
 echo     * Read README.TXT before use this Installer.
 echo     * Make sure your phone is fully charged and it's battery is not wear too much.
@@ -168,32 +180,39 @@ pause
 :ChooseDev
 cls
 echo ////////////////////////////////////////////////////////////////////////////////////////////////
-echo //                         Windows 10 for ARMv7 Installer (VHDX) A3                           //
+echo //                         Windows 10 for ARMv7 Installer (VHDX) B1                           //
 echo //                                    by RedGreenBlue123                                      //
 echo //                Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz                //
 echo ////////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo Choose your Device Model below:
-echo 1) Lumia 930 / Icon
-echo 2) Lumia 1520
-echo 3) Lumia 1520 (16GB)
-echo 4) Lumia 1520 AT^&T
-echo 5) Lumia 1520 AT^&T (16GB)
-echo 6) Lumia 830 Global
-echo 7) Lumia 735 Global
-echo 8) Lumia 640 XL LTE Global
-echo 9) Lumia 640 XL LTE AT^&T
+echo  1) Lumia 930
+echo  2) Lumia Icon
+echo  3) Lumia 1520
+echo  4) Lumia 1520 (16GB)
+echo  5) Lumia 1520 AT^&T
+echo  6) Lumia 1520 AT^&T (16GB)
+echo  7) Lumia 830 Global
+echo  8) Lumia 735 Global
+echo  A) Lumia 640 XL LTE Global
+echo  B) Lumia 640 XL LTE AT^&T
+echo  C) Lumia 650 [experimental only]
 set /p Model=Device: 
-if %model%==1 "%~dp0\files\martini_icon.bat"
-if %model%==2 "%~dp0\files\bandit.bat"
-if %model%==3 "%~dp0\files\bandit_16g.bat"
-if %model%==4 "%~dp0\files\bandit_atat.bat"
-if %model%==5 "%~dp0\files\bandit_atat_16g.bat"
-if %model%==6 "%~dp0\files\tesla.bat"
-if %model%==7 "%~dp0\files\superman.bat"
-if %model%==8 "%~dp0\files\makepeace.bat"
-if %model%==9 "%~dp0\files\makepeace_atat.bat"
-if &model%=. goto ChooseDev
+if "%model%"=="" goto ChooseDev
+if %model%==1 "%~dp0\files\martini.bat"
+if %model%==2 "%~dp0\files\vanquish.bat"
+if %model%==3 "%~dp0\files\bandit.bat"
+if %model%==4 "%~dp0\files\bandit_16g.bat"
+if %model%==5 "%~dp0\files\bandit_atat.bat"
+if %model%==6 "%~dp0\files\bandit_atat_16g.bat"
+if %model%==7 "%~dp0\files\tesla.bat"
+if %model%==8 "%~dp0\files\superman.bat"
+if %model%==A "%~dp0\files\makepeace.bat"
+if %model%==B "%~dp0\files\makepeace_atat.bat"
+if %model%==C "%~dp0\files\saana.bat"
+if %model%==a "%~dp0\files\makepeace.bat"
+if %model%==b "%~dp0\files\makepeace_atat.bat"
+if %model%==c "%~dp0\files\saana.bat"
 if not %model%==1 goto ChooseDev
 if not %model%==2 goto ChooseDev
 if not %model%==3 goto ChooseDev
@@ -202,4 +221,9 @@ if not %model%==5 goto ChooseDev
 if not %model%==6 goto ChooseDev
 if not %model%==7 goto ChooseDev
 if not %model%==8 goto ChooseDev
-if not %model%==9 goto ChooseDev
+if not %model%==A goto ChooseDev
+if not %model%==B goto ChooseDev
+if not %model%==C goto ChooseDev
+if not %model%==a goto ChooseDev
+if not %model%==b goto ChooseDev
+if not %model%==c goto ChooseDev

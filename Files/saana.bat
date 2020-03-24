@@ -32,10 +32,10 @@ if '%errorlevel%' NEQ '0' (
 mode con: cols=96 lines=24
 cd /D %~dp0\..\
 cls
-title Windows 10 Installer for Lumia 1520 AT^&T Variant (16GB)
+title Windows 10 Installer for Lumia 650
 echo ---------------------- Windows 10 for ARMv7 Installer by RedGreenBlue123 ----------------------
 echo.
-echo  - For Lumia 1520 AT^&T Variant (16GB)
+echo  - For Lumia 650
 echo  - You need at least ^> 8.0 GB of Phone Storage to continue.
 echo.
 pause
@@ -75,11 +75,12 @@ DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
 echo.
 echo Installing Drivers ...
 :: Device's Driver
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8909.SAANA" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8909.MMO" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-:: MSM8974's Driver
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
+:: MSM8909's Driver
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.BASE" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.MMO" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse

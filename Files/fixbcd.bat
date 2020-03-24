@@ -1,10 +1,9 @@
 @ECHO OFF
-SET MainOS="%~d0"
-SET bcdLoc="%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
+SET bcdLoc="%~d0\EFIESP\efi\Microsoft\Boot\BCD"
 SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
 
 bcdedit /store %bcdLoc% /delete %id% >nul
-bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" >nul
+bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader"
 bcdedit /store %bcdLoc% /set %id% "device" "vhd=[%~d0\Data]\windows10arm.vhdx"
 bcdedit /store %bcdLoc% /set %id% "osdevice" "vhd=[%~d0\Data]\windows10arm.vhdx"
 bcdedit /store %bcdLoc% /set %id% "path" "\windows\system32\winload.efi"

@@ -75,19 +75,23 @@ DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
 echo.
 echo Installing Drivers ...
 :: Device's Driver
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\configurations\devices\specifics-banditatt" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
 :: MSM8974's Driver
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\configurations\oems" /Recurse
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\msm8974" /Recurse
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\support-desktop" /Recurse
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\support-15035" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 ::---------------------------------------------------------------
 echo.
 echo Copying EFI to VHDX image ...
-xcopy .\files\efi M:\efi /E /H /I /Y
+xcopy .\files\ui %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y
 echo.
 echo Setting Up BCD ...
-call .\files\setupbcd.bat
+bcdboot N:\windows /s M: /l en-us /f UEFI
 ::---------------------------------------------------------------
 echo.
 echo Patching BCD ...
@@ -96,16 +100,32 @@ call %mainos%\patchbcd.bat
 del %mainos%\patchbcd.bat >nul
 ::---------------------------------------------------------------
 echo.
+echo Setting up ESP ...
+mkdir %MainOS%\EFIESP\EFI\Microsoft\Recovery\
+copy M:\EFI\Microsoft\Recovery\BCD %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD /Y
+set BCDRec=%MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD 
+bcdedit /store %BCDRec% /set {bootmgr} "device" "partition=%MainOS%\EFIESP"
+bcdedit /store %BCDRec% /set {bootmgr} "path" "\EFI\Boot\Bootarm.efi"
+bcdedit /store %BCDRec% /set {bootmgr} "timeout" "3"
+set DLMOS=%MainOS:~0,-1%
+for /f %%i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
+for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
+echo>>diskpart.txt sel dis %DiskNumber%
+echo>>diskpart.txt sel par %PartitionNumber%
+echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+diskpart /s diskpart.txt
+::---------------------------------------------------------------
+echo.
 echo Unmounting VHDX Image ...
 powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx"
 ::---------------------------------------------------------------
 color 0a
 echo.
-echo ==============================================================================
+echo ================================================================================================
 echo  - Done. Now, reboot your phone.
 echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7,
 echo    Do nothing to boot Windows 10 Mobile or Windows Phone 8.x
 echo  - Don't use Vol Down button at the boot menu because it will boot Reset My Phone.
 echo    And an exclamation mark will apears. This will not cause damage to your phone.
-echo ==============================================================================
+echo ================================================================================================
 pause

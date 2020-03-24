@@ -32,11 +32,11 @@ if '%errorlevel%' NEQ '0' (
 mode con: cols=96 lines=24
 cd /D %~dp0\..\
 cls
-title Windows 10 Installer for Lumia 1520 AT^&T Variant (16GB)
+title Windows 10 Installer for Lumia Icon
 echo ---------------------- Windows 10 for ARMv7 Installer by RedGreenBlue123 ----------------------
 echo.
-echo  - For Lumia 1520 AT^&T Variant (16GB)
-echo  - You need at least ^> 8.0 GB of Phone Storage to continue.
+echo  - For Lumia Icon (929)
+echo  - You need at least ^> 16.0 GB of Phone Storage to continue.
 echo.
 pause
 cls
@@ -53,8 +53,8 @@ if not exist "%MainOS%/Data" (
 ::---------------------------------------------------------------
 :ToBeContinued
 color 0b
-echo Creating 8 GB VHDX image ...
-powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 8192MB
+echo Creating 16 GB VHDX image ...
+powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 16384MB
 echo.
 echo Creating Partitions ...
 powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
@@ -75,7 +75,7 @@ DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
 echo.
 echo Installing Drivers ...
 :: Device's Driver
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
+Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.VANQUISH" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
 :: MSM8974's Driver
