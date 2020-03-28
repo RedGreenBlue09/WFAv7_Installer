@@ -66,11 +66,11 @@ powershell Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "E
 powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB
 :: Create Win10 Disk
 powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N
-powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel "Windows10" -confirm:$false
+powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel "Windows10" -Compress -confirm:$false
 ::---------------------------------------------------------------
 echo.
 echo Installing Windows 10 for ARMv7 ...
-DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
+DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\ /compact
 ::---------------------------------------------------------------
 echo.
 echo Installing Drivers ...
@@ -82,7 +82,6 @@ Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 ::---------------------------------------------------------------
@@ -113,6 +112,7 @@ for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"'
 echo>>diskpart.txt sel dis %DiskNumber%
 echo>>diskpart.txt sel par %PartitionNumber%
 echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+attrib +h diskpart.txt
 diskpart /s diskpart.txt
 ::---------------------------------------------------------------
 echo.
@@ -123,9 +123,8 @@ color 0a
 echo.
 echo ================================================================================================
 echo  - Done. Now, reboot your phone.
-echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7,
-echo    Do nothing to boot Windows 10 Mobile or Windows Phone 8.x
-echo  - Don't use Vol Down button at the boot menu because it will boot Reset My Phone.
-echo    And an exclamation mark will apears. This will not cause damage to your phone.
+echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7.
+echo  - Boot and setup Windows 10 for the first time. Then reboot the phone to mass storage mode.
+echo  - Run PostInstall.bat.
 echo ================================================================================================
 pause
