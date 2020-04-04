@@ -13,7 +13,7 @@ IF EXIST .\Drivers\README.md (
 mode con: cols=96 lines=24
 cls
 echo ////////////////////////////////////////////////////////////////////////////////////////////////
-echo //                                WFAv7 Driver Downloader 1.1                                 //
+echo //                                WFAv7 Driver Downloader 1.2                                 //
 echo //                                    by RedGreenBlue123                                      //
 echo ////////////////////////////////////////////////////////////////////////////////////////////////
 echo.

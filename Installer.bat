@@ -109,8 +109,6 @@ if errorlevel 0 (
 )
 
 powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Volume'" | find "True"
-	cls
-	echo Installer is loading ... [45%%]
 if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
@@ -119,10 +117,10 @@ if errorlevel 1 (
 	PAUSE
 	EXIT
 )
+cls
+echo Installer is loading ... [45%%]
 
 powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Disk'" | find "True"
-	cls
-	echo Installer is loading ... [60%%]
 if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
@@ -131,10 +129,10 @@ if errorlevel 1 (
 	PAUSE
 	EXIT
 )
+cls
+echo Installer is loading ... [60%%]
 
 powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Storage'" | find "True"
-	cls
-	echo Installer is loading ... [80%%]
 if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
@@ -143,10 +141,10 @@ if errorlevel 1 (
 	PAUSE
 	EXIT
 )
+cls
+echo Installer is loading ... [80%%]
 
 powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Hyper-V'" | find "True"
-	cls
-	echo Installer is loading ... [100%%]
 if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
@@ -155,15 +153,18 @@ if errorlevel 1 (
 	PAUSE
 	EXIT
 )
+cls
+echo Installer is loading ... [100%%]
 
 cls
 mode con: cols=96 lines=24
-title Windows 10 for ARMv7 Installer (VHDX) Beta 1
-echo ////////////////////////////////////////////////////////////////////////////////////////////////
-echo //                         Windows 10 for ARMv7 Installer (VHDX) B1                           //
-echo //                                    by RedGreenBlue123                                      //
-echo //               Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz                 //
-echo ////////////////////////////////////////////////////////////////////////////////////////////////
+chcp 65001>nul
+title Windows 10 for ARMv7 Installer (VHDX) Beta 3
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                         Windows 10 for ARMv7 Installer (VHDX) B3                         //
+echo  //                                    by RedGreenBlue123                                    //
+echo  //               Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz               //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo DISCLAIMER:
 echo     * I'm not responsible for bricked devices, dead SD cards,
@@ -172,17 +173,18 @@ echo     * YOU are choosing to make these modifications,
 echo       and if you point the finger at me for messing up your device, I will laugh at you.
 echo     * Your warranty will be void if you tamper with any part of your device / software.
 echo PREPARATION:
-echo     * Read README.TXT before use this Installer.
-echo     * Make sure your phone is fully charged and it's battery is not wear too much.
-echo     * Unlocked bootloader and boot into Mass Storage Mode.
+echo     - Read README.TXT before use this Installer.
+echo     - Make sure your phone is fully charged and it's battery is not wear too much.
+echo     - Unlocked bootloader and boot into Mass Storage Mode.
+echo.
 pause
 :ChooseDev
 cls
-echo ////////////////////////////////////////////////////////////////////////////////////////////////
-echo //                         Windows 10 for ARMv7 Installer (VHDX) B1                           //
-echo //                                    by RedGreenBlue123                                      //
-echo //                Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz                //
-echo ////////////////////////////////////////////////////////////////////////////////////////////////
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                         Windows 10 for ARMv7 Installer (VHDX) B3                         //
+echo  //                                    by RedGreenBlue123                                    //
+echo  //               Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz               //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo Choose your Device Model below:
 echo  1) Lumia 930
@@ -196,8 +198,6 @@ echo  8) Lumia 735 Global
 echo  A) Lumia 640 XL LTE Global
 echo  B) Lumia 640 XL LTE AT^&T
 echo  C) Lumia 650 [experimental only]
-echo  D) Lumia 920 Global [experimental only]
-echo  E) Lumia 1020 AT^&T [experimental only]
 set /p Model=Device: 
 if "%model%"=="" goto ChooseDev
 if %model%==1 "%~dp0\files\martini.bat"
@@ -211,13 +211,9 @@ if %model%==8 "%~dp0\files\superman.bat"
 if %model%==A "%~dp0\files\makepeace.bat"
 if %model%==B "%~dp0\files\makepeace_atat.bat"
 if %model%==C "%~dp0\files\saana.bat"
-if %model%==D "%~dp0\files\phi.bat"
-if %model%==E "%~dp0\files\eos_atat.bat"
 if %model%==a "%~dp0\files\makepeace.bat"
 if %model%==b "%~dp0\files\makepeace_atat.bat"
 if %model%==c "%~dp0\files\saana.bat"
-if %model%==d "%~dp0\files\phi.bat"
-if %model%==e "%~dp0\files\eos_atat.bat"
 if not %model%==1 goto ChooseDev
 if not %model%==2 goto ChooseDev
 if not %model%==3 goto ChooseDev
@@ -234,5 +230,4 @@ if not %model%==E goto ChooseDev
 if not %model%==a goto ChooseDev
 if not %model%==b goto ChooseDev
 if not %model%==c goto ChooseDev
-if not %model%==d goto ChooseDev
-if not %model%==e goto ChooseDev
+goto ChooseDev

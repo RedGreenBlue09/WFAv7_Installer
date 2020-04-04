@@ -1,5 +1,5 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //                         Windows 10 for ARMv7 Installer (VHDX) B1                           //
+    //                         Windows 10 for ARMv7 Installer (VHDX) B3                           //
     //                                    by RedGreenBlue123                                      //
     //           Thanks to @Heathcliff74, @driver1998, @Gus33000, @FadilFadz, @Gus33000           //
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,26 +12,26 @@ DISCLAIMER:
     * Your warranty will be void if you tamper with any part of your device / software.
 
 CURRENT SUPPORTED DEVICES:
-    * NOKIA Lumia 930
-    * NOKIA Lumia Icon
-    * NOKIA Lumia 1520 (Global, AT&T)
-    * NOKIA Lumia 830 Global
-    * NOKIA Lumia 735 Global
-    * Microsoft Lumia 640 XL LTE (Global, AT&T)
-    - No support for Lumia 2520 due to lack of drivers.
-    - Future:
-       + Add support for other devices.
-    - For 8 GB devices, i recommended use it to test only. If you want to use it,
+    - NOKIA Lumia 930
+    - NOKIA Lumia Icon
+    - NOKIA Lumia 1520 (Global, AT&T)
+    - NOKIA Lumia 830 Global
+    - NOKIA Lumia 735 Global
+    - Microsoft Lumia 640 XL LTE (Global, AT&T)
+    * No support for Lumia 2520 due to lack of drivers.
+    * No support for Spec A devices because these devices don't support VHD boot.
+    * Future: Add support for other devices.
+    * For 8 GB devices, i recommended use it to test only. If you want WOA,
       Use normal method is better than dual boot on a 8 GB storage.
 
 REQUIREMENTS:
-    * Full Windows 10 (Other Windows 10 and Windows 8.1 is not tested. Try and tell me)
-    * Windows Powershell Enabled
-    * Windows Powershell Modules Installed 
+    - Full Windows 10 Pro or Enterprise
+    - Windows Powershell Enabled
+    - Windows Powershell Modules Installed 
       (Don't care about this if you have a full installation of Windows 10)
-    * Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
-    * 3 GB of storage
-    * A few brain cells (VERY IMPORTANT)
+    - Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
+    - 3 GB of storage
+    - A few brain cells (VERY IMPORTANT)
 
 INSTRUCTION:
     - Download Windows 10 for ARMv7 build 15035 to your Computer.
@@ -41,13 +41,18 @@ INSTRUCTION:
     - Extract Drivers to <InstallerFolder>\Drivers (NEVER create subfolders or Extract Subfolders)
     - Run Installer.bat and follow the Instruction in the installer.
     - After installation finished, boot and setup Windows 10.
+      Don't connect to Wi-Fi on setup. It will makes the setup stuck.
     - After setup complete (Desktop appears), reboot to mass storage mode.
     - Double click MainOS\Data\windows10arm.vhdx
     - Run PostInstall.bat to fix Windows Phone crash.
     - Now, you can dualboot Windows Phone and Windows 10.
-    * UPDATE YOUR PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
-      If you accidentally updated, run FixUpdate.bat to fix BCD (not tested).
+
+NOTES:
+    * UPDATE WINDOWS PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
+      If you accidentally updated, reboot to mass storage mode,
+      run FixUpdate.bat to fix BCD (not tested).
     * If you use Reset Phone feature on Windows Phone, it will delete Windows 10 for ARMv7.
+
 DOWNLOADS:
     - Windows 10 for ARMv7  : https://bit.ly/33ap8dq
       Thanks to @driver1998 (Image owner) and @FadilFadz (link).
@@ -55,8 +60,15 @@ DOWNLOADS:
       Or download it from here (Extra space and data): https://github.com/WOA-Project/Lumia-Drivers
       Thanks to @Gus33000
     - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
-:===============[ Alpha (A) --> Beta (B) --> Proximal Release (PR) --> Release 1.0 ]===============:
+
 CHANGELOGS:
+ - Beta 3 (B3)
+   + Support for Spec A devices has dropped due to unsupported hardware.
+   + Introduce Uninstaller
+   + Minor fixes
+  *KNOWN ISSUES:
+   - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
+   - Try and tell me :)
  - Beta 2 (B2)
    + Added NTFS Compression and Compact OS for 8 GB devices.
    + Mount EFIESP to Windows 10 Partition to get battery percentage.
@@ -65,8 +77,6 @@ CHANGELOGS:
    + Rename FixESP.bat to PostInstall.bat
    + Changed Changelogs section of README.TXT to have descending version order.
    + Fixed touch not working on 640 XL LTE.
-  *KNOWN ISSUES:
-   - Try and tell me :)
  - Beta 1 (B1)
   *Gus33000 changed driver repos to the new repo that has different layout.
    + Update Installer to match the new repo.

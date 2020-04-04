@@ -31,7 +31,9 @@ if '%errorlevel%' NEQ '0' (
 @Echo Off
 cd /D "%~dp0"
 echo  Connect your phone in mass storage mode to the computer and press enter to continue ...
-pause >nul
+echo.
+pause
+echo.
 :MOSPath
 set /p MainOS=Enter MainOS Path: 
 if not exist "%MainOS%/EFIESP" (
@@ -47,9 +49,9 @@ attrib +h diskpart1.txt
 attrib +h diskpart2.txt
 diskpart /s diskpart1.txt
 diskpart /s diskpart2.txt
-del diskpart1.txt
-del diskpart2txt
-del diskpart.txt
+del /A:H diskpart1.txt
+del /A:H diskpart2.txt
+del /A:H diskpart.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
 echo =====================================================================================
 echo  - Done. Now, you have Windows 10 for ARMv7 Dualboot with Windows Phone.
