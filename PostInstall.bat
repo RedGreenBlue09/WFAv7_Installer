@@ -47,6 +47,7 @@ powershell -Command "(gc diskpart.txt) -replace 'c12a7328-f81f-11d2-ba4b-00a0c93
 powershell -Command "(gc diskpart.txt) -replace 'set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b', 'assign mount=%WinDir%\EFIESP' | Out-File -encoding ASCII diskpart2.txt"
 attrib +h diskpart1.txt
 attrib +h diskpart2.txt
+mkdir %WinDir%\EFIESP
 diskpart /s diskpart1.txt
 diskpart /s diskpart2.txt
 del /A:H diskpart1.txt

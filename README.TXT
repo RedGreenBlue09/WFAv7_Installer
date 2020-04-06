@@ -1,7 +1,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //                         Windows 10 for ARMv7 Installer (VHDX) B3                           //
+    //                         Windows 10 for ARMv7 Installer (VHDX) PR1                          //
     //                                    by RedGreenBlue123                                      //
-    //           Thanks to @Heathcliff74, @driver1998, @Gus33000, @FadilFadz, @Gus33000           //
+    //                        Thanks to @Gus33000, @FadilFadz01, @demonttl                        //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 DISCLAIMER:
@@ -11,7 +11,7 @@ DISCLAIMER:
       and if you point the finger at me for messing up your device, I will laugh at you.
     * Your warranty will be void if you tamper with any part of your device / software.
 
-CURRENT SUPPORTED DEVICES:
+SUPPORTED DEVICES:
     - NOKIA Lumia 930
     - NOKIA Lumia Icon
     - NOKIA Lumia 1520 (Global, AT&T)
@@ -48,10 +48,12 @@ INSTRUCTION:
     - Now, you can dualboot Windows Phone and Windows 10.
 
 NOTES:
+    * This is not a software, this is a set of programs that combined to make the installation easier.
+    * Editing the files or folders may cause damage to the intaller.
+    * If you use Reset Phone feature on Windows Phone, it will delete Windows 10 for ARMv7.
     * UPDATE WINDOWS PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
       If you accidentally updated, reboot to mass storage mode,
       run FixUpdate.bat to fix BCD (not tested).
-    * If you use Reset Phone feature on Windows Phone, it will delete Windows 10 for ARMv7.
 
 DOWNLOADS:
     - Windows 10 for ARMv7  : https://bit.ly/33ap8dq
@@ -61,14 +63,37 @@ DOWNLOADS:
       Thanks to @Gus33000
     - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
 
+CREDITS:
+    - fadilfadz01 (Fadil Fadz)     : Helping me write the script
+    - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
+    - demonttl (John Anderson)     : Explaining WimBoot doesn't work in Windows 10
+    - driver1998                   : Windows 10 For ARMv7 Image
+    - Windows ARMv7 Telegram group : Testing my script
+    - Microsoft                    : Command Prompt, Windows, DISM, BCDEDIT, PowerShell, Notepad, ...
+    - SmartSVN                     : SVN downloader
+    - Igor Pavlov                  : 7-Zip extractor
+    - GNU                          : WGET downloader
+    - RedGreenBlue123 (Me)         : Writing the script
+
 CHANGELOGS:
+ - Proximal Release 1 (PR1)
+   + Rewrite Installer to 1 file Installer
+   + Rewrite Downloader to 1 file
+   + Fixed 2nd time downloading drivers without reopen downloader failed
+   + Added "All Drivers" option in Driver Downloader with auto extract
+   + Added Title to Driver Downloader
+   + Added Colors to Driver Downloader
+   + Minimize downloader binaries.
+   + Added Credits section in README.TXT
+   + Fixed "Parameter is incorrect" in PostInstall.bat
+   + A lot more ...
+  *KNOWN ISSUES:
+   - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
+   - Try and tell me :)
  - Beta 3 (B3)
    + Support for Spec A devices has dropped due to unsupported hardware.
    + Introduce Uninstaller
    + Minor fixes
-  *KNOWN ISSUES:
-   - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
-   - Try and tell me :)
  - Beta 2 (B2)
    + Added NTFS Compression and Compact OS for 8 GB devices.
    + Mount EFIESP to Windows 10 Partition to get battery percentage.
@@ -78,7 +103,7 @@ CHANGELOGS:
    + Changed Changelogs section of README.TXT to have descending version order.
    + Fixed touch not working on 640 XL LTE.
  - Beta 1 (B1)
-  *Gus33000 changed driver repos to the new repo that has different layout.
+   * Gus33000 changed driver repos to the new repo that has different layout.
    + Update Installer to match the new repo.
    + Added support for Lumia 650 (experimental)
    + Added FixESP.bat
@@ -86,18 +111,12 @@ CHANGELOGS:
    + Fixed BSOD on Lumia Icon.
    + Fixed Error on OOBE.
    + Changed BCD setting method.
-  *KNOWN ISSUES:
-   - Touch not working on 640 XL LTE.
  - Alpha 3 (A3)
    + Introduce FixUpdate script.
    + Improved requirements check at startup.
    + Loop when MainOS is not valid.
    + Added Mass Storage Mode UI (thanks to @Gus33000).
    + Added more notes.
-  *KNOWN ISSUES:
-   - Installer crashes when you didn't choose any device and press enter. (Stupid Fix)
-   - BSOD on Lumia Icon.
-   - Error on OOBE.
  - Alpha 2 (A2)
    + Fixed Windows 10 does not boot.
    + Fixed Drivers not found error.
@@ -107,10 +126,6 @@ CHANGELOGS:
    + Automatic Change CMD buffer.
    + Added Support for Lumia 1520 (16GB)
    + Added Support for Snapdragon 400 Spec B Devices.
-     Lumia 730 Dual SIM is not supported due to lack of drivers.
-  *KNOWN ISSUES:
-   - Installer crashes when you didn't choose any device and press enter.
-   - BSOD on Lumia Icon.
  - Alpha 1 (A1)
    + Introduce Installer.bat.
    + Introduce README.TXT
@@ -119,8 +134,3 @@ CHANGELOGS:
    + Fixed Patch BCD error.
    + UI Update.
    + Added UEFI Mass Storage Mode status images.
-  *KNOWN ISSUES:
-   - Windows 10 does not boot when press power up.
-   - Driver not found error.
-   - Batch does not work in dir contains space.
-   - BSOD on Lumia Icon.
