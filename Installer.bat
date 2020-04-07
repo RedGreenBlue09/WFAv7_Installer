@@ -301,7 +301,7 @@ if %Storage%==16 (
 if %Storage%==32 (
 	echo Creating 16 GB VHDX image ...
 	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 16384MB
-) else (exit)
+)
 echo.
 echo Creating Partitions ...
 powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
@@ -315,7 +315,7 @@ powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\wi
 powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N
 if %Storage%==8 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -Compress -confirm:$false )
 if %Storage%==16 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false )
-if %Storage%==32 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false ) else (exit)
+if %Storage%==32 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false )
 ::---------------------------------------------------------------
 echo.
 echo Installing Windows 10 for ARMv7 ...
@@ -510,7 +510,7 @@ if %model%==C(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
-) else (exit)
+)
 ::---------------------------------------------------------------
 echo.
 echo Copying EFI to VHDX image ...
