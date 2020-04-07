@@ -57,7 +57,7 @@ IF %ERRORLEVEL% NEQ 0 (
 cls
 if exist "%~dp0\drivers\README.md" (
 	cls
-	echo Installer is loading ... [6%%]
+	echo Installer is loading ... [7%%]
 )
 if not exist "%~dp0\drivers\README.md" (
 	TITLE ERROR!
@@ -71,7 +71,7 @@ if not exist "%~dp0\drivers\README.md" (
 
 if exist "%~dp0\install.wim" (
 	cls
-	echo Installer is loading ... [8%%]
+	echo Installer is loading ... [9%%]
 )
 if not exist "%~dp0\install.wim" (
 	TITLE ERROR!
@@ -84,7 +84,7 @@ if not exist "%~dp0\install.wim" (
 
 IF NOT EXIST M:\ (
 	cls
-	ECHO Installer is loading ... [15%%]
+	ECHO Installer is loading ... [12%%]
 )
 IF EXIST M:\ (
 	TITLE ERROR!
@@ -97,7 +97,7 @@ IF EXIST M:\ (
 
 IF NOT EXIST N:\ (
 	cls
-	ECHO Installer is loading ... [18%%]
+	ECHO Installer is loading ... [15%%]
 )
 IF EXIST N:\ (
 	TITLE ERROR!
@@ -109,7 +109,7 @@ IF EXIST N:\ (
 )
 
 cls
-echo Installer is loading ... [20%%]
+echo Installer is loading ... [18%%]
 
 WHERE bcdedit >nul
 IF %ERRORLEVEL% NEQ 0 (
@@ -121,7 +121,7 @@ IF %ERRORLEVEL% NEQ 0 (
 	EXIT
 )
 cls
-echo Installer is loading ... [25%%]
+echo Installer is loading ... [20%%]
 
 powershell -Command "(Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V -Online).State" | findstr /I "Enabled"
 if errorlevel 0 (
