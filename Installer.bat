@@ -191,7 +191,7 @@ title Windows 10 for ARMv7 Installer (VHDX) Beta 3
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR1                         //
 echo  //                                   by RedGreenBlue123                                     //
-echo  //                      Thanks to  @Gus33000, @FadilFadz01, @demonttl                       //
+echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo DISCLAIMER:
@@ -212,7 +212,7 @@ cls
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR1                         //
 echo  //                                   by RedGreenBlue123                                     //
-echo  //                      Thanks to  @Gus33000, @FadilFadz01, @demonttl                       //
+echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo Choose your Device Model below:
@@ -261,9 +261,9 @@ if not %model%==c goto ChooseDev
 :ToBeContinued1
 cls
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                         Windows 10 for ARMv7 Installer (VHDX) PR1                        //
-echo  //                                    by RedGreenBlue123                                    //
-echo  //               Thanks to @Heathcliff74, @driver1998, @Gus33000, @Fadil Fadz               //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR1                         //
+echo  //                                   by RedGreenBlue123                                     //
+echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 if %Storage%==8 echo  - You need at least ^> 4.0 GB of Phone Storage to continue.
@@ -323,7 +323,7 @@ DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
 ::---------------------------------------------------------------
 echo.
 echo Installing Drivers ...
-if %model%==1(
+if %model%==1 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.MARTINI" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -336,7 +336,7 @@ if %model%==1(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==2(
+if %model%==2 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.VANQUISH" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -349,7 +349,7 @@ if %model%==2(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==3(
+if %model%==3 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDIT" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -362,7 +362,7 @@ if %model%==3(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==4(
+if %model%==4 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDIT" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -375,7 +375,7 @@ if %model%==4(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==5(
+if %model%==5 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -388,7 +388,7 @@ if %model%==5(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==6(
+if %model%==6 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -401,7 +401,7 @@ if %model%==6(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==7(
+if %model%==7 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.TESLA" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -414,7 +414,7 @@ if %model%==7(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==8(
+if %model%==8 (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.SUPERMAN" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -427,7 +427,7 @@ if %model%==8(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==a(
+if %model%==a (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -440,7 +440,7 @@ if %model%==a(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==b(
+if %model%==b (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACEATT" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -453,7 +453,7 @@ if %model%==b(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==c(
+if %model%==c (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8909.SAANA" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -469,7 +469,7 @@ if %model%==c(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==A(
+if %model%==A (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -482,7 +482,7 @@ if %model%==A(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==B(
+if %model%==B (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACEATT" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
@@ -495,7 +495,7 @@ if %model%==B(
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==C(
+if %model%==C (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8909.SAANA" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
