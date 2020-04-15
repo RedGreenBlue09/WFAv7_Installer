@@ -189,7 +189,7 @@ mode con: cols=96 lines=24
 chcp 65001>nul
 title Windows 10 for ARMv7 Installer (VHDX) Beta 3
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR1                         //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR2                         //
 echo  //                                   by RedGreenBlue123                                     //
 echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +210,7 @@ pause
 :ChooseDev
 cls
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR1                         //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR2                         //
 echo  //                                   by RedGreenBlue123                                     //
 echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,7 +226,6 @@ echo  7) Lumia 830 Global
 echo  8) Lumia 735 Global
 echo  A) Lumia 640 XL LTE Global
 echo  B) Lumia 640 XL LTE AT^&T
-echo  C) Lumia 650 [experimental]
 set /p Model=Device: 
 if "%model%"=="" goto ChooseDev
 if %model%==1 set Storage=32 & goto ToBeContinued1
@@ -235,14 +234,12 @@ if %model%==3 set Storage=32 & goto ToBeContinued1
 if %model%==4 set Storage=16 & goto ToBeContinued1
 if %model%==5 set Storage=32 & goto ToBeContinued1
 if %model%==6 set Storage=16 & goto ToBeContinued1
-if %model%==7 set Storage=8 & goto ToBeContinued1
+if %model%==7 set Storage=16 & goto ToBeContinued1
 if %model%==8 set Storage=8 & goto ToBeContinued1
 if %model%==A set Storage=8 & goto ToBeContinued1
 if %model%==B set Storage=8 & goto ToBeContinued1
-if %model%==C set Storage=16 & goto ToBeContinued1
 if %model%==a set Storage=8 & goto ToBeContinued1
 if %model%==b set Storage=8 & goto ToBeContinued1
-if %model%==c set Storage=16 & goto ToBeContinued1
 if not %model%==1 goto ChooseDev
 if not %model%==2 goto ChooseDev
 if not %model%==3 goto ChooseDev
@@ -261,17 +258,14 @@ if not %model%==c goto ChooseDev
 :ToBeContinued1
 cls
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR1                         //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR2                         //
 echo  //                                   by RedGreenBlue123                                     //
 echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 if %Storage%==8 echo  - You need at least ^> 4.0 GB of Phone Storage to continue.
-)
 if %Storage%==16 echo  - You need at least ^> 8.0 GB of Phone Storage to continue.
-)
 if %Storage%==32 echo  - You need at least ^> 16.0 GB of Phone Storage to continue.
-)
 echo.
 pause
 goto MOSPath
@@ -305,15 +299,23 @@ if %Storage%==32 (
 echo.
 echo Creating Partitions ...
 powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
-powershell Initialize-Disk -Number ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -PartitionStyle GPT -confirm:$false
+powershell Initialize-Disk -Number (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -PartitionStyle GPT -confirm:$false
 :: Create ESP
-powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}' -Size 100MB -DriveLetter M
+powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}' -Size 100MB -DriveLetter M
 powershell Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "ESP" -confirm:$false
 :: Create MSR
-powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB
+powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB
 :: Create Win10 Partition
-powershell New-Partition -DiskNumber ($disknumber=Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N
-if %Storage%==8 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -Compress -confirm:$false )
+powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N
+if %Storage%==8 (
+	for /f %e in ('powershell -C "(Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber"') do set VHDNumber=%e
+	for /f %d in ('powershell -C "(powershell -C "(Get-Partition | ? { $_.AccessPaths -eq 'N:\' }).PartitionNumber"') do set WinNumber=%d
+	echo>>diskpart10.txt sel dis %VHDNumber%
+	echo>>diskpart10.txt sel par %WinNumber%
+	echo>>diskpart10.txt format fs=ntfs label="Windows 10" compress
+	diskpart /s diskpart10.txt
+	del diskpart10.txt
+)
 if %Storage%==16 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false )
 if %Storage%==32 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false )
 ::---------------------------------------------------------------
@@ -453,22 +455,6 @@ if %model%==b (
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
-if %model%==c (
-	:: Device's Driver
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8909.SAANA" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8909's Driver
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8909.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.MMO_OTHERS" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
-)
 if %model%==A (
 	:: Device's Driver
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse
@@ -492,22 +478,6 @@ if %model%==B (
 	:: Windows 10 For ARMv7 Drivers
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
-)
-if %model%==C (
-	:: Device's Driver
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8909.SAANA" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8909's Driver
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8909.MMO_OTHERS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8909.MMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
 	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
 )
@@ -561,6 +531,7 @@ echo>>diskpart.txt sel par %PartitionNumber%
 echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 attrib +h diskpart.txt
 diskpart /s diskpart.txt
+del diskpart.txt
 ::---------------------------------------------------------------
 echo.
 echo Unmounting VHDX Image ...

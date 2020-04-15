@@ -36,23 +36,32 @@ pause
 echo.
 :MOSPath
 set /p MainOS=Enter MainOS Path: 
-if not exist "%MainOS%/EFIESP" (
+if not exist "%MainOS%\EFIESP" (
 	ECHO  Not a valid MainOS partition!
 	GOTO MOSPath
 )
+if not exist %MainOS%\Data\windows10arm.vhdx echo WFAv7 is not installed. & pause & exit
+echo Mounting Windows 10 for ARMv7 ...
+powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
+:WinPath
 echo.
 set /p WinDir=Enter Windows 10 for ARMv7 Path: 
+if not exist "%WinDir%\Windows" (
+	ECHO  Not a valid Windows partition!
+	GOTO WinPath
+)
 :ToBeContinued
-powershell -Command "(gc diskpart.txt) -replace 'c12a7328-f81f-11d2-ba4b-00a0c93ec93b', 'ebd0a0a2-b9e5-4433-87c0-68b6b72699c7' | Out-File -encoding ASCII diskpart1.txt"
-powershell -Command "(gc diskpart.txt) -replace 'set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b', 'assign mount=%WinDir%\EFIESP' | Out-File -encoding ASCII diskpart2.txt"
+echo Getting partitions info ...
+set DLMOS=%MainOS:~0,-1%
+for /f %i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%i
+for /f %f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%f
+echo>>diskpart1.txt sel dis %DiskNumber%
+echo>>diskpart1.txt sel par %PartitionNumber%
+echo>>diskpart1.txt assign mount=%WinDir%\EFIESP
 attrib +h diskpart1.txt
-attrib +h diskpart2.txt
-mkdir %WinDir%\EFIESP
+mkdir "%WinDir%\EFIESP"
 diskpart /s diskpart1.txt
-diskpart /s diskpart2.txt
 del /A:H diskpart1.txt
-del /A:H diskpart2.txt
-del /A:H diskpart.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
 echo =====================================================================================
 echo  - Done. Now, you have Windows 10 for ARMv7 Dualboot with Windows Phone.

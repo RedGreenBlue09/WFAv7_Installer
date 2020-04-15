@@ -1,7 +1,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //                         Windows 10 for ARMv7 Installer (VHDX) PR1                          //
+    //                         Windows 10 for ARMv7 Installer (VHDX) PR2                          //
     //                                    by RedGreenBlue123                                      //
-    //                        Thanks to @Gus33000, @FadilFadz01, @demonttl                        //
+    //                       Thanks to: @Gus33000, @FadilFadz01, @demonttl                        //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 DISCLAIMER:
@@ -21,7 +21,7 @@ SUPPORTED DEVICES:
     * No support for Lumia 2520 due to lack of drivers.
     * No support for Spec A devices because these devices don't support VHD boot.
     * Future: Add support for other devices.
-    * For 8 GB devices, i recommended use it to test only. If you want WOA,
+    * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 
 REQUIREMENTS:
@@ -31,6 +31,7 @@ REQUIREMENTS:
       (Don't care about this if you have a full installation of Windows 10)
     - Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
     - 3 GB of storage
+    - Windows Phone installed in your Lumia
     - A few brain cells (VERY IMPORTANT)
 
 INSTRUCTION:
@@ -53,7 +54,7 @@ NOTES:
     * If you use Reset Phone feature on Windows Phone, it will delete Windows 10 for ARMv7.
     * UPDATE WINDOWS PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
       If you accidentally updated, reboot to mass storage mode,
-      run FixUpdate.bat to fix BCD (not tested).
+      run Tools.bat and choose Fix Update tool to fix BCD (not tested).
 
 DOWNLOADS:
     - Windows 10 for ARMv7  : https://bit.ly/33ap8dq
@@ -76,20 +77,32 @@ CREDITS:
     - RedGreenBlue123 (Me)         : Writing the script
 
 CHANGELOGS:
- - Proximal Release 1 (PR1)
-   + Rewrite Installer to 1 file Installer
-   + Rewrite Downloader to 1 file
-   + Fixed 2nd time downloading drivers without reopen downloader failed
-   + Added "All Drivers" option in Driver Downloader with auto extract
-   + Added Title to Driver Downloader
-   + Added Colors to Driver Downloader
-   + Minimize downloader binaries.
-   + Added Credits section in README.TXT
-   + Fixed "Parameter is incorrect" in PostInstall.bat
-   + A lot more ...
+ - Proximal Release 2 (PR2)
+   + Fixed severe Installer exit issues (PR1.2 & PR1.3)
+   + Fixed severe Downloader crash issue (PR1.1)
+   + Fixed Installer create 4 GB VHDX on Lumia 830
+   + Fixed Clean.bat diskpart.txt errors
+   + Fixed Clean.bat choice loop
+   + Introduce VHDX Mounter and Unmounter
+   + Use DiskPart method to format partition as compressed for 8 GB devices
+   + Remove support for Lumia 650 until drivers completed
+   + Auto mount EFIESP to Windows 10 for ARMv7 partition (PostInstall.bat)
+   + Improved PostInstall.bat
+   + Bundle Clean.bat, Uninstaller.bat, FixUpdate.bat, VHDX Mounter into Tools.bat
   *KNOWN ISSUES:
    - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
    - Try and tell me :)
+ - Proximal Release 1 (PR1)
+   + Rewrite Installer to 1 file
+   + Rewrite Downloader to 1 file
+   + Fixed 2nd time downloading drivers without reopen downloader failed
+   + Fixed "Parameter is incorrect" in PostInstall.bat
+   + Added "All Drivers" option in Driver Downloader with auto extract
+   + Added Title to Driver Downloader
+   + Added Colors to Driver Downloader
+   + Added Credits section in README.TXT
+   + Minimize downloader binaries
+   + A lot more ...
  - Beta 3 (B3)
    + Support for Spec A devices has dropped due to unsupported hardware.
    + Introduce Uninstaller
