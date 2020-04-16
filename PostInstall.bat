@@ -57,6 +57,7 @@ for /f %i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\
 for /f %f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%f
 echo>>diskpart1.txt sel dis %DiskNumber%
 echo>>diskpart1.txt sel par %PartitionNumber%
+echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 echo>>diskpart1.txt assign mount=%WinDir%\EFIESP
 attrib +h diskpart1.txt
 mkdir "%WinDir%\EFIESP"
