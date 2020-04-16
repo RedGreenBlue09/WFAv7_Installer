@@ -41,6 +41,7 @@ if not exist "%MainOS%\EFIESP" (
 	GOTO MOSPath
 )
 if not exist %MainOS%\Data\windows10arm.vhdx echo WFAv7 is not installed. & pause & exit
+echo.
 echo Mounting Windows 10 for ARMv7 ...
 powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
 :WinPath
@@ -51,6 +52,7 @@ if not exist "%WinDir%\Windows" (
 	GOTO WinPath
 )
 :ToBeContinued
+echo.
 echo Getting partitions info ...
 set DLMOS=%MainOS:~0,-1%
 for /f %i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%i
@@ -61,6 +63,7 @@ echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 echo>>diskpart1.txt assign mount=%WinDir%\EFIESP
 attrib +h diskpart1.txt
 mkdir "%WinDir%\EFIESP"
+echo Enabling Dual Boot ...
 diskpart /s diskpart1.txt
 del /A:H diskpart1.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"

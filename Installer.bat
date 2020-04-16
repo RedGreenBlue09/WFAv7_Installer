@@ -185,7 +185,6 @@ cls
 echo Installer is loading ... [100%%]
 :---------------------------------------------------------------
 cls
-mode con: cols=96 lines=24
 chcp 65001>nul
 title Windows 10 for ARMv7 Installer (VHDX) Beta 3
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +202,7 @@ echo     * Your warranty will be void if you tamper with any part of your device
 echo PREPARATION:
 echo     - Read README.TXT before use this Installer.
 echo     - Make sure your phone is fully charged and it's battery is not wear too much.
-echo     - Unlocked bootloader and boot into Mass Storage Mode.
+echo     - Unlocked bootloader and booted into Mass Storage Mode.
 echo.
 pause
 :---------------------------------------------------------------
@@ -307,21 +306,15 @@ powershell Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "E
 powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB
 :: Create Win10 Partition
 powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N
-if %Storage%==8 (
-	for /f %e in ('powershell -C "(Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber"') do set VHDNumber=%e
-	for /f %d in ('powershell -C "(powershell -C "(Get-Partition | ? { $_.AccessPaths -eq 'N:\' }).PartitionNumber"') do set WinNumber=%d
-	echo>>diskpart10.txt sel dis %VHDNumber%
-	echo>>diskpart10.txt sel par %WinNumber%
-	echo>>diskpart10.txt format fs=ntfs label="Windows 10" compress
-	diskpart /s diskpart10.txt
-	del diskpart10.txt
-)
-if %Storage%==16 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false )
-if %Storage%==32 ( powershell Format-Volume -DriveLetter N -FileSystem NTFS -NewFileSystemLabel 'Windows 10' -confirm:$false )
+if %Storage%==8 ( format N: /FS:NTFS /V:Windows10 /Q /C /Y )
+if %Storage%==16 ( format N: /FS:NTFS /V:Windows10 /Q /Y  )
+if %Storage%==32 ( format N: /FS:NTFS /V:Windows10 /Q /Y  )
 ::---------------------------------------------------------------
 echo.
 echo Installing Windows 10 for ARMv7 ...
-DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
+if %Storage%==8 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\ /compact
+if %Storage%==16 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
+if %Storage%==32 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
 ::---------------------------------------------------------------
 echo.
 echo Installing Drivers ...
@@ -487,7 +480,7 @@ echo Copying EFI to VHDX image ...
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y
 echo.
 echo Setting Up BCD ...
-bcdboot N:\windows /s M: /l en-us /f UEFI
+bcdboot N:\Windows /s M: /l en-us /f UEFI
 ::---------------------------------------------------------------
 echo.
 echo Patching BCD ...
