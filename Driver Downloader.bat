@@ -1,14 +1,14 @@
 @echo off
+powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
 :ChooseDev
 cd /D "%~dp0"
 set Model=
-mode con: cols=96 lines=24
 cls
 color 0f
-echo ////////////////////////////////////////////////////////////////////////////////////////////////
-echo //                                WFAv7 Driver Downloader 1.5                                 //
-echo //                                    by RedGreenBlue123                                      //
-echo ////////////////////////////////////////////////////////////////////////////////////////////////
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                               WFAv7 Driver Downloader 1.6                                //
+echo  //                                   by RedGreenBlue123                                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo Choose your Device Model below:
 echo  1) Lumia 930
@@ -20,12 +20,17 @@ echo  6) Lumia 735 Global
 echo  7) Lumia 640 XL LTE Global
 echo  8) Lumia 640 XL LTE AT^&T
 echo  A) Lumia 650 [experimental only]
-echo  B) Lumia 920 [Will be used in the Installer]
-echo  C) Lumia 1020 [Will be used in the Installer]
+echo  B) Lumia 920 [Will not be used in the Installer]
+echo  C) Lumia 1020 [Will not be used in the Installer]
 echo  D) Lumia 1020 AT^&T
 echo  E) All Drivers
 set /p Model=Device: 
 if "%model%"=="" goto ChooseDev
+::------------------------------------------------------------------
+set SVNLoc="%~dp0\Files\DownloaderFiles\svn"
+set WGETLoc="%~dp0\Files\DownloaderFiles\wget"
+set COMLoc=https://github.com/WOA-Project/Lumia-Drivers/trunk/components/
+set READMELoc=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
 if %model%==1 (
 	cls
 	color 0b
@@ -33,17 +38,17 @@ if %model%==1 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8974.MARTINI\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8974.MARTINI
-	if not exist OEM.SOC_QC8974.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8974.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8974.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8974.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8974.MARTINI\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8974.MARTINI
+	if not exist OEM.SOC_QC8974.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8974.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8974.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8974.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -56,17 +61,17 @@ if %model%==2 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8974.VANQUISH\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8974.VANQUISH
-	if not exist OEM.SOC_QC8974.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8974.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8974.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8974.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8974.VANQUISH\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8974.VANQUISH
+	if not exist OEM.SOC_QC8974.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8974.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8974.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8974.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -79,17 +84,17 @@ if %model%==3 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8974.BANDIT\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8974.BANDIT
-	if not exist OEM.SOC_QC8974.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8974.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8974.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8974.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8974.BANDIT\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8974.BANDIT
+	if not exist OEM.SOC_QC8974.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8974.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8974.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8974.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -102,17 +107,17 @@ if %model%==4 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8974.BANDITATT\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8974.BANDITATT
-	if not exist OEM.SOC_QC8974.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8974.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8974.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8974.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8974.BANDITATT\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8974.BANDITATT
+	if not exist OEM.SOC_QC8974.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8974.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8974.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8974.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -125,17 +130,17 @@ if %model%==5 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8X26.TESLA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8X26.TESLA
-	if not exist OEM.SOC_QC8X26.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8X26.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8X26.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8X26.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8X26.TESLA\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8X26.TESLA
+	if not exist OEM.SOC_QC8X26.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8X26.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8X26.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8X26.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -148,17 +153,17 @@ if %model%==6 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8X26.SUPERMAN\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8X26.SUPERMAN
-	if not exist OEM.SOC_QC8X26.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8X26.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8X26.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8X26.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8X26.SUPERMAN\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8X26.SUPERMAN
+	if not exist OEM.SOC_QC8X26.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8X26.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8X26.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8X26.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -171,17 +176,17 @@ if %model%==7 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8X26.MAKEPEACE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8X26.MAKEPEACE
-	if not exist OEM.SOC_QC8X26.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8X26.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8X26.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8X26.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8X26.MAKEPEACE\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8X26.MAKEPEACE
+	if not exist OEM.SOC_QC8X26.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8X26.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8X26.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8X26.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -194,17 +199,17 @@ if %model%==8 (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8X26.MAKEPEACEATT\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8X26.MAKEPEACEATT
-	if not exist OEM.SOC_QC8X26.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8X26.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8X26.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8X26.BASE
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8X26.MAKEPEACEATT\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8X26.MAKEPEACEATT
+	if not exist OEM.SOC_QC8X26.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8X26.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8X26.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8X26.BASE
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -217,20 +222,20 @@ if %model%==A (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8909.SAANA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8909.SAANA
-	if not exist OEM.SOC_QC8909.MMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8909.MMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8909.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8909.BASE
-	if not exist PLATFORM.SOC_QC8909.MMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8909.MMO
-	if not exist PLATFORM.SOC_QC8909.MMO_OTHERS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8909.MMO_OTHERS
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MMO_EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8909.SAANA\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8909.SAANA
+	if not exist OEM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8909.MMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8909.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.BASE
+	if not exist PLATFORM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO
+	if not exist PLATFORM.SOC_QC8909.MMO_OTHERS\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO_OTHERS
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MMO_EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -243,18 +248,18 @@ if %model%==B (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8960.PHI\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8960.PHI
-	if not exist OEM.SOC_QC8960.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8960.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8960.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.BASE
-	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.SOC8960AA
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8960.PHI\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.PHI
+	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8960.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.BASE
+	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.SOC8960AA
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -267,18 +272,18 @@ if %model%==C (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8960.EOS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8960.EOS
-	if not exist OEM.SOC_QC8960.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8960.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8960.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.BASE
-	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.SOC8960AA
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8960.EOS\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.EOS
+	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8960.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.BASE
+	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.SOC8960AA
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -291,18 +296,18 @@ if %model%==D (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8960.EOSATT\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8960.EOSATT
-	if not exist OEM.SOC_QC8960.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8960.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8960.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.BASE
-	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.SOC8960AA
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8960.EOSATT\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.EOSATT
+	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8960.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.BASE
+	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.SOC8960AA
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -315,20 +320,20 @@ if %model%==a (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8909.SAANA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8909.SAANA
-	if not exist OEM.SOC_QC8909.MMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8909.MMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8909.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8909.BASE
-	if not exist PLATFORM.SOC_QC8909.MMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8909.MMO
-	if not exist PLATFORM.SOC_QC8909.MMO_OTHERS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8909.MMO_OTHERS
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MMO_EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8909.SAANA\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8909.SAANA
+	if not exist OEM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8909.MMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8909.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.BASE
+	if not exist PLATFORM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO
+	if not exist PLATFORM.SOC_QC8909.MMO_OTHERS\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO_OTHERS
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MMO_EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -341,18 +346,18 @@ if %model%==b (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8960.PHI\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8960.PHI
-	if not exist OEM.SOC_QC8960.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8960.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8960.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.BASE
-	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.SOC8960AA
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8960.PHI\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.PHI
+	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8960.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.BASE
+	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.SOC8960AA
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -365,18 +370,18 @@ if %model%==c (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8960.EOS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8960.EOS
-	if not exist OEM.SOC_QC8960.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8960.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8960.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.BASE
-	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.SOC8960AA
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8960.EOS\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.EOS
+	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8960.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.BASE
+	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.SOC8960AA
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
@@ -389,18 +394,18 @@ if %model%==d (
 	if not exist Drivers\ mkdir Drivers
 	if not exist Drivers\components\ mkdir Drivers\components
 	cd Drivers\
-	if not exist README.md ..\Files\DownloaderFiles\wget https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8960.EOSATT\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.SOC_QC8960.EOSATT
-	if not exist OEM.SOC_QC8960.NMO\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/OEM.SOC_QC8960.NMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8960.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.BASE
-	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/PLATFORM.SOC_QC8960.SOC8960AA
-	if not exist SUPPORT.DESKTOP.BASE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ ..\..\Files\DownloaderFiles\svn checkout https://github.com/WOA-Project/Lumia-Drivers/trunk/components/SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	if not exist DEVICE.SOC_QC8960.EOSATT\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.EOSATT
+	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
+	if not exist PLATFORM.SOC_QC8960.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.BASE
+	if not exist PLATFORM.SOC_QC8960.SOC8960AA\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8960.SOC8960AA
+	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	echo.
 	color 0a
 	echo Downloading Drivers Done!

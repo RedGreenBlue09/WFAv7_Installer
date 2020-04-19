@@ -30,20 +30,20 @@ if '%errorlevel%' NEQ '0' (
 :---------------------------------------------------------------
 @echo off
 title WFAv7 Tools by RedGreenBlue123
+powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
 :ChooseTool
 cd /D "%~dp0"
 set Tool=
-mode con: cols=96 lines=24
 cls
 color 0f
-echo ----------------------------------------
-echo Choose tool you want to use below:
-echo  1) Driver Downloader
-echo  2) Clean Installer folder
-echo  3) Mount/Unmount Windows 10 for ARMv7
-echo  4) Fix Windows Phone update
-echo  5) Uninstall Windows 10 for ARMv7
-echo ----------------------------------------
+echo -----------------------------------------
+echo  Choose tool you want to use below:
+echo   1) Driver Downloader
+echo   2) Clean Installer folder
+echo   3) Mount/Unmount Windows 10 for ARMv7
+echo   4) Fix Windows Phone update
+echo   5) Uninstall Windows 10 for ARMv7
+echo -----------------------------------------
 set /p Tool=Tool: 
 if not defined Tool goto ChooseTool
 if %Tool%==1 call "Driver Downloader.bat"

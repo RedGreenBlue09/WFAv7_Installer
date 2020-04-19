@@ -29,14 +29,27 @@ if '%errorlevel%' NEQ '0' (
     CD /D "%~dp0"
 :---------------------------------------------------------------
 @Echo Off
+powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
 cd /D "%~dp0"
+echo.
 echo  Connect your phone in mass storage mode to the computer and press enter to continue ...
 echo.
 pause
 echo.
 :MOSPath
+set MainOS=
+echo.
 set /p MainOS=Enter MainOS Path: 
+for /f %%m in ('powershell -C "(echo %MainOS%).length -eq 2"') do set Lenght2=%%m
+if %Lenght2%==False (
+	ECHO  Not a valid MainOS partition!
+	GOTO MOSPath
+)
 if not exist "%MainOS%\EFIESP" (
+	ECHO  Not a valid MainOS partition!
+	GOTO MOSPath
+)
+if not exist "%MainOS%\Data" (
 	ECHO  Not a valid MainOS partition!
 	GOTO MOSPath
 )
@@ -55,8 +68,8 @@ if not exist "%WinDir%\Windows" (
 echo.
 echo Getting partitions info ...
 set DLMOS=%MainOS:~0,-1%
-for /f %i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%i
-for /f %f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%f
+for /f %%i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
+for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
 echo>>diskpart1.txt sel dis %DiskNumber%
 echo>>diskpart1.txt sel par %PartitionNumber%
 echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7

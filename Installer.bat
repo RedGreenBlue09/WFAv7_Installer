@@ -1,41 +1,60 @@
 @echo off
+:Check1
+IF EXIST M:\ (
+	TITLE ERROR!
+	COLOR 0C
+	ECHO.
+	ECHO   Please Unmount Drive [M:]
+	PAUSE
+	EXIT
+)
+IF EXIST N:\ (
+	TITLE ERROR!
+	COLOR 0C
+	ECHO.
+	ECHO   Please Unmount Drive [N:]
+	PAUSE
+	EXIT
+)
+::---------------------------------------------------------------
 :GetAdministrator
 REM  --> Requesting administrative privilege...
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
->nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system"
-) ELSE (
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-)
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "X86" (
+	>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+) else ( >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" )
+
 
 REM --> Please run as Administrator.
 if '%errorlevel%' NEQ '0' (
-    echo Requesting administrative privileges...
-    goto UserAccountControl
+	echo Requesting administrative privileges...
+	goto UserAccountControl
 ) else ( goto GotAdministrator )
 
 :UserAccountControl
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    set params= %*
-    echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-
-    "%temp%\getadmin.vbs"
-    del "%temp%\getadmin.vbs"
-    exit /B
+	echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+	set params= %*
+	echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+	"%temp%\getadmin.vbs"
+	del "%temp%\getadmin.vbs"
+	exit /B
 
 :GotAdministrator
-    pushd "%CD%"
-    CD /D "%~dp0"
-:---------------------------------------------------------------
-@echo off
+	pushd "%CD%"
+	CD /D "%~dp0"
+	goto Check2
+::---------------------------------------------------------------
+:Check2
 title Starting Installer ...
 
-POWERSHELL -? >nul
+POWERSHELL /? >nul
 SET PLV=%ERRORLEVEL%
 IF %PLV% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
 	ECHO.
-	ECHO   Powershell wasn't found or it have problem.
+	ECHO   Powershell isn't found or it have problem.
 	ECHO   Please enable Powershell and continue.
 	ECHO   Error code: %PLV%
 	PAUSE
@@ -49,7 +68,7 @@ IF %ERRORLEVEL% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
 	ECHO.
-	ECHO   DISM wasn't found or it has problem.
+	ECHO   DISM isn't found or it has problem.
 	PAUSE
 	EXIT
 )
@@ -116,7 +135,7 @@ IF %ERRORLEVEL% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
 	ECHO.
-	ECHO   BCDEDIT wasn't found or it has problem.
+	ECHO   BCDEDIT isn't found or it has problem.
 	PAUSE
 	EXIT
 )
@@ -141,7 +160,8 @@ if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
 	echo.
-	echo  Please Install Windows PowerShell Modules.
+	echo  You used Windows 7 / Windows Home edition / Customized Windows.
+	echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 	PAUSE
 	EXIT
 )
@@ -153,7 +173,8 @@ if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
 	echo.
-	echo  Please Install Windows PowerShell Modules.
+	echo  You used Windows 7 / Windows Home edition / Customized Windows.
+	echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 	PAUSE
 	EXIT
 )
@@ -165,7 +186,8 @@ if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
 	echo.
-	echo  Please Install Windows PowerShell Modules.
+	echo  You used Windows 7 / Windows Home edition / Customized Windows.
+	echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 	PAUSE
 	EXIT
 )
@@ -177,18 +199,18 @@ if errorlevel 1 (
 	TITLE ERROR!
 	COLOR 0C
 	echo.
-	echo  Please enable Hyper-V in Windows Features. [VT-x is not needed]
+	echo  Hyper-V is not fully enabled.
 	PAUSE
 	EXIT
 )
 cls
 echo Installer is loading ... [100%%]
-:---------------------------------------------------------------
+::---------------------------------------------------------------
 cls
-chcp 65001>nul
-title Windows 10 for ARMv7 Installer (VHDX) Beta 3
+powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
+title Windows 10 for ARMv7 Installer (VHDX) Proximal Release 3
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR2                         //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR3                         //
 echo  //                                   by RedGreenBlue123                                     //
 echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,14 +224,15 @@ echo     * Your warranty will be void if you tamper with any part of your device
 echo PREPARATION:
 echo     - Read README.TXT before use this Installer.
 echo     - Make sure your phone is fully charged and it's battery is not wear too much.
+echo     - Make sure no drives mounted in M and N.
 echo     - Unlocked bootloader and booted into Mass Storage Mode.
 echo.
 pause
-:---------------------------------------------------------------
+::---------------------------------------------------------------
 :ChooseDev
 cls
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR2                         //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR3                         //
 echo  //                                   by RedGreenBlue123                                     //
 echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,11 +276,11 @@ if not %model%==C goto ChooseDev
 if not %model%==a goto ChooseDev
 if not %model%==b goto ChooseDev
 if not %model%==c goto ChooseDev
-:---------------------------------------------------------------
+::---------------------------------------------------------------
 :ToBeContinued1
 cls
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR2                         //
+echo  //                        Windows 10 for ARMv7 Installer (VHDX) PR3                         //
 echo  //                                   by RedGreenBlue123                                     //
 echo  //                      Thanks to: @Gus33000, @FadilFadz01, @demonttl                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,8 +292,14 @@ echo.
 pause
 goto MOSPath
 :MOSPath
+set MainOS=
 echo.
 set /p MainOS=Enter MainOS Path: 
+for /f %%m in ('powershell -C "(echo %MainOS%).length -eq 2"') do set Lenght2=%%m
+if %Lenght2%==False (
+	ECHO  Not a valid MainOS partition!
+	GOTO MOSPath
+)
 if not exist "%MainOS%\EFIESP" (
 	ECHO  Not a valid MainOS partition!
 	GOTO MOSPath
@@ -517,8 +546,8 @@ bcdedit /store %BCDRec% /set {bootmgr} "device" "partition=%MainOS%\EFIESP"
 bcdedit /store %BCDRec% /set {bootmgr} "path" "\EFI\Boot\Bootarm.efi"
 bcdedit /store %BCDRec% /set {bootmgr} "timeout" "3"
 set DLMOS=%MainOS:~0,-1%
-for /f %i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%i
-for /f %f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%f
+for /f %%i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
+for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
 echo>>diskpart.txt sel dis %DiskNumber%
 echo>>diskpart.txt sel par %PartitionNumber%
 echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b

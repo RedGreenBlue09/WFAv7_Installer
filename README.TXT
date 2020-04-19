@@ -20,15 +20,15 @@ SUPPORTED DEVICES:
     - Microsoft Lumia 640 XL LTE (Global, AT&T)
     * No support for Lumia 2520 due to lack of drivers.
     * No support for Spec A devices because these devices don't support VHD boot.
-    * Future: Add support for other devices.
+    * Future: Add support for 950 and 950 XL.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 
 REQUIREMENTS:
-    - Full Windows 10 Pro or Enterprise
+    - Full Windows 8.1+ Pro or Enterprise (Windows 7 not working)
     - Windows Powershell Enabled
-    - Windows Powershell Modules Installed 
-      (Don't care about this if you have a full installation of Windows 10)
+    - Windows Powershell Modules Installed
+      (Don't care about this if you have a full installation of Windows 8.1+)
     - Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
     - 3 GB of storage
     - Windows Phone installed in your Lumia
@@ -69,7 +69,7 @@ CREDITS:
     - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
     - demonttl (John Anderson)     : Explaining WimBoot doesn't work in Windows 10
     - driver1998                   : Windows 10 For ARMv7 Image
-    - Windows ARMv7 Telegram group : Testing my script
+    - Windows ARM32 Telegram group : Testing my script
     - Microsoft                    : Command Prompt, Windows, DISM, BCDEDIT, PowerShell, Notepad, ...
     - SmartSVN                     : SVN downloader
     - Igor Pavlov                  : 7-Zip extractor
@@ -77,6 +77,23 @@ CREDITS:
     - RedGreenBlue123 (Me)         : Writing the script
 
 CHANGELOGS:
+ - Proximal Release 3 (PR3)
+   + Fixed PostInstall not enabling WP boot (PR2.1)
+   + Fixed severe Installer exit issue from 2.1 (PR2.3)
+   + Fixed choice in Tools.bat (PR2.3)
+   + Fixed title shows Beta 3
+   + Fixed Installer crashes when setting up ESP & in PostInstall.bat
+   + Fixed console changed to Raster Font when run Powershell commands
+   + Changed Windows resize method: Enable scroll bar
+   + Changed format method from Powershell & Diskpart to Format command (PR2.3)
+   + Force MainOS must be 2 characters (Allow E:, F:, etc and error on E:\, etc)
+   + Minimized Driver Downloader size & make it easy for edit
+   + Restored CompactOS (PR2.3)
+   + Check for drives mounted that only visible to normal user, not exist in Admin
+   + Many more fixes ...
+  *KNOWN ISSUES:
+   - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
+   - Try and tell me :)
  - Proximal Release 2 (PR2)
    + Fixed severe Installer exit issues (PR1.2 & PR1.3)
    + Fixed severe Downloader crash issue (PR1.1)
@@ -89,9 +106,6 @@ CHANGELOGS:
    + Auto mount EFIESP to Windows 10 for ARMv7 partition (PostInstall.bat)
    + Improved PostInstall.bat
    + Bundle Clean.bat, Uninstaller.bat, FixUpdate.bat, VHDX Mounter into Tools.bat
-  *KNOWN ISSUES:
-   - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
-   - Try and tell me :)
  - Proximal Release 1 (PR1)
    + Rewrite Installer to 1 file
    + Rewrite Downloader to 1 file
