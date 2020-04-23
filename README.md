@@ -1,8 +1,5 @@
 # Windows 10 for ARMv7 Installer (VHDX) PR3
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7-S1")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-3.JPG "WFAv7-S3")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-4.JPG "WFAv7-S4")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7")
 ### Disclaimer
     * I'm not responsible for bricked devices, dead SD cards,
       thermonuclear war, or you getting fired because the alarm app failed (like it did for me...).
@@ -69,5 +66,10 @@
   - Igor Pavlov                  : 7-Zip extractor
   - GNU                          : WGET downloader
   - RedGreenBlue123 (Me)         : Writing the script
+### Screenshots
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S1")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-3.JPG "WFAv7-DD")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-4.JPG "WFAv7-TL")
 ### Changelogs
   - Changelogs included in README.TXT
