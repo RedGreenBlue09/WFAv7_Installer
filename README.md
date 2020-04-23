@@ -67,7 +67,7 @@
   - GNU                          : WGET downloader
   - RedGreenBlue123 (Me)         : Writing the script
 ### Screenshots
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S1")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7-S1")
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-3.JPG "WFAv7-DD")
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-4.JPG "WFAv7-TL")
