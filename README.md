@@ -51,9 +51,9 @@
     run Tools.bat and choose Fix Update tool to fix BCD (not tested).
 ### Downloads
   - Windows 10 for ARMv7  : https://bit.ly/33ap8dq
-    .Thanks to @driver1998 (Image owner) and @FadilFadz (link).
-  - Drivers: Run Driver Downloader to feltch drivers for your device automatically.
-    .Thanks to @Gus33000
+    . Thanks to @driver1998 (Image owner) and @FadilFadz (link).
+  - Drivers: Run Driver Downloader to feltch drivers for your device automatically
+    . Thanks to @Gus33000
   - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
 ### Credits
   - fadilfadz01 (Fadil Fadz)     : Helping me write the script
