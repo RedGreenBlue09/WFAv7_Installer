@@ -1,36 +1,42 @@
 @echo off
+mode 96,2400
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
+call :setESC
 :ChooseDev
 cd /D "%~dp0"
 set Model=
 cls
 color 0f
-echo  //////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               WFAv7 Driver Downloader 1.6                                //
-echo  //                                   by RedGreenBlue123                                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////
+echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 1.7%ESC%[93m                                //
+echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
 echo.
 echo Choose your Device Model below:
-echo  1) Lumia 930
-echo  2) Lumia Icon
-echo  3) Lumia 1520
-echo  4) Lumia 1520 AT^&T
-echo  5) Lumia 830 Global
-echo  6) Lumia 735 Global
-echo  7) Lumia 640 XL LTE Global
-echo  8) Lumia 640 XL LTE AT^&T
-echo  A) Lumia 650 [experimental only]
-echo  B) Lumia 920 [Will not be used in the Installer]
-echo  C) Lumia 1020 [Will not be used in the Installer]
-echo  D) Lumia 1020 AT^&T
-echo  E) All Drivers
-set /p Model=Device: 
+echo  %ESC%[0m1)%ESC%[97m Lumia 930
+echo  %ESC%[0m2)%ESC%[97m Lumia Icon                        %ESC%[91m+-------------------------------------------------+%ESC%[97m
+echo  %ESC%[0m3)%ESC%[97m Lumia 1520                        %ESC%[91m^| - Detele old drivers before downloading 950/XL  ^|%ESC%[97m
+echo  %ESC%[0m4)%ESC%[97m Lumia 1520 AT^&T                  %ESC%[91m ^|   If you downloaded All Drivers.                ^|%ESC%[97m
+echo  %ESC%[0m5)%ESC%[97m Lumia 830 Global                  %ESC%[91m^| - If you didn't delete,                         ^|%ESC%[97m
+echo  %ESC%[0m6)%ESC%[97m Lumia 735 Global                  %ESC%[91m^|   That may causes install errors or BSOD.       ^|%ESC%[97m
+echo  %ESC%[0m7)%ESC%[97m Lumia 640 XL LTE Global           %ESC%[91m+-------------------------------------------------+%ESC%[97m
+echo  %ESC%[0m8)%ESC%[97m Lumia 640 XL LTE AT^&T
+echo  %ESC%[0mA)%ESC%[97m Lumia 650 %ESC%[0m[experimental only]
+echo  %ESC%[0mB)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[0mC)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[0mD)%ESC%[97m Lumia 1020 AT^&T
+echo  %ESC%[0mE)%ESC%[97m Lumia 950
+echo  %ESC%[0mF)%ESC%[97m Lumia 950 XL
+echo  %ESC%[0mG)%ESC%[97m All Drivers (Not for 950 and 950 XL)
+set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
 if "%model%"=="" goto ChooseDev
 ::------------------------------------------------------------------
 set SVNLoc="%~dp0\Files\DownloaderFiles\svn"
 set WGETLoc="%~dp0\Files\DownloaderFiles\wget"
+set SzLoc="%~dp0\Files\DownloaderFiles\7za"
 set COMLoc=https://github.com/WOA-Project/Lumia-Drivers/trunk/components/
 set READMELoc=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+set ReleaseLoc=https://github.com/WOA-Project/Lumia-Drivers/releases/download/2003.2.2/
 if %model%==1 (
 	cls
 	color 0b
@@ -313,6 +319,113 @@ if %model%==D (
 	echo Downloading Drivers Done!
 	pause
 )
+if %model%==E (
+	cls
+	color 0b
+	title Downloading Drivers ...
+	if not exist Drivers\ mkdir Drivers
+	if not exist Drivers\components\ mkdir Drivers\components
+	cd Drivers\
+	if not exist README.md %WGETLoc% %READMELoc%
+	cd components\
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip
+	if not exist DEVICE.SOC_QC8994.TALKMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.TALKMAN.zip
+	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip
+	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip
+	if not exist OEM.SOC_QC8994.MMO_SOC8992\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8992.zip
+	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip
+	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8992\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8992.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip
+	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip
+	if exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip %SzLoc% x DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip DEVICE.INPUT.SYNAPTICS_RMI4_F12_10
+	if exist DEVICE.SOC_QC8994.TALKMAN.zip %SzLoc% x DEVICE.SOC_QC8994.TALKMAN.zip DEVICE.SOC_QC8994.TALKMAN
+	if exist DEVICE.USB.MMO_USBC.zip %SzLoc% x DEVICE.USB.MMO_USBC.zip DEVICE.USB.MMO_USBC
+	if exist OEM.SOC_QC8994.MMO.zip %SzLoc% x OEM.SOC_QC8994.MMO.zip OEM.SOC_QC8994.MMO
+	if exist OEM.SOC_QC8994.MMO_SOC8992.zip %SzLoc% x OEM.SOC_QC8994.MMO_SOC8992.zip OEM.SOC_QC8994.MMO_SOC8992
+	if exist PLATFORM.SOC_QC8994.BASE.zip %SzLoc% x PLATFORM.SOC_QC8994.BASE.zip PLATFORM.SOC_QC8994.BASE
+	if exist PLATFORM.SOC_QC8994.MMO.zip %SzLoc% x PLATFORM.SOC_QC8994.MMO.zip PLATFORM.SOC_QC8994.MMO
+	if exist PLATFORM.SOC_QC8994.SOC8992.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8992.zip PLATFORM.SOC_QC8994.SOC8992
+	if exist PLATFORM.SOC_QC8994.SOC8994AB.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8994AB.zip PLATFORM.SOC_QC8994.SOC8994AB
+	if exist SUPPORT.DESKTOP.BASE.zip %SzLoc% x SUPPORT.DESKTOP.BASE.zip SUPPORT.DESKTOP.BASE
+	if exist SUPPORT.DESKTOP.EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.EXTRAS.zip SUPPORT.DESKTOP.EXTRAS
+	if exist SUPPORT.DESKTOP.MMO_EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.MMO_EXTRAS.zip SUPPORT.DESKTOP.MMO_EXTRAS
+	if exist SUPPORT.DESKTOP.MOBILE_BRIDGE.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_BRIDGE.zip SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if exist SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	del *.zip 2>NUL
+	echo.
+	color 0a
+	echo Downloading Drivers Done!
+	pause
+)
+if %model%==F (
+	cls
+	color 0b
+	title Downloading Drivers ...
+	if not exist Drivers\ mkdir Drivers
+	if not exist Drivers\components\ mkdir Drivers\components
+	cd Drivers\
+	if not exist README.md %WGETLoc% %READMELoc%
+	cd components\
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip
+	if not exist DEVICE.SOC_QC8994.CITYMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.CITYMAN.zip
+	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip
+	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip
+	if not exist OEM.SOC_QC8994.MMO_SOC8994\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8994.zip
+	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip
+	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8994\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip
+	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip
+	if exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip %SzLoc% x DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip DEVICE.INPUT.SYNAPTICS_RMI4_F12_10
+	if exist DEVICE.SOC_QC8994.CITYMAN.zip %SzLoc% x DEVICE.SOC_QC8994.CITYMAN.zip DEVICE.SOC_QC8994.CITYMAN
+	if exist DEVICE.USB.MMO_USBC.zip %SzLoc% x DEVICE.USB.MMO_USBC.zip DEVICE.USB.MMO_USBC
+	if exist OEM.SOC_QC8994.MMO.zip %SzLoc% x OEM.SOC_QC8994.MMO.zip OEM.SOC_QC8994.MMO
+	if exist OEM.SOC_QC8994.MMO_SOC8994.zip %SzLoc% x OEM.SOC_QC8994.MMO_SOC8994.zip OEM.SOC_QC8994.MMO_SOC8994
+	if exist PLATFORM.SOC_QC8994.BASE.zip %SzLoc% x PLATFORM.SOC_QC8994.BASE.zip PLATFORM.SOC_QC8994.BASE
+	if exist PLATFORM.SOC_QC8994.MMO.zip %SzLoc% x PLATFORM.SOC_QC8994.MMO.zip PLATFORM.SOC_QC8994.MMO
+	if exist PLATFORM.SOC_QC8994.SOC8994.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8994.zip PLATFORM.SOC_QC8994.SOC8994
+	if exist PLATFORM.SOC_QC8994.SOC8994AB.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8994AB.zip PLATFORM.SOC_QC8994.SOC8994AB
+	if exist SUPPORT.DESKTOP.BASE.zip %SzLoc% x SUPPORT.DESKTOP.BASE.zip SUPPORT.DESKTOP.BASE
+	if exist SUPPORT.DESKTOP.EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.EXTRAS.zip SUPPORT.DESKTOP.EXTRAS
+	if exist SUPPORT.DESKTOP.MMO_EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.MMO_EXTRAS.zip SUPPORT.DESKTOP.MMO_EXTRAS
+	if exist SUPPORT.DESKTOP.MOBILE_BRIDGE.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_BRIDGE.zip SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if exist SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	del *.zip 2>NUL
+	echo.
+	color 0a
+	echo Downloading Drivers Done!
+	pause
+)
+if %model%==G (
+	cls
+	if exist Drivers\ (
+		title ERROR!
+		color 0c
+		echo Please delete or move previous drivers when downloading all drivers.
+		pause
+		goto ChooseDev
+	)
+	color 0b
+	title Downloading Drivers ...
+	%WGETLoc% https://github.com/WOA-Project/Lumia-Drivers/archive/master.zip
+	title Extracting Drivers ...
+	%SzLoc% x master.zip Lumia-Drivers-master
+	ren Lumia-Drivers-master Drivers
+	del master.zip
+	echo.
+	color 0a
+	echo Downloading Drivers Done!
+	pause
+)
 if %model%==a (
 	cls
 	color 0b
@@ -413,26 +526,91 @@ if %model%==d (
 )
 if %model%==e (
 	cls
-	if exist Drivers\ (
-		title ERROR!
-		color 0c
-		echo Please delete or move previous drivers when downloading all drivers.
-		pause
-		goto ChooseDev
-	)
 	color 0b
 	title Downloading Drivers ...
-	Files\DownloaderFiles\wget https://github.com/WOA-Project/Lumia-Drivers/archive/master.zip
-	title Extracting Drivers ...
-	Files\DownloaderFiles\7za x master.zip Lumia-Drivers-master
-	ren Lumia-Drivers-master Drivers
-	del master.zip
+	if not exist Drivers\ mkdir Drivers
+	if not exist Drivers\components\ mkdir Drivers\components
+	cd Drivers\
+	if not exist README.md %WGETLoc% %READMELoc%
+	cd components\
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip
+	if not exist DEVICE.SOC_QC8994.TALKMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.TALKMAN.zip
+	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip
+	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip
+	if not exist OEM.SOC_QC8994.MMO_SOC8992\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8992.zip
+	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip
+	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8992\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8992.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip
+	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip
+	if exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip %SzLoc% x DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip DEVICE.INPUT.SYNAPTICS_RMI4_F12_10
+	if exist DEVICE.SOC_QC8994.TALKMAN.zip %SzLoc% x DEVICE.SOC_QC8994.TALKMAN.zip DEVICE.SOC_QC8994.TALKMAN
+	if exist DEVICE.USB.MMO_USBC.zip %SzLoc% x DEVICE.USB.MMO_USBC.zip DEVICE.USB.MMO_USBC
+	if exist OEM.SOC_QC8994.MMO.zip %SzLoc% x OEM.SOC_QC8994.MMO.zip OEM.SOC_QC8994.MMO
+	if exist OEM.SOC_QC8994.MMO_SOC8992.zip %SzLoc% x OEM.SOC_QC8994.MMO_SOC8992.zip OEM.SOC_QC8994.MMO_SOC8992
+	if exist PLATFORM.SOC_QC8994.BASE.zip %SzLoc% x PLATFORM.SOC_QC8994.BASE.zip PLATFORM.SOC_QC8994.BASE
+	if exist PLATFORM.SOC_QC8994.MMO.zip %SzLoc% x PLATFORM.SOC_QC8994.MMO.zip PLATFORM.SOC_QC8994.MMO
+	if exist PLATFORM.SOC_QC8994.SOC8992.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8992.zip PLATFORM.SOC_QC8994.SOC8992
+	if exist PLATFORM.SOC_QC8994.SOC8994AB.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8994AB.zip PLATFORM.SOC_QC8994.SOC8994AB
+	if exist SUPPORT.DESKTOP.BASE.zip %SzLoc% x SUPPORT.DESKTOP.BASE.zip SUPPORT.DESKTOP.BASE
+	if exist SUPPORT.DESKTOP.EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.EXTRAS.zip SUPPORT.DESKTOP.EXTRAS
+	if exist SUPPORT.DESKTOP.MMO_EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.MMO_EXTRAS.zip SUPPORT.DESKTOP.MMO_EXTRAS
+	if exist SUPPORT.DESKTOP.MOBILE_BRIDGE.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_BRIDGE.zip SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if exist SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	del *.zip 2>NUL
 	echo.
 	color 0a
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==E (
+if %model%==f (
+	cls
+	color 0b
+	title Downloading Drivers ...
+	if not exist Drivers\ mkdir Drivers
+	if not exist Drivers\components\ mkdir Drivers\components
+	cd Drivers\
+	if not exist README.md %WGETLoc% %READMELoc%
+	cd components\
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip
+	if not exist DEVICE.SOC_QC8994.CITYMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.CITYMAN.zip
+	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip
+	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip
+	if not exist OEM.SOC_QC8994.MMO_SOC8994\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8994.zip
+	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip
+	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8994\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994.zip
+	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip
+	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip
+	if exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip %SzLoc% x DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip DEVICE.INPUT.SYNAPTICS_RMI4_F12_10
+	if exist DEVICE.SOC_QC8994.CITYMAN.zip %SzLoc% x DEVICE.SOC_QC8994.CITYMAN.zip DEVICE.SOC_QC8994.CITYMAN
+	if exist DEVICE.USB.MMO_USBC.zip %SzLoc% x DEVICE.USB.MMO_USBC.zip DEVICE.USB.MMO_USBC
+	if exist OEM.SOC_QC8994.MMO.zip %SzLoc% x OEM.SOC_QC8994.MMO.zip OEM.SOC_QC8994.MMO
+	if exist OEM.SOC_QC8994.MMO_SOC8994.zip %SzLoc% x OEM.SOC_QC8994.MMO_SOC8994.zip OEM.SOC_QC8994.MMO_SOC8994
+	if exist PLATFORM.SOC_QC8994.BASE.zip %SzLoc% x PLATFORM.SOC_QC8994.BASE.zip PLATFORM.SOC_QC8994.BASE
+	if exist PLATFORM.SOC_QC8994.MMO.zip %SzLoc% x PLATFORM.SOC_QC8994.MMO.zip PLATFORM.SOC_QC8994.MMO
+	if exist PLATFORM.SOC_QC8994.SOC8994.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8994.zip PLATFORM.SOC_QC8994.SOC8994
+	if exist PLATFORM.SOC_QC8994.SOC8994AB.zip %SzLoc% x PLATFORM.SOC_QC8994.SOC8994AB.zip PLATFORM.SOC_QC8994.SOC8994AB
+	if exist SUPPORT.DESKTOP.BASE.zip %SzLoc% x SUPPORT.DESKTOP.BASE.zip SUPPORT.DESKTOP.BASE
+	if exist SUPPORT.DESKTOP.EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.EXTRAS.zip SUPPORT.DESKTOP.EXTRAS
+	if exist SUPPORT.DESKTOP.MMO_EXTRAS.zip %SzLoc% x SUPPORT.DESKTOP.MMO_EXTRAS.zip SUPPORT.DESKTOP.MMO_EXTRAS
+	if exist SUPPORT.DESKTOP.MOBILE_BRIDGE.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_BRIDGE.zip SUPPORT.DESKTOP.MOBILE_BRIDGE
+	if exist SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip SUPPORT.DESKTOP.MOBILE_COMPONENTS
+	del *.zip 2>NUL
+	echo.
+	color 0a
+	echo Downloading Drivers Done!
+	pause
+)
+if %model%==g (
 	cls
 	if exist Drivers\ (
 		title ERROR!
@@ -443,9 +621,9 @@ if %model%==E (
 	)
 	color 0b
 	title Downloading Drivers ...
-	Files\DownloaderFiles\wget https://github.com/WOA-Project/Lumia-Drivers/archive/master.zip
+	%WGETLoc% https://github.com/WOA-Project/Lumia-Drivers/archive/master.zip
 	title Extracting Drivers ...
-	Files\DownloaderFiles\7za x master.zip Lumia-Drivers-master
+	%SzLoc% x master.zip Lumia-Drivers-master
 	ren Lumia-Drivers-master Drivers
 	del master.zip
 	echo.
@@ -472,3 +650,9 @@ if not %model%==c goto ChooseDev
 if not %model%==d goto ChooseDev
 if not %model%==e goto ChooseDev
 goto ChooseDev
+
+:setESC
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
+  set ESC=%%b
+)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
