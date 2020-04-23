@@ -19,7 +19,7 @@
     * Future: Add support for 950 and 950 XL.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
-### REQUIREMENTS:
+### Requirements
   - Full Windows 10 Pro or Enterprise (Windows 7 not working)
   - Windows Powershell Enabled
   - Windows Powershell Modules Installed
