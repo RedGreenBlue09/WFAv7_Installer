@@ -25,7 +25,7 @@ SUPPORTED DEVICES:
       Use normal method is better than dual boot on a 8 GB storage.
 
 REQUIREMENTS:
-    - Full Windows 10 Pro or Enterprise (Windows 7 not working)
+    - Full Windows 8.1+ Pro or Enterprise (Windows 7 not working)
     - Windows Powershell Enabled
     - Windows Powershell Modules Installed
       (Don't care about this if you have a full installation of Windows 8.1+)
@@ -60,6 +60,7 @@ DOWNLOADS:
     - Windows 10 for ARMv7  : https://bit.ly/33ap8dq
       Thanks to @driver1998 (Image owner) and @FadilFadz (link).
     - Drivers: Run Driver Downloader to feltch drivers for your device automatically.
+      Or download it from here (Extra space and data): https://github.com/WOA-Project/Lumia-Drivers
       Thanks to @Gus33000
     - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
 
@@ -91,7 +92,7 @@ CHANGELOGS:
    + Fixed title shows Beta 3
    + Fixed Installer crashes when setting up ESP & in PostInstall.bat
    + Fixed console changed to Raster Font when run Powershell commands
-   + Changed window resize method to Powershell: Enable scroll bar
+   + Changed Windows resize method: Enable scroll bar
    + Changed format method from Powershell & Diskpart to Format command (PR2.3)
    + Force MainOS must be 2 characters (Allow E:, F:, etc and error on E:\, etc)
    + Minimized Driver Downloader size & make it easy for edit

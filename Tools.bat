@@ -30,22 +30,22 @@ if '%errorlevel%' NEQ '0' (
 :---------------------------------------------------------------
 @echo off
 title WFAv7 Tools by RedGreenBlue123
-mode 96,2000
+mode 96,2400
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
-call :setESC
 :ChooseTool
 cd /D "%~dp0"
 set Tool=
 cls
-echo %ESC%[93m-----------------------------------------%ESC%[97m
+color 0f
+echo -----------------------------------------
 echo  Choose tool you want to use below:
-echo   %ESC%[0m1)%ESC%[97m Driver Downloader
-echo   %ESC%[0m2)%ESC%[97m Clean Installer folder
-echo   %ESC%[0m3)%ESC%[97m Mount/Unmount Windows 10 for ARMv7
-echo   %ESC%[0m4)%ESC%[97m Fix Windows Phone update
-echo   %ESC%[0m5)%ESC%[97m Uninstall Windows 10 for ARMv7
-echo %ESC%[93m-----------------------------------------%ESC%[97m
-set /p Tool=%ESC%[92mTool%ESC%[32m: %ESC%[0m
+echo   1) Driver Downloader
+echo   2) Clean Installer folder
+echo   3) Mount/Unmount Windows 10 for ARMv7
+echo   4) Fix Windows Phone update
+echo   5) Uninstall Windows 10 for ARMv7
+echo -----------------------------------------
+set /p Tool=Tool: 
 if not defined Tool goto ChooseTool
 if %Tool%==1 call "Driver Downloader.bat"
 if %Tool%==2 (
@@ -55,14 +55,14 @@ if %Tool%==2 (
 	if exist diskpart1.txt del /A:H diskpart1.txt
 	if exist diskpart2.txt del /A:H diskpart2.txt
 	:Choice
-	set /p CYN=%ESC%[97mDo you want to delete Drivers folder? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m] %ESC%[0m
+	set /p CYN=Do you want to delete Drivers folder? [Y/N] 
 	if "!CYN!"=="" goto Choice
 	if !CYN!==Y rd /s /q Drivers\ & set Completed=1
 	if !CYN!==y rd /s /q Drivers\ & set Completed=1
 	if !CYN!==N set Completed=1
 	if !CYN!==n set Completed=1
 	if not !Completed!==1 goto Choice
-	if !Completed!==1 echo. & echo Done. & echo. & pause
+	if !Completed!==1 echo Done! & pause
 	endlocal
 )
 if %Tool%==3 (
@@ -71,53 +71,52 @@ if %Tool%==3 (
 	set Operation=
 	cls
 	echo.
-	echo %ESC%[97mChoose operation below:
-	echo %ESC%[0m1^)%ESC%[97m Mount Windows 10 for ARMv7
-	echo %ESC%[0m2^)%ESC%[97m Unmount Windows 10 for ARMv7
-	set /p Operation=%ESC%[93mOperation: %ESC%[0m
+	echo Choose operation below:
+	echo 1^) Mount Windows 10 for ARMv7
+	echo 2^) Unmount Windows 10 for ARMv7
+	set /p Operation=Operation: 
 	if not defined Operation goto ChooseOperation
 	if !Operation!==1 (
-		:MOSPath10
-		set /p MainOS=%ESC%[92mEnter MainOS Path: 
+		:MOSPath1
+		set /p MainOS=Enter MainOS Path: 
 		if not exist !MainOS!\EFIESP (
-			ECHO  %ESC%[91mNot a valid MainOS partition!
-			GOTO MOSPath10
+			ECHO  Not a valid MainOS partition!
+			GOTO MOSPath1
 		)
 		if not exist !MainOS!\Data (
-			ECHO  %ESC%[91mNot a valid MainOS partition!
-			GOTO MOSPath10
+			ECHO  Not a valid MainOS partition!
+			GOTO MOSPath1
 		)
 		if not exist !MainOS!\Data\windows10arm.vhdx (
-			ECHO  %ESC%[91mWindows 10 for ARMv7 is not installed.%ESC%[0m
+			ECHO  Windows 10 for ARMv7 is not installed.
 			PAUSE
 		) else (
-			%ESC%[93mMounting VHDX ...%ESC%[96m
+			Mounting VHDX ...
 			powershell Mount-VHD -Path !MainOS!\Data\windows10arm.vhdx
 			set Completed=1
 		)
 	)
 	if !Operation!==2 (
-		:MOSPath11
-		set /p MainOS=%ESC%[92mEnter MainOS Path: 
+		set /p MainOS=Enter MainOS Path: 
 		if not exist !MainOS!\EFIESP (
-			ECHO  %ESC%[91mNot a valid MainOS partition!
-			GOTO MOSPath10
+			ECHO  Not a valid MainOS partition!
+			GOTO MOSPath
 		)
 		if not exist !MainOS!\Data (
-			ECHO  %ESC%[91mNot a valid MainOS partition!
-			GOTO MOSPath10
+			ECHO  Not a valid MainOS partition!
+			GOTO MOSPath
 		)
 		if not exist !MainOS!\Data\windows10arm.vhdx (
-			ECHO  %ESC%[91mWindows 10 for ARMv7 is not installed.%ESC%[0m
+			ECHO  Windows 10 for ARMv7 is not installed.
 			PAUSE
 		) else (
-			%ESC%[93mUnmounting VHDX ...%ESC%[96m
+			Unmounting VHDX ...
 			powershell Dismount-VHD -Path !MainOS!\Data\windows10arm.vhdx
 			set Completed=1
 		)
 	)
 	if !Completed!==1 (
-		echo %ESC%[92mDone!%ESC%[0m
+		echo Done.
 		Pause
 	)
 	if not !Completed!==1 goto ChooseOperation
@@ -126,17 +125,17 @@ if %Tool%==3 (
 if %Tool%==4 (
 	setlocal EnableDelayedExpansion
 	echo.
-	echo  %ESC%[93mConnect your phone in mass storage mode to the computer.%ESC%[0m
+	echo  Connect your phone in mass storage mode to the computer and press enter to continue ...
 	echo.
 	pause
 	echo.
 	:MOSPath
-	set /p MainOS=%ESC%[92mEnter MainOS Path%ESC%[32m: 
+	set /p MainOS=Enter MainOS Path: 
 	if not exist !MainOS!\EFIESP (
-		ECHO  %ESC%[91mNot a valid MainOS partition!
+		ECHO  Not a valid MainOS partition!
 		GOTO MOSPath
 	)
-	echo %ESC%[93mFixing BCD ...%ESC%[96m
+	echo Fixing BCD ...
 	@ECHO OFF
 	SET bcdLoc="!MainOS!\EFIESP\efi\Microsoft\Boot\BCD"
 	SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
@@ -163,41 +162,35 @@ if %Tool%==4 (
 	bcdedit /store %bcdLoc% /set "{globalsettings}" "nobootuxtext" no
 	bcdedit /store %bcdLoc% /set "{globalsettings}" "nobootuxprogress" no
 	ECHO.
-	ECHO %ESC%[92mBCD has been fixed!%ESC%[0m
+	ECHO BCD has been fixed.
 	pause
 	endlocal
 )
 if %Tool%==5 (
 	setlocal EnableDelayedExpansion
 	echo.
-	echo  %ESC%[93mConnect your phone in mass storage mode to the computer.%ESC%[0m
+	echo  Connect your phone in mass storage mode to the computer and press enter to continue ...
 	echo.
 	pause
 	echo.
 	:MOSPath2
-	set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[0m
+	set /p MainOS=Enter MainOS Path: 
 	if not exist "!MainOS!\EFIESP" (
-		ECHO  %ESC%[91mNot a valid MainOS partition!
+		ECHO  Not a valid MainOS partition!
 		GOTO MOSPath2
 	)
 	if not exist "!MainOS!\Data" (
-		ECHO  %ESC%[91mNot a valid MainOS partition!
+		ECHO  Not a valid MainOS partition!
 		GOTO MOSPath2
 	)
-	
-	if not exist !MainOS!\Data\windows10arm.vhdx (
-		ECHO  Windows 10 for ARMv7 is not installed.
-		PAUSE
-	) else (
-		echo %ESC%[93mDeleting Windows 10 for ARMv7 VHDX ...%ESC%[96m
-		del !MainOS!\Data\windows10arm.vhdx
-		echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
-		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
-		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
-		echo.
-		echo %ESC%[93mDone!%ESC%[0m
-		pause
-	)
+	echo Deleting Windows 10 for ARMv7 VHDX ...
+	del !MainOS!\Data\windows10arm.vhdx
+	echo Removing BCD entry ...
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
+	echo.
+	echo Done.
+	pause
 	endlocal
 )
 if not %Tool%==1 goto ChooseTool
@@ -206,8 +199,3 @@ if not %Tool%==3 goto ChooseTool
 if not %Tool%==4 goto ChooseTool
 if not %Tool%==5 goto ChooseTool
 goto ChooseTool
-:setESC
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set ESC=%%b
-)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

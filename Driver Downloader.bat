@@ -1,34 +1,33 @@
 @echo off
-mode 96,2400
+mode 96,24
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
-call :setESC
 :ChooseDev
 cd /D "%~dp0"
 set Model=
 cls
 color 0f
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 1.7%ESC%[93m                                //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                               WFAv7 Driver Downloader 1.7                                //
+echo  //                                   by RedGreenBlue123                                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////
 echo.
 echo Choose your Device Model below:
-echo  %ESC%[0m1)%ESC%[97m Lumia 930
-echo  %ESC%[0m2)%ESC%[97m Lumia Icon                        %ESC%[91m+-------------------------------------------------+%ESC%[97m
-echo  %ESC%[0m3)%ESC%[97m Lumia 1520                        %ESC%[91m^| - Detele old drivers before downloading 950/XL  ^|%ESC%[97m
-echo  %ESC%[0m4)%ESC%[97m Lumia 1520 AT^&T                  %ESC%[91m ^|   If you downloaded All Drivers.                ^|%ESC%[97m
-echo  %ESC%[0m5)%ESC%[97m Lumia 830 Global                  %ESC%[91m^| - If you didn't delete,                         ^|%ESC%[97m
-echo  %ESC%[0m6)%ESC%[97m Lumia 735 Global                  %ESC%[91m^|   That may causes install errors or BSOD.       ^|%ESC%[97m
-echo  %ESC%[0m7)%ESC%[97m Lumia 640 XL LTE Global           %ESC%[91m+-------------------------------------------------+%ESC%[97m
-echo  %ESC%[0m8)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[0mA)%ESC%[97m Lumia 650 %ESC%[0m[experimental only]
-echo  %ESC%[0mB)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mC)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mD)%ESC%[97m Lumia 1020 AT^&T
-echo  %ESC%[0mE)%ESC%[97m Lumia 950
-echo  %ESC%[0mF)%ESC%[97m Lumia 950 XL
-echo  %ESC%[0mG)%ESC%[97m All Drivers (Not for 950 and 950 XL)
-set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
+echo  1) Lumia 930
+echo  2) Lumia Icon                        +-------------------------------------------------+
+echo  3) Lumia 1520                        ^| - Detele old drivers before downloading 950/XL  ^|
+echo  4) Lumia 1520 AT^&T                   ^|   If you downloaded All Drivers.                ^|
+echo  5) Lumia 830 Global                  ^| - If you didn't delete,                         ^|
+echo  6) Lumia 735 Global                  ^|   That may causes install errors or BSOD.       ^|
+echo  7) Lumia 640 XL LTE Global           +-------------------------------------------------+
+echo  8) Lumia 640 XL LTE AT^&T
+echo  A) Lumia 650 [experimental only]
+echo  B) Lumia 920 [Will not be used in the Installer]
+echo  C) Lumia 1020 [Will not be used in the Installer]
+echo  D) Lumia 1020 AT^&T
+echo  E) Lumia 950
+echo  F) Lumia 950 XL
+echo  G) All Drivers (Not for 950 and 950 XL)
+set /p Model=Device: 
 if "%model%"=="" goto ChooseDev
 ::------------------------------------------------------------------
 set SVNLoc="%~dp0\Files\DownloaderFiles\svn"
@@ -650,9 +649,3 @@ if not %model%==c goto ChooseDev
 if not %model%==d goto ChooseDev
 if not %model%==e goto ChooseDev
 goto ChooseDev
-
-:setESC
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set ESC=%%b
-)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
