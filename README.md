@@ -7,11 +7,11 @@
       and if you point the finger at me for messing up your device, I will laugh at you.
     * Your warranty will be void if you tamper with any part of your device / software.
 ### Supported Devices
-  - NOKIA Lumia 930
-  - NOKIA Lumia Icon
-  - NOKIA Lumia 1520 (Global, AT&T)
-  - NOKIA Lumia 830 Global
-  - NOKIA Lumia 735 Global
+  - Nokia Lumia 930
+  - Nokia Lumia Icon
+  - Nokia Lumia 1520 (Global, AT&T)
+  - Nokia Lumia 830 Global
+  - Nokia Lumia 735 Global
   - Microsoft Lumia 640 XL LTE (Global, AT&T)
   - Microsoft Lumia 950 & XL
   - Notes:
@@ -21,7 +21,7 @@
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 ### Requirements
-  - Full Windows 10 Pro or Enterprise (Windows 7 not working)
+  - Full Windows 10 Pro or Enterprise (Windows 7 not working, Windows 8.1 don't support custom colors)
   - Windows Powershell Enabled
   - Windows Powershell Modules Installed
     (Don't care about this if you have a full installation of Windows 8.1+)
