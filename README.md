@@ -17,7 +17,6 @@
   - Notes:
     * No support for Lumia 2520 due to lack of drivers.
     * No support for Spec A devices because these devices don't support VHD boot.
-    * Future: Add support for 950 and 950 XL.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 ### Requirements
