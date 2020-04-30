@@ -54,10 +54,10 @@ SET PLV=%ERRORLEVEL%
 IF %PLV% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
-	ECHO.
-	ECHO   Powershell isn't found or it have problem.
-	ECHO   Please enable Powershell and continue.
-	ECHO   Error code: %PLV%
+	echo.
+	echo   Powershell isn't found or it have problem.
+	echo   Please enable Powershell and continue.
+	echo   Error code: %PLV%
 	PAUSE
 	EXIT
 )
@@ -68,8 +68,8 @@ WHERE DISM >nul
 IF %ERRORLEVEL% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
-	ECHO.
-	ECHO   DISM isn't found or it has problem.
+	echo.
+	echo   DISM isn't found or it has problem.
 	PAUSE
 	EXIT
 )
@@ -104,26 +104,26 @@ if not exist "%~dp0\install.wim" (
 
 IF NOT EXIST M:\ (
 	cls
-	ECHO Installer is loading ... [12%%]
+	echo Installer is loading ... [12%%]
 )
 IF EXIST M:\ (
 	TITLE ERROR!
 	COLOR 0C
-	ECHO.
-	ECHO   Please Unmount Drive [M:]
+	echo.
+	echo   Please Unmount Drive [M:]
 	PAUSE
 	EXIT
 )
 
 IF NOT EXIST N:\ (
 	cls
-	ECHO Installer is loading ... [15%%]
+	echo Installer is loading ... [15%%]
 )
 IF EXIST N:\ (
 	TITLE ERROR!
 	COLOR 0C
-	ECHO.
-	ECHO   Please Unmount Drive [N:]
+	echo.
+	echo   Please Unmount Drive [N:]
 	PAUSE
 	EXIT
 )
@@ -135,8 +135,8 @@ WHERE bcdedit >nul
 IF %ERRORLEVEL% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
-	ECHO.
-	ECHO   BCDEDIT isn't found or it has problem.
+	echo.
+	echo   BCDEDIT isn't found or it has problem.
 	PAUSE
 	EXIT
 )
@@ -206,7 +206,7 @@ if errorlevel 1 (
 )
 cls
 echo Installer is loading ... [100%%]
-call :setESC
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 ::---------------------------------------------------------------
 cls
 mode 96,2400
@@ -241,19 +241,19 @@ echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m 
 echo  //                      %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @demonttl%ESC%[93m                       //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
 echo.
-echo Choose your Device Model below:
-echo  1) %ESC%[97mLumia 930
-echo  %ESC%[0m2) %ESC%[97mLumia Icon
-echo  %ESC%[0m3) %ESC%[97mLumia 1520
-echo  %ESC%[0m4) %ESC%[97mLumia 1520 (16GB)
-echo  %ESC%[0m5) %ESC%[97mLumia 1520 AT^&T
-echo  %ESC%[0m6) %ESC%[97mLumia 1520 AT^&T (16GB)
-echo  %ESC%[0m7) %ESC%[97mLumia 830 Global
-echo  %ESC%[0m8) %ESC%[97mLumia 735 Global
-echo  %ESC%[0mA) %ESC%[97mLumia 640 XL LTE Global
-echo  %ESC%[0mB) %ESC%[97mLumia 640 XL LTE AT^&T
-echo  %ESC%[0mC) %ESC%[97mLumia 950
-echo  %ESC%[0mD) %ESC%[97mLumia 950 XL%ESC%[0m
+echo %ESC%[92mChoose your Device Model below:
+echo  %ESC%[36m1) %ESC%[97mLumia 930
+echo  %ESC%[36m2) %ESC%[97mLumia 929 (Icon)
+echo  %ESC%[36m3) %ESC%[97mLumia 1520
+echo  %ESC%[36m4) %ESC%[97mLumia 1520 (16GB)
+echo  %ESC%[36m5) %ESC%[97mLumia 1520 AT^&T
+echo  %ESC%[36m6) %ESC%[97mLumia 1520 AT^&T (16GB)
+echo  %ESC%[36m7) %ESC%[97mLumia 830 Global
+echo  %ESC%[36m8) %ESC%[97mLumia 730 / 735 Global
+echo  %ESC%[36mA) %ESC%[97mLumia 640 XL LTE Global
+echo  %ESC%[36mB) %ESC%[97mLumia 640 XL LTE AT^&T
+echo  %ESC%[36mC) %ESC%[97mLumia 950
+echo  %ESC%[36mD) %ESC%[97mLumia 950 XL%ESC%[0m
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
 if "%model%"=="" goto ChooseDev
 if %model%==1 set Storage=32 & goto ToBeContinued1
@@ -307,345 +307,389 @@ set MainOS=
 echo.
 set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[0m
 if not defined MainOS (
-	ECHO  %ESC%[91mNot a valid MainOS partition!
+	echo  %ESC%[91mNot a valid MainOS partition.
 	GOTO MOSPath
 )
 for /f %%m in ('powershell -C "(echo %MainOS%).length -eq 2"') do set Lenght2=%%m
 if %Lenght2%==False (
-	ECHO  %ESC%[91mNot a valid MainOS partition!
+	echo  %ESC%[91mNot a valid MainOS partition.
 	GOTO MOSPath
 )
 if not exist "%MainOS%\EFIESP" (
-	ECHO  %ESC%[91mNot a valid MainOS partition!
+	echo  %ESC%[91mNot a valid MainOS partition.
 	GOTO MOSPath
 )
 if not exist "%MainOS%\Data" (
-	ECHO  %ESC%[91mNot a valid MainOS partition!
+	echo  %ESC%[91mNot a valid MainOS partition.
 	GOTO MOSPath
 )
+if exist "%MainOS%\Data\windows10arm.vhdx" (
+	echo  %ESC%[91mWindows 10 for ARMv7 is installed. Please uninstall it first.
+	Pause
+	Exit
+)
 ::---------------------------------------------------------------
+:LogNameInit
+if not exist Logs\NUL del Logs /Q 2>nul
+if not exist Logs\ mkdir Logs
+cd Logs
+FOR /F "tokens=* USEBACKQ" %%F IN (`powershell Get-Date -format "dd-MMM-yy"`) DO SET Date1=%%F
+if not exist %Date1%.log set LogName=Logs\%Date1%.log & goto ToBeContinued2
+if not exist %Date1%-1.log set LogName=Logs\%Date1%-1.log & goto ToBeContinued2
+set LogNum=1
+:LogName
+if exist %Date1%-*.log (
+    if exist %Date1%-%LogNum%.log (
+        set /A LogNum=LogNum+1
+        goto LogName
+    ) else (
+        set LogName=Logs\%Date1%-%LogNum%.log
+    )
+)
 :ToBeContinued2
+cd ..
 echo.
+echo #### INSTALLATION STARTED #### >>%LogName%
+echo ======================================== >>%LogName%
+echo ## Device is %Model%  ## >>%LogName%
+echo ## MainOS is %MainOS% ## >>%LogName%
+echo. >>%LogName%
+set Logger=2^>CurrentError.log ^>^>%LogName% ^& type CurrentError.log ^& type CurrentError.log ^>^>%LogName%
 if %Storage%==8 (
-	echo %ESC%[93mCreating 4 GB VHDX image ...%ESC%[96m
-	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 4096MB
+	echo %ESC%[93mCreating 4 GB VHDX image ...%ESC%[91m
+	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 4096MB %Logger%
 )
 if %Storage%==16 (
-	echo %ESC%[93mCreating 8 GB VHDX image ...%ESC%[96m
-	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 8192MB
+	echo %ESC%[93mCreating 8 GB VHDX image ...%ESC%[91m
+	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 8192MB %Logger%
 )
 if %Storage%==32 (
-	echo %ESC%[93mCreating 16 GB VHDX image ...%ESC%[96m
-	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 16384MB
+	echo %ESC%[93mCreating 16 GB VHDX image ...%ESC%[91m
+	powershell New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 16384MB %Logger%
 )
 echo.
-echo %ESC%[93mCreating Partitions ...%ESC%[96m
-powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
-powershell Initialize-Disk -Number (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -PartitionStyle GPT -confirm:$false
+echo %ESC%[93mCreating Partitions ...%ESC%[91m
+powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx  %Logger%
+powershell Initialize-Disk -Number (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -PartitionStyle GPT -confirm:$false %Logger%
 :: Create ESP
-powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}' -Size 100MB -DriveLetter M
-powershell Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "ESP" -confirm:$false
+echo.
+echo %ESC%[96m - EFI System Partition%ESC%[91m
+powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}' -Size 100MB -DriveLetter M %Logger%
+powershell Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "ESP" -confirm:$false %Logger%
 :: Create MSR
-powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB
+echo %ESC%[96m - Microsoft Reserved Partition %ESC%[91m
+powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB %Logger%
 :: Create Win10 Partition
-powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N
-if %Storage%==8 ( format N: /FS:NTFS /V:Windows10 /Q /C /Y )
-if %Storage%==16 ( format N: /FS:NTFS /V:Windows10 /Q /Y  )
-if %Storage%==32 ( format N: /FS:NTFS /V:Windows10 /Q /Y  )
+echo %ESC%[96m - Windows Partition %ESC%[91m
+powershell New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N %Logger%
+if %Storage%==8 ( format N: /FS:NTFS /V:Windows10 /Q /C /Y %Logger% )
+if %Storage%==16 ( format N: /FS:NTFS /V:Windows10 /Q /Y %Logger% )
+if %Storage%==32 ( format N: /FS:NTFS /V:Windows10 /Q /Y %Logger% )
 ::---------------------------------------------------------------
+echo ======================================== >>%LogName%
 echo.
 echo %ESC%[93mInstalling Windows 10 for ARMv7 ...%ESC%[96m
-if %Storage%==8 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\ /compact
-if %Storage%==16 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
-if %Storage%==32 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\
+if %Storage%==8 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\ /compact & echo. >>%LogName% & echo DISM Apply Exit Code: %errorlevel% >>%LogName%
+if %Storage%==16 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\ & echo. >>%LogName% & echo DISM Apply Exit Code: %errorlevel% >>%LogName%
+if %Storage%==32 DISM /Apply-Image /imagefile:".\install.wim" /Index:1 /ApplyDir:N:\ & echo. >>%LogName% & echo DISM Apply Exit Code: %errorlevel% >>%LogName%
 ::---------------------------------------------------------------
 echo.
-echo %ESC%[93mInstalling Drivers ...%ESC%[96m
+echo %ESC%[93mInstalling Drivers ...%ESC%[91m
+echo.
 if %model%==1 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.MARTINI" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8974's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.MARTINI" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 800 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==2 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.VANQUISH" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8974's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.VANQUISH" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 800 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==3 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDIT" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8974's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDIT" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 800 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==4 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDIT" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8974's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDIT" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 800 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==5 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8974's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 800 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==6 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8974's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8974.BANDITATT" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 800 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8974.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8974.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==7 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.TESLA" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8X26's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.TESLA" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 400 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==8 (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.SUPERMAN" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8X26's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.SUPERMAN" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 400 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==A (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8X26's Driver
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 400 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==B (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACEATT" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8X26's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACEATT" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 400 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==C (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.TALKMAN" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse2
-	:: MSM8992's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8992" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8992" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.TALKMAN" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse2 %Logger%
+	echo %ESC%[96m - Snapdragon 808 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8992" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8992" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==D (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.CITYMAN" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse
-	:: MSM8994's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8994" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.CITYMAN" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 810 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8994" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==a (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8X26's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 400 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==b (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACEATT" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse
-	:: MSM8X26's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8X26.MAKEPEACEATT" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 400 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8X26.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8X26.NMO" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==c (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.TALKMAN" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse2
-	:: MSM8992's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8992" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8992" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.TALKMAN" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse2 %Logger%
+	echo %ESC%[96m - Snapdragon 808 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8992" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8992" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 if %model%==d (
-	:: Device's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.CITYMAN" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse
-	:: MSM8994's Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8994" /Recurse
-	:: Windows 10 For ARMv7 Drivers
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse
-	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse
+	echo %ESC%[96m - Device Specific Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.SOC_QC8994.CITYMAN" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.INPUT.SYNAPTICS_RMI4_F12_10" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\DEVICE.USB.MMO_USBC" /Recurse %Logger%
+	echo %ESC%[96m - Snapdragon 810 Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\PLATFORM.SOC_QC8994.SOC8994AB" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\OEM.SOC_QC8994.MMO_SOC8994" /Recurse %Logger%
+	echo %ESC%[96m - Windows 10 For ARMv7 Support Drivers%ESC%[91m
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.BASE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MMO_EXTRAS" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_BRIDGE" /Recurse %Logger%
+	Dism /Image:N:\ /Add-Driver /Driver:".\drivers\components\SUPPORT.DESKTOP.MOBILE_COMPONENTS" /Recurse %Logger%
 )
 ::---------------------------------------------------------------
+echo ======================================== >>%LogName%
 echo.
-echo %ESC%[93mInstalling Mass Storage Mode UI ...%ESC%[96m
-xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y
+echo %ESC%[93mInstalling Mass Storage Mode UI ...%ESC%[91m
+xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
 echo.
-echo %ESC%[93mSetting Up BCD ...%ESC%[96m
-bcdboot N:\Windows /s M: /l en-us /f UEFI
+echo %ESC%[93mSetting Up BCD ...%ESC%[91m
+bcdboot N:\Windows /s M: /l en-us /f UEFI %Logger%
 ::---------------------------------------------------------------
+echo ======================================== >>%LogName%
 echo.
-echo %ESC%[93mPatching BCD ...%ESC%[96m
+echo %ESC%[93mPatching BCD ...%ESC%[91m
 SET bcdLoc="%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
+echo ## BCD Path is %bcdLoc% ## >>%LogName% 
 SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
-bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader"
-bcdedit /store %bcdLoc% /set %id% "device" "vhd=[%MainOS%\Data]\windows10arm.vhdx"
-bcdedit /store %bcdLoc% /set %id% "osdevice" "vhd=[%MainOS%\Data]\windows10arm.vhdx"
-bcdedit /store %bcdLoc% /set %id% "path" "\windows\system32\winload.efi"
-bcdedit /store %bcdLoc% /set %id% "locale" "en-US"
-bcdedit /store %bcdLoc% /set %id% "testsigning" yes
-bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}"
-bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows"
-bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard"
-bcdedit /store %bcdLoc% /set %id% "detecthal" Yes
-bcdedit /store %bcdLoc% /set %id% "winpe" No
-bcdedit /store %bcdLoc% /set %id% "ems" No
-bcdedit /store %bcdLoc% /set %id% "bootdebug" No
-bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes
-bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" yes
-bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5
-bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" yes
-bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id%
-ECHO.
-::---------------------------------------------------------------
+bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %Logger%
+bcdedit /store %bcdLoc% /set %id% "device" "vhd=[%MainOS%\Data]\windows10arm.vhdx" %Logger%
+bcdedit /store %bcdLoc% /set %id% "osdevice" "vhd=[%MainOS%\Data]\windows10arm.vhdx" %Logger%
+bcdedit /store %bcdLoc% /set %id% "path" "\windows\system32\winload.efi" %Logger%
+bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
+bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
+bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
+bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %Logger%
+bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
+bcdedit /store %bcdLoc% /set %id% "detecthal" Yes %Logger%
+bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
+bcdedit /store %bcdLoc% /set %id% "ems" No %Logger%
+bcdedit /store %bcdLoc% /set %id% "bootdebug" No %Logger%
+bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
+bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" yes %Logger%
+bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5 %Logger%
+bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" yes %Logger%
+bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %Logger%
 echo.
-echo %ESC%[93mSetting up ESP ...%ESC%[96m
-mkdir %MainOS%\EFIESP\EFI\Microsoft\Recovery\
-copy M:\EFI\Microsoft\Recovery\BCD %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD /Y
-set BCDRec=%MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD 
-bcdedit /store %BCDRec% /set {bootmgr} "device" "partition=%MainOS%\EFIESP"
-bcdedit /store %BCDRec% /set {bootmgr} "path" "\EFI\Boot\Bootarm.efi"
-bcdedit /store %BCDRec% /set {bootmgr} "timeout" "5"
+::---------------------------------------------------------------
+echo ======================================== >>%LogName%
+echo %ESC%[93mSetting up ESP ...%ESC%[91m
+mkdir %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
+copy M:\EFI\Microsoft\Recovery\BCD %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD /Y %Logger%
+set BCDRec=%MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD >>%LogName%
+bcdedit /store %BCDRec% /set {bootmgr} "device" "partition=%MainOS%\EFIESP" %Logger%
+bcdedit /store %BCDRec% /set {bootmgr} "path" "\EFI\Boot\Bootarm.efi" %Logger%
+bcdedit /store %BCDRec% /set {bootmgr} "timeout" "5" %Logger%
 set DLMOS=%MainOS:~0,-1%
+echo. >>%LogName%
 for /f %%i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
+echo ## PartitionNumber is %PartitionNumber% ## >>%LogName%
 for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
+echo ## DiskNumber is %DiskNumber% ## >>%LogName%
 echo>>diskpart.txt sel dis %DiskNumber%
 echo>>diskpart.txt sel par %PartitionNumber%
 echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
-attrib +h diskpart.txt
-diskpart /s diskpart.txt
-del /A:H diskpart.txt
+attrib +h diskpart.txt %Logger%
+diskpart /s diskpart.txt %Logger%
+del /A:H diskpart.txt %Logger%
 ::---------------------------------------------------------------
+echo ======================================== >>%LogName%
 echo.
-echo %ESC%[93mUnmounting VHDX Image ...%ESC%[96m
-powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx"
+echo %ESC%[93mUnmounting VHDX Image ...%ESC%[91m
+powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx" %Logger%
+echo #### INSTALLATION COMPLETED #### >>%LogName%
+del CurrentError.log
 ::---------------------------------------------------------------
 echo.
 echo %ESC%[92m================================================================================================
@@ -656,8 +700,3 @@ echo  - Run PostInstall.bat.
 echo ================================================================================================%ESC%[0m
 pause
 exit
-:setESC
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set ESC=%%b
-)
-                                                                                                                                                                                                                                                                                                                                                                                                       

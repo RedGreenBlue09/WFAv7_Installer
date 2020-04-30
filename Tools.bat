@@ -32,7 +32,7 @@ if '%errorlevel%' NEQ '0' (
 title WFAv7 Tools by RedGreenBlue123
 mode 96,2000
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
-call :setESC
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 :ChooseTool
 cd /D "%~dp0"
 set Tool=
@@ -163,7 +163,7 @@ if %Tool%==4 (
 	bcdedit /store %bcdLoc% /set "{globalsettings}" "nobootuxtext" no
 	bcdedit /store %bcdLoc% /set "{globalsettings}" "nobootuxprogress" no
 	ECHO.
-	ECHO %ESC%[92mBCD has been fixed!%ESC%[0m
+	ECHO %ESC%[92mBCD has been fixed%ESC%[0m
 	pause
 	endlocal
 )
@@ -194,8 +194,9 @@ if %Tool%==5 (
 		echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
+		del MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 		echo.
-		echo %ESC%[93mDone!%ESC%[0m
+		echo %ESC%[93mDone%ESC%[0m
 		pause
 	)
 	endlocal
@@ -206,8 +207,3 @@ if not %Tool%==3 goto ChooseTool
 if not %Tool%==4 goto ChooseTool
 if not %Tool%==5 goto ChooseTool
 goto ChooseTool
-:setESC
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set ESC=%%b
-)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

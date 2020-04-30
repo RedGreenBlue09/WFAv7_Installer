@@ -1,7 +1,8 @@
 @echo off
+title WFAv7 Driver Downloader 1.7
 mode 96,2400
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
-call :setESC
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 :ChooseDev
 cd /D "%~dp0"
 set Model=
@@ -17,17 +18,16 @@ echo  %ESC%[0m1)%ESC%[97m Lumia 930
 echo  %ESC%[0m2)%ESC%[97m Lumia Icon                        %ESC%[91m+-------------------------------------------------+%ESC%[97m
 echo  %ESC%[0m3)%ESC%[97m Lumia 1520                        %ESC%[91m^| - Detele old drivers before downloading 950/XL  ^|%ESC%[97m
 echo  %ESC%[0m4)%ESC%[97m Lumia 1520 AT^&T                  %ESC%[91m ^|   If you downloaded All Drivers.                ^|%ESC%[97m
-echo  %ESC%[0m5)%ESC%[97m Lumia 830 Global                  %ESC%[91m^| - If you didn't delete,                         ^|%ESC%[97m
+echo  %ESC%[0m5)%ESC%[97m Lumia 830 Global                  %ESC%[91m^| - If you don't delete,                          ^|%ESC%[97m
 echo  %ESC%[0m6)%ESC%[97m Lumia 735 Global                  %ESC%[91m^|   That may causes install errors or BSOD.       ^|%ESC%[97m
 echo  %ESC%[0m7)%ESC%[97m Lumia 640 XL LTE Global           %ESC%[91m+-------------------------------------------------+%ESC%[97m
 echo  %ESC%[0m8)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[0mA)%ESC%[97m Lumia 650 %ESC%[0m[experimental only]
-echo  %ESC%[0mB)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mC)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mD)%ESC%[97m Lumia 1020 AT^&T
-echo  %ESC%[0mE)%ESC%[97m Lumia 950
-echo  %ESC%[0mF)%ESC%[97m Lumia 950 XL
-echo  %ESC%[0mG)%ESC%[97m All Drivers (Not for 950 and 950 XL)
+echo  %ESC%[0mA)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[0mB)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[0mC)%ESC%[97m Lumia 1020 AT^&T
+echo  %ESC%[0mD)%ESC%[97m Lumia 950
+echo  %ESC%[0mE)%ESC%[97m Lumia 950 XL
+echo  %ESC%[0mF)%ESC%[97m All Drivers (Not for 950 and 950 XL)
 set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
 if "%model%"=="" goto ChooseDev
 ::------------------------------------------------------------------
@@ -231,32 +231,6 @@ if %model%==A (
 	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8909.SAANA\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8909.SAANA
-	if not exist OEM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8909.MMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8909.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.BASE
-	if not exist PLATFORM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO
-	if not exist PLATFORM.SOC_QC8909.MMO_OTHERS\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO_OTHERS
-	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MMO_EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
-	echo.
-	color 0a
-	echo Downloading Drivers Done!
-	pause
-)
-if %model%==B (
-	cls
-	color 0b
-	title Downloading Drivers ...
-	if not exist Drivers\ mkdir Drivers
-	if not exist Drivers\components\ mkdir Drivers\components
-	cd Drivers\
-	if not exist README.md %WGETLoc% %READMELoc%
-	cd components\
-	title Downloading Drivers ...
 	if not exist DEVICE.SOC_QC8960.PHI\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.PHI
 	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
 	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
@@ -271,7 +245,7 @@ if %model%==B (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==C (
+if %model%==B (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -295,7 +269,7 @@ if %model%==C (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==D (
+if %model%==C (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -319,7 +293,7 @@ if %model%==D (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==E (
+if %model%==D (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -362,7 +336,7 @@ if %model%==E (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==F (
+if %model%==E (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -405,7 +379,7 @@ if %model%==F (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==G (
+if %model%==F (
 	cls
 	if exist Drivers\ (
 		title ERROR!
@@ -436,32 +410,6 @@ if %model%==a (
 	if not exist README.md %WGETLoc% %READMELoc%
 	cd components\
 	title Downloading Drivers ...
-	if not exist DEVICE.SOC_QC8909.SAANA\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8909.SAANA
-	if not exist OEM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8909.MMO
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
-	if not exist PLATFORM.SOC_QC8909.BASE\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.BASE
-	if not exist PLATFORM.SOC_QC8909.MMO\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO
-	if not exist PLATFORM.SOC_QC8909.MMO_OTHERS\ %SVNLoc% checkout %COMLoc%PLATFORM.SOC_QC8909.MMO_OTHERS
-	if not exist SUPPORT.DESKTOP.BASE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.BASE
-	if not exist SUPPORT.DESKTOP.EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.EXTRAS
-	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MMO_EXTRAS
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %SVNLoc% checkout %COMLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS
-	echo.
-	color 0a
-	echo Downloading Drivers Done!
-	pause
-)
-if %model%==b (
-	cls
-	color 0b
-	title Downloading Drivers ...
-	if not exist Drivers\ mkdir Drivers
-	if not exist Drivers\components\ mkdir Drivers\components
-	cd Drivers\
-	if not exist README.md %WGETLoc% %READMELoc%
-	cd components\
-	title Downloading Drivers ...
 	if not exist DEVICE.SOC_QC8960.PHI\ %SVNLoc% checkout %COMLoc%DEVICE.SOC_QC8960.PHI
 	if not exist OEM.SOC_QC8960.NMO\ %SVNLoc% checkout %COMLoc%OEM.SOC_QC8960.NMO
 	if not exist DEVICE.INPUT.SYNAPTICS_RMI4\ %SVNLoc% checkout %COMLoc%DEVICE.INPUT.SYNAPTICS_RMI4
@@ -476,7 +424,7 @@ if %model%==b (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==c (
+if %model%==b (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -500,7 +448,7 @@ if %model%==c (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==d (
+if %model%==c (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -524,7 +472,7 @@ if %model%==d (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==e (
+if %model%==d (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -567,7 +515,7 @@ if %model%==e (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==f (
+if %model%==e (
 	cls
 	color 0b
 	title Downloading Drivers ...
@@ -610,7 +558,7 @@ if %model%==f (
 	echo Downloading Drivers Done!
 	pause
 )
-if %model%==g (
+if %model%==f (
 	cls
 	if exist Drivers\ (
 		title ERROR!
@@ -651,8 +599,4 @@ if not %model%==d goto ChooseDev
 if not %model%==e goto ChooseDev
 goto ChooseDev
 
-:setESC
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set ESC=%%b
-)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              

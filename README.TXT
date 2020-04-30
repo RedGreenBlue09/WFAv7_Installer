@@ -1,5 +1,5 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //                         Windows 10 for ARMv7 Installer (VHDX) PR2                          //
+    //                         Windows 10 for ARMv7 Installer (VHDX) PR3                          //
     //                                    by RedGreenBlue123                                      //
     //                       Thanks to: @Gus33000, @FadilFadz01, @demonttl                        //
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,35 +18,34 @@ SUPPORTED DEVICES:
     - NOKIA Lumia 830 Global
     - NOKIA Lumia 735 Global
     - Microsoft Lumia 640 XL LTE (Global, AT&T)
+    - Microsoft Lumia 950 & XL
     * No support for Lumia 2520 due to lack of drivers.
     * No support for Spec A devices because these devices don't support VHD boot.
-    * Future: Add support for 950 and 950 XL.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 
 REQUIREMENTS:
-    - Full Windows 10 Pro or Enterprise (Windows 7 not working)
+    - Full Windows 10 Pro or Enterprise (Version 1511+)
+      (Windows 7 not working, 8.1 doesn't support custom colors)
     - Windows Powershell Enabled
     - Windows Powershell Modules Installed
-      (Don't care about this if you have a full installation of Windows 8.1+)
+      (Don't care about this if you have a full installation of Windows 10)
     - Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
     - 3 GB of storage
     - Windows Phone installed in your Lumia
     - A few brain cells (VERY IMPORTANT)
 
 INSTRUCTION:
-    - Download Windows 10 for ARMv7 build 15035 to your Computer.
-    - Extract <ISOFILE>\sources\install.wim  to  Installer folder.
-      You can mount it and copy install.wim to Installer folder.
-    - Download Drivers for your device.
-    - Extract Drivers to <InstallerFolder>\Drivers (NEVER create subfolders or Extract Subfolders)
-    - Run Installer.bat and follow the Instruction in the installer.
-    - After installation finished, boot and setup Windows 10.
-      Don't connect to Wi-Fi on setup. It will makes the setup stuck.
-    - After setup complete (Desktop appears), reboot to mass storage mode.
-    - Double click MainOS\Data\windows10arm.vhdx
-    - Run PostInstall.bat to fix Windows Phone crash.
-    - Now, you can dualboot Windows Phone and Windows 10.
+    1. Download Windows 10 for ARMv7 build 15035 to your Computer.
+    2. Extract Win10.7z\sources\install.wim  to  Installer folder.
+    3. Run Driver Downloader and download Drivers for your device.
+    4. Run Installer.bat and follow the Instruction in the installer.
+    5. After installation finished, boot and setup Windows 10.
+       Don't connect to Wi-Fi on setup. It will makes the setup stuck.
+    6. After setup complete (Desktop appears), reboot to mass storage mode.
+    7. Double click MainOS\Data\windows10arm.vhdx
+    8. Run PostInstall.bat to fix Windows Phone crash.
+    9. Now, you can dualboot Windows Phone and Windows 10.
 
 NOTES:
     * This is not a software, this is a set of programs that combined to make the installation easier.

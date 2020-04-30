@@ -29,12 +29,12 @@ if '%errorlevel%' NEQ '0' (
     CD /D "%~dp0"
 :---------------------------------------------------------------
 @Echo Off
-call :setESC
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 mode 96,2000
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
 cd /D "%~dp0"
 echo.
-echo  %ESC%[93mConnect your phone in mass storage mode to the computer and press enter to continue ...%ESC%[0m
+echo  %ESC%[93mConnect your phone in mass storage mode to the computer. %ESC%[0m
 echo.
 pause
 echo.
@@ -81,10 +81,15 @@ echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 echo>>diskpart1.txt assign mount=%WinDir%\EFIESP
 attrib +h diskpart1.txt
 mkdir "%WinDir%\EFIESP"
+echo.
 echo %ESC%[93mEnabling Dual Boot ...%ESC%[96m
 diskpart /s diskpart1.txt
 del /A:H diskpart1.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
+echo.
+echo %ESC%[93mUnmounting VHDX Image ...%ESC%[91m
+powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx"
+echo.
 echo %ESC%[92m=====================================================================================
 echo  - Done. Now, you have Windows 10 for ARMv7 Dualboot with Windows Phone.
 echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7,
@@ -94,8 +99,3 @@ echo    And an exclamation mark will apears. This will not cause damage to your 
 echo =====================================================================================%ESC%[0m
 pause
 exit
-:setESC
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set ESC=%%b
-)
-                                                                                                                                                                                                                                                                                                                                                                               
