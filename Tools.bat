@@ -194,7 +194,7 @@ if %Tool%==5 (
 		echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
-		del MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
+		del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 		echo.
 		echo %ESC%[93mDone%ESC%[0m
 		pause
