@@ -28,22 +28,40 @@ if '%errorlevel%' NEQ '0' (
     pushd "%CD%"
     CD /D "%~dp0"
 :---------------------------------------------------------------
+cd /D "%~dp0"
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a
+if %WinBuild% LSS 9600 (
+	title ERROR!
+	color 0c
+	echo ----------------------------------------------------------------
+	echo   This Windows version is not supported by WFAv7 Installer.
+	echo   Please use Windows 8.1 Pro+ ^(Build 9600+^) 
+	echo   Current OS build: %WinBuild%
+	pause
+	exit
+)
+echo Installer is loading ... [100%%]
+if %WinBuild% LSS 10586 (
+	if %PROCESSOR_ARCHITECTURE%==x86 Files\ansicon32 -p
+	if %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
+)
 @echo off
 title WFAv7 Tools by RedGreenBlue123
 mode 96,2000
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
 for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 :ChooseTool
-cd /D "%~dp0"
 set Tool=
 cls
 echo %ESC%[93m-----------------------------------------%ESC%[97m
-echo  Choose tool you want to use below:
+echo  %ESC%[92mChoose tool you want to use below:
 echo   %ESC%[0m1)%ESC%[97m Driver Downloader
 echo   %ESC%[0m2)%ESC%[97m Clean Installer folder
 echo   %ESC%[0m3)%ESC%[97m Mount/Unmount Windows 10 for ARMv7
 echo   %ESC%[0m4)%ESC%[97m Fix Windows Phone update
 echo   %ESC%[0m5)%ESC%[97m Uninstall Windows 10 for ARMv7
+echo   %ESC%[0m6)%ESC%[97m Enable Safe Mode of Windows 10 for ARMv7
+echo   %ESC%[0m7)%ESC%[97m Run Installer without compatibility check (NOT RECOMMENDED)
 echo %ESC%[93m-----------------------------------------%ESC%[97m
 set /p Tool=%ESC%[92mTool%ESC%[32m: %ESC%[0m
 if not defined Tool goto ChooseTool
@@ -117,7 +135,7 @@ if %Tool%==3 (
 		)
 	)
 	if !Completed!==1 (
-		echo %ESC%[92mDone!%ESC%[0m
+		echo %ESC%[92mDone^!%ESC%[0m
 		Pause
 	)
 	if not !Completed!==1 goto ChooseOperation
@@ -163,7 +181,7 @@ if %Tool%==4 (
 	bcdedit /store %bcdLoc% /set "{globalsettings}" "nobootuxtext" no
 	bcdedit /store %bcdLoc% /set "{globalsettings}" "nobootuxprogress" no
 	ECHO.
-	ECHO %ESC%[92mBCD has been fixed%ESC%[0m
+	ECHO %ESC%[92mBCD has been fixed.%ESC%[0m
 	pause
 	endlocal
 )
@@ -196,14 +214,61 @@ if %Tool%==5 (
 		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
 		del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 		echo.
-		echo %ESC%[93mDone%ESC%[0m
+		echo %ESC%[93mDone^!%ESC%[0m
 		pause
 	)
 	endlocal
 )
+if %Tool%==6 (
+	setlocal EnableDelayedExpansion
+	:ChooseOperation
+	set Operation=
+	cls
+	echo.
+	echo %ESC%[97mChoose operation below:
+	echo %ESC%[0m1^)%ESC%[97m Enable Safe Mode for WFAv7
+	echo %ESC%[0m2^)%ESC%[97m Disable Safe Mode for WFAv7
+	set /p Operation=%ESC%[93mOperation: %ESC%[0m
+	if not defined Operation goto ChooseOperation
+	if !Operation!==1 (
+		:MOSPath10
+		set /p MainOS=%ESC%[92mEnter MainOS Path: 
+		if not exist !MainOS!\EFIESP (
+			ECHO  %ESC%[91mNot a valid MainOS partition!
+			GOTO MOSPath10
+		)
+		if not exist !MainOS!\Data (
+			ECHO  %ESC%[91mNot a valid MainOS partition!
+			GOTO MOSPath10
+		)
+		bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /set {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot minimal & set Completed=1
+	)
+	if !Operation!==2 (
+		:MOSPath11
+		set /p MainOS=%ESC%[92mEnter MainOS Path: 
+		if not exist !MainOS!\EFIESP (
+			ECHO  %ESC%[91mNot a valid MainOS partition!
+			GOTO MOSPath10
+		)
+		if not exist !MainOS!\Data (
+			ECHO  %ESC%[91mNot a valid MainOS partition!
+			GOTO MOSPath10
+		)
+		bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /deletevalue {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot & set Completed=1
+	)
+	if !Completed!==1 (
+		echo %ESC%[92mDone^!%ESC%[0m
+		Pause
+	)
+	if not !Completed!==1 goto ChooseOperation
+	endlocal
+)
+if %Tool%==7 call Installer.bat Start
 if not %Tool%==1 goto ChooseTool
 if not %Tool%==2 goto ChooseTool
 if not %Tool%==3 goto ChooseTool
 if not %Tool%==4 goto ChooseTool
 if not %Tool%==5 goto ChooseTool
+if not %Tool%==6 goto ChooseTool
+if not %Tool%==7 goto ChooseTool
 goto ChooseTool

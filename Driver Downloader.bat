@@ -1,4 +1,21 @@
 @echo off
+cd /D "%~dp0"
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a
+if %WinBuild% LSS 9600 (
+	title ERROR!
+	color 0c
+	echo ----------------------------------------------------------------
+	echo   This Windows version is not supported by WFAv7 Installer.
+	echo   Please use Windows 8.1 Pro+ ^(Build 9600+^) 
+	echo   Current OS build: %WinBuild%
+	pause
+	exit
+)
+echo Installer is loading ... [100%%]
+if %WinBuild% LSS 10586 (
+	if %PROCESSOR_ARCHITECTURE%==x86 Files\ansicon32 -p
+	if %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
+)
 title WFAv7 Driver Downloader 2.0
 mode 96,2400
 powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
@@ -9,24 +26,24 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 2.0%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 2.1%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
 echo Choose your Device Model below%ESC%[32m:
-echo  %ESC%[0m1)%ESC%[97m Lumia 930
-echo  %ESC%[0m2)%ESC%[97m Lumia Icon                      %ESC%[91m+---------------------------------------------------+%ESC%[97m
-echo  %ESC%[0m3)%ESC%[97m Lumia 1520                      %ESC%[91m^| - Move old drivers before downloading new one     ^|%ESC%[97m
-echo  %ESC%[0m4)%ESC%[97m Lumia 1520 AT^&T                %ESC%[91m ^|  Because driver structures will be updated weekly ^|%ESC%[97m
-echo  %ESC%[0m5)%ESC%[97m Lumia 830 Global                %ESC%[91m+---------------------------------------------------+%ESC%[97m
-echo  %ESC%[0m6)%ESC%[97m Lumia 735 Global
-echo  %ESC%[0m7)%ESC%[97m Lumia 640 XL LTE Global
-echo  %ESC%[0m8)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[0mA)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mB)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mC)%ESC%[97m Lumia 1020 AT^&T %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[0mD)%ESC%[97m Lumia 950
-echo  %ESC%[0mE)%ESC%[97m Lumia 950 XL
+echo  %ESC%[36m1)%ESC%[97m Lumia 930
+echo  %ESC%[36m2)%ESC%[97m Lumia 929 (Icon)                %ESC%[91m+---------------------------------------------------+%ESC%[97m
+echo  %ESC%[36m3)%ESC%[97m Lumia 1520                      %ESC%[91m^| - Move old drivers before downloading new one     ^|%ESC%[97m
+echo  %ESC%[36m4)%ESC%[97m Lumia 1520 AT^&T                %ESC%[91m ^|  Because driver structures will be updated weekly ^|%ESC%[97m
+echo  %ESC%[36m5)%ESC%[97m Lumia 830 Global                %ESC%[91m+---------------------------------------------------+%ESC%[97m
+echo  %ESC%[36m6)%ESC%[97m Lumia 735 Global
+echo  %ESC%[36m7)%ESC%[97m Lumia 640 XL LTE Global
+echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE AT^&T
+echo  %ESC%[36mA)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[36mB)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[36mD)%ESC%[97m Lumia 950
+echo  %ESC%[36mE)%ESC%[97m Lumia 950 XL
 set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
 if "%model%"=="" goto ChooseDev
 ::------------------------------------------------------------------
@@ -37,6 +54,7 @@ set COMLoc=https://github.com/WOA-Project/Lumia-Drivers/trunk
 set ReleaseLoc=https://github.com/WOA-Project/Lumia-Drivers/releases/download/2003.2.2/
 cls
 color 0b
+setlocal EnableDelayedExpansion
 title Downloading Drivers ...
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
@@ -47,10 +65,9 @@ if %Model%==1 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/930.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (930.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia930!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia930!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia930!Drv!
 	)
 	del 930.txt
 )
@@ -59,10 +76,9 @@ if %Model%==2 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/icon.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (icon.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist LumiaIcon!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! LumiaIcon!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! LumiaIcon!Drv!
 	)
 	del icon.txt
 )
@@ -71,10 +87,9 @@ if %Model%==3 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520upsidedown.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1520upsidedown.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia1520!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia1520!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia1520!Drv!
 	)
 	del 1520upsidedown.txt
 )
@@ -83,10 +98,9 @@ if %Model%==4 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520attupsidedown.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1520attupsidedown.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia1520-AT^&T!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia1520AT^&T!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia1520-AT^&T!Drv!
 	)
 	del 1520attupsidedown.txt
 )
@@ -95,10 +109,9 @@ if %Model%==5 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/830.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (830.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia830!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia830!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia830!Drv!
 	)
 	del 830.txt
 )
@@ -107,10 +120,9 @@ if %Model%==6 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/735.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (735.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia735!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia735!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia735!Drv!
 	)
 	del 735.txt
 )
@@ -119,10 +131,9 @@ if %Model%==7 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xl.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (640xl.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia640XL!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia640XL!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia640XL!Drv!
 	)
 	del 640xl.txt
 )
@@ -131,10 +142,9 @@ if %Model%==8 (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xlatt.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (640xlatt.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia640XL-AT^&T!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia640XL-AT^&T!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia640XL-AT^&T!Drv!
 	)
 	del 640xlatt.txt
 )
@@ -143,10 +153,9 @@ if %Model%==A (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/920.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (920.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia920!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia920!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia920!Drv!
 	)
 	del 920.txt
 )
@@ -155,10 +164,9 @@ if %Model%==B (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia1020!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia1020!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia1020!Drv!
 	)
 	del 1020.txt
 )
@@ -167,10 +175,9 @@ if %Model%==C (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020att.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020att.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia1020-AT^&T!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia1020-AT^&T!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia1020-AT^&T!Drv!
 	)
 	del 1020att.txt
 )
@@ -179,10 +186,9 @@ if %Model%==a (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/920.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (920.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia920!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia920!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia920!Drv!
 	)
 	del 920.txt
 )
@@ -191,10 +197,9 @@ if %Model%==b (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia1020!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia1020!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia1020!Drv!
 	)
 	del 1020.txt
 )
@@ -203,10 +208,9 @@ if %Model%==c (
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020att.txt
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020att.txt) do (
-		setlocal EnableDelayedExpansion
 		set Drv=%%A
 		set DrvUrl=!Drv:\=/!
-		if not exist Lumia1020-AT^&T!Drv! %SVNLoc% checkout %COMLoc%!DrvUrl! Lumia1020-AT^&T!Drv!
+		%SVNLoc% export %COMLoc%!DrvUrl! Lumia1020-AT^&T!Drv!
 	)
 	del 1020att.txt
 )
