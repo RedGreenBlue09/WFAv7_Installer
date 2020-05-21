@@ -65,6 +65,7 @@
   - Igor Pavlov                  : 7-Zip extractor
   - GNU                          : WGET downloader
   - RedGreenBlue123 (Me)         : Writing the script
+  - Adoxa                        : ansicon
 ### Screenshots
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7-S1")
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")
