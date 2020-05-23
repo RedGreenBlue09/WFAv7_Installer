@@ -2,31 +2,29 @@
 
 :: GetAdministrator
 :---------------------------------------------------------------
-REM  --> Requesting administrative privilege...
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
->nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system"
-) ELSE (
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-)
+:GetAdministrator
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
+	>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+) else ( >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" )
 
-REM --> Please run as Administrator.
 if '%errorlevel%' NEQ '0' (
-    echo Requesting administrative privileges...
-    goto UserAccountControl
+	echo Requesting administrative privileges...
+	goto UserAccountControl
 ) else ( goto GotAdministrator )
 
 :UserAccountControl
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    set params= %*
-    echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-
-    "%temp%\getadmin.vbs"
-    del "%temp%\getadmin.vbs"
-    exit /B
+	echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+	set params= %*
+	echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+	"%temp%\getadmin.vbs"
+	del "%temp%\getadmin.vbs"
+	exit /B
 
 :GotAdministrator
-    pushd "%CD%"
-    CD /D "%~dp0"
+	pushd "%CD%"
+	CD /D "%~dp0"
 :---------------------------------------------------------------
 cd /D "%~dp0"
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a

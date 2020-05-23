@@ -1,8 +1,9 @@
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //                         Windows 10 for ARMv7 Installer (VHDX) PR3                          //
-    //                                    by RedGreenBlue123                                      //
-    //                       Thanks to: @Gus33000, @FadilFadz01, @demonttl                        //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+ABOUT THIS SOFTWARE:
+ Windows 10 for ARMv7 Installer (VHDX) PR3
+ Type    : Batch script
+ Made by : RedGreenBlue123
+ Version : 0.9.9 (PR3.9)
 
 DISCLAIMER:
     * I'm not responsible for bricked devices, dead SD cards,
@@ -25,8 +26,8 @@ SUPPORTED DEVICES:
       Use normal method is better than dual boot on a 8 GB storage.
 
 REQUIREMENTS:
-    - Full Windows 10 Pro or Enterprise (Version 1511+)
-      (Windows 7 not working, 8.1 doesn't support custom colors)
+    - Full Windows 8.1+ Pro or Enterprise (16+ GB phones only)
+    - Full Windows 10 Pro or Enterprise version 1511+ (All models)
     - Windows Powershell Enabled
     - Windows Powershell Modules Installed
       (Don't care about this if you have a full installation of Windows 10)
@@ -63,18 +64,49 @@ DOWNLOADS:
     - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
 
 CREDITS:
-    - fadilfadz01 (Fadil Fadz)     : Helping me write the script
+    - FadilFadz01 (Fadil Fadz)     : Helping me write the script
     - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
-    - demonttl (John Anderson)     : Explaining WimBoot doesn't work in Windows 10
+    - Heathcliff74 (Rene Lergner)  : WPinternals
     - driver1998                   : Windows 10 For ARMv7 Image
     - Windows ARM32 Telegram group : Testing my script
-    - Microsoft                    : Command Prompt, Windows, DISM, BCDEDIT, PowerShell, Notepad, ...
-    - SmartSVN                     : SVN downloader
-    - Igor Pavlov                  : 7-Zip extractor
-    - GNU                          : WGET downloader
+    - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
+    - SmartSVN                     : SVN
+    - Igor Pavlov                  : 7-Zip
+    - GNU                          : WGET
     - RedGreenBlue123 (Me)         : Writing the script
+    - Adoxa                        : Ansicon
 
 CHANGELOGS:
+ - Proximal Release 3.8 & 3.9 (PR3.8 & 3.9)
+   + Added Windows build check
+   + Bring up colors for Windows 8.1 (Thanks to @adoxa for "ansicon")
+   + Installer only has one version for both Windows 8.1 and 10 now
+   + Installer now starts 5X faster thanks to new compatibility check method.
+   + Installation will be cancelled if a severe issue ocurred during installation
+   + Improved UI a lot
+   + Improved Logs
+   + Powershell cmdlets now return errorlevel 1 if error occurred
+   + Use Expand-WindowsImage instead of DISM for progress bar
+   + Number of errors will be appears at the end of installation
+   + Added Safe Mode enabler / disabler for WFAv7 (Tools)
+   + Added option to run Installer without compatibility check (Tools)
+   + Fixed SetLocal error when download too much drivers (Driver Downloader)
+   + Use SVN Export instead of SVN Checkout (Driver Downloader)
+   + PR 3.9 fixes "Installation always failed" in PR 3.8
+   + Block 8.1 users from installing WFAv7 to 8 GB devices to fix compact errors.
+   + Check for Drivers and install.wim after select model for more accurate result.
+   + Code cleanup
+   + Misc improvements & fixes
+ - Proximal Release 3.6 and 3.7 (PR3.6 & 3.7)
+   + Better UI
+   + Added Logging
+   + Added Mount VHDX to PostInstall
+   + Change some colors
+   + Remove Lumia 650 in Driver Downloader
+   + Updated DriverDownloader and Installer to use new driver repo structure
+   + DriverDownloader now parse definition files provided every driver repo update
+   + Fixed WFAv7 Uninstaller MainOS!\EFIESP\efi\Microsoft\Recovery\BCD not found
+
  - Proximal Release 3.5 (PR3.5)
    + Fixed could not find diskpart.txt
    + Fixed Powershell pattern... when press enter at MainOS partition

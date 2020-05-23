@@ -2,31 +2,40 @@
 if not "%~1"=="" call :%~1
 :Check1
 cd ..
-IF EXIST M:\ (
-	TITLE ERROR!
-	COLOR 0C
-	ECHO.
-	ECHO   Please Unmount Drive [M:]
-	PAUSE
-	EXIT
+if EXIST M:\ (
+	title ERROR!
+	color 0C
+	echo ----------------------------------------------------------------
+	echo   Please Unmount Drive [M:]
+	pause
+	exit
 )
-IF EXIST N:\ (
-	TITLE ERROR!
-	COLOR 0C
-	ECHO.
-	ECHO   Please Unmount Drive [N:]
-	PAUSE
-	EXIT
+if NOT EXIST M:\ (
+	cls
+	echo Checking compatibility ...
+)
+
+if EXIST N:\ (
+	title ERROR!
+	color 0C
+	echo ----------------------------------------------------------------
+	echo   Please Unmount Drive [N:]
+	pause
+	exit
+)
+if NOT EXIST N:\ (
+	cls
+	echo Checking compatibility ...
 )
 ::---------------------------------------------------------------
 :GetAdministrator
     IF "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
     IF "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "X86" (
+    IF "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
 	>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 ) else ( >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" )
 
-if '%errorlevel%' NEQ '0' (
+if %errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
 	goto UserAccountControl
 ) else ( goto GotAdministrator )
@@ -41,16 +50,14 @@ if '%errorlevel%' NEQ '0' (
 
 :GotAdministrator
 	pushd "%CD%"
-	CD /D "%~dp0"
-	goto Check2
+	cd /D "%~dp0"
 ::---------------------------------------------------------------
 :Check2
-title Starting Installer ...
-
+title Checking compatibility ...
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a
 if %WinBuild% LSS 9600 (
 	title ERROR!
-	color 0c
+	color 0C
 	echo ----------------------------------------------------------------
 	echo   This Windows version is not supported by WFAv7 Installer.
 	echo   Please use Windows 8.1 Pro+ ^(Build 9600+^) 
@@ -60,160 +67,75 @@ if %WinBuild% LSS 9600 (
 )
 
 Powershell /? >nul
-SET PLV=%ERRORLEVEL%
-IF %PLV% NEQ 0 (
-	TITLE ERROR!
-	COLOR 0C
+set PLV=%errorlevel%
+if %PLV% NEQ 0 (
+	title ERROR!
+	color 0C
 	echo ----------------------------------------------------------------
-	echo   Powershell isn't found or it have problem.
+	echo   Powershell wasn't found or it have problem.
 	echo   Please enable Powershell and continue.
 	echo   Error code: %PLV%
-	PAUSE
-	EXIT
+	pause
+	exit
 )
-cls
-echo Installer is loading ... [4%%]
-
-WHERE DISM >nul
-IF %ERRORLEVEL% NEQ 0 (
-	TITLE ERROR!
-	COLOR 0C
+where DISM >nul
+if %errorlevel% NEQ 0 (
+	title ERROR!
+	color 0C
 	echo ----------------------------------------------------------------
 	echo   DISM isn't found or it has problem.
-	PAUSE
-	EXIT
-)
-
-cls
-if exist "%~dp0\drivers\README.md" (
-	cls
-	echo Installer is loading ... [7%%]
-)
-if not exist "%~dp0\drivers\README.md" (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo  Extract Drivers to Drivers folder and try again.
-	echo  Remember NEVER creates Subfolders or extract subfolders.
 	pause
 	exit
 )
 
-if exist "%~dp0\install.wim" (
-	cls
-	echo Installer is loading ... [9%%]
-)
-if not exist "%~dp0\install.wim" (
+where bcdedit >nul
+if %errorlevel% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
 	echo ----------------------------------------------------------------
-	echo  Place install.wim in the Installer folder and try again.
-	pause
-	exit
-)
-
-IF NOT EXIST M:\ (
-	cls
-	echo Installer is loading ... [12%%]
-)
-IF EXIST M:\ (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo   Please Unmount Drive [M:]
+	echo   BCDEDIT wasn't found or it has problem.
 	PAUSE
 	EXIT
 )
-
-IF NOT EXIST N:\ (
-	cls
-	echo Installer is loading ... [15%%]
-)
-IF EXIST N:\ (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo   Please Unmount Drive [N:]
-	PAUSE
-	EXIT
-)
-
-cls
-echo Installer is loading ... [18%%]
-
-WHERE bcdedit >nul
-IF %ERRORLEVEL% NEQ 0 (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo   BCDEDIT isn't found or it has problem.
-	PAUSE
-	EXIT
-)
-cls
-echo Installer is loading ... [20%%]
 
 Powershell -Command "(Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V -Online).State" | findstr /I "Enabled"
-if errorlevel 0 (
-	cls
-	echo Installer is loading ... [30%%]
-) else (
-	TITLE ERROR!
-	COLOR 0C
+if %errorlevel% NEQ 0 (
+	title ERROR!
+	color 0C
 	echo ----------------------------------------------------------------
-	echo  Please enable Hyper-V in Windows Features. [VT-x is not needed]
-	PAUSE
-	EXIT
-)
-
-Powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Volume'" | find "True"
-if errorlevel 1 (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo  You used Windows 7 / Windows Home edition / Customized Windows.
-	echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
-	PAUSE
-	EXIT
+	echo  Please enable Hyper-V in Windows Features.
+	pause
+	exit
 )
 cls
-echo Installer is loading ... [45%%]
-
-Powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Disk'" | find "True"
-if errorlevel 1 (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo  You used Windows 7 / Windows Home edition / Customized Windows.
-	echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
-	PAUSE
-	EXIT
-)
-cls
-echo Installer is loading ... [60%%]
-
-Powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Storage'" | find "True"
-if errorlevel 1 (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo  You used Windows 7 / Windows Home edition / Customized Windows.
-	echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
-	PAUSE
-	EXIT
-)
-cls
-echo Installer is loading ... [80%%]
-
-Powershell -Command "(Get-Module -ListAvailable -All).name -Contains 'Hyper-V'" | find "True"
-if errorlevel 1 (
-	TITLE ERROR!
-	COLOR 0C
+echo Checking compatibility ...
+Powershell -C "(Get-Module -ListAvailable -All).name" >> Modules.txt
+FindStr /X /C:"Volume" Modules.txt >nul
+if %errorlevel% NEQ 0 goto MissingModule
+FindStr /X /C:"Disk" Modules.txt >nul
+if %errorlevel% NEQ 0 goto MissingModule
+FindStr /X /C:"Storage" Modules.txt >nul
+if %errorlevel% NEQ 0 goto MissingModule
+FindStr /X /C:"Hyper-V" Modules.txt >nul
+if %errorlevel% NEQ 0 (
+	title ERROR!
+	color 0C
 	echo ----------------------------------------------------------------
 	echo  Hyper-V is not fully enabled.
-	PAUSE
-	EXIT
+	pause
+	exit
 )
+del Modules.txt
+goto ToBeContinued0
+:MissingModule
+title ERROR!
+color 0C
+echo ----------------------------------------------------------------
+echo  You used Windows 7 / Windows Home edition / Customized Windows.
+echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
+pause
+exit
+:ToBeContinued0
 cls
 echo Installer is loading ... [100%%]
 :Start
@@ -224,13 +146,13 @@ if %WinBuild% LSS 10586 (
 for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 ::---------------------------------------------------------------
 cls
-mode 96,2400
+mode 96,1200
 Powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
 title Windows 10 for ARMv7 Installer (VHDX) Proximal Release 3
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                        %ESC%[97mWindows 10 for ARMv7 Installer (VHDX) PR3%ESC%[93m                         //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                      %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @demonttl%ESC%[93m                       //
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
 echo %ESC%[95mDISCLAIMER:
@@ -253,8 +175,8 @@ cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                        %ESC%[97mWindows 10 for ARMv7 Installer (VHDX) PR3%ESC%[93m                         //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                      %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @demonttl%ESC%[93m                       //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
 echo %ESC%[92mChoose your Device Model below:
 echo  %ESC%[36m1) %ESC%[97mLumia 930
@@ -309,9 +231,10 @@ cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                        %ESC%[97mWindows 10 for ARMv7 Installer (VHDX) PR3%ESC%[93m                         //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                      %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @demonttl%ESC%[93m                       //
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
 echo.
+if %WinBuild% LSS 10240 echo %ESC%[91m - Installing WFAv7 to 8 GB devices on Windows 8.1 is not supported.%ESC%[90m & pause & exit
 if %Storage%==8 echo  - You need at least ^> %ESC%[4m4.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.
 if %Storage%==16 echo  - You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.
 if %Storage%==32 echo  - You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.
@@ -344,6 +267,37 @@ if exist "%MainOS%\Data\windows10arm.vhdx" (
 	Exit
 )
 ::---------------------------------------------------------------
+:CheckReqFiles
+if %Model%==1 (if not exist Drivers\Lumia930 goto DriverMissing)
+if %Model%==2 (if not exist Drivers\LumiaIcon goto DriverMissing)
+if %Model%==3 (if not exist Drivers\Lumia1520 goto DriverMissing)
+if %Model%==4 (if not exist Drivers\Lumia1520 goto DriverMissing)
+if %Model%==5 (if not exist Drivers\Lumia1520-AT^&T goto DriverMissing)
+if %Model%==6 (if not exist Drivers\Lumia1520-AT^&T goto DriverMissing)
+if %Model%==7 (if not exist Drivers\Lumia830 goto DriverMissing)
+if %Model%==8 (if not exist Drivers\Lumia735 goto DriverMissing)
+if %Model%==A (if not exist Drivers\Lumia640XL goto DriverMissing)
+if %Model%==B (if not exist Drivers\Lumia640XL-AT^&T goto DriverMissing)
+if %Model%==C (if not exist Drivers\Lumia950 goto DriverMissing)
+if %Model%==d (if not exist Drivers\Lumia950XL goto DriverMissing)
+if %Model%==a (if not exist Drivers\Lumia640XL goto DriverMissing)
+if %Model%==b (if not exist Drivers\Lumia640XL-AT^&T goto DriverMissing)
+if %Model%==c (if not exist Drivers\Lumia950 goto DriverMissing)
+if %Model%==d (if not exist Drivers\Lumia950XL goto DriverMissing)
+if not exist "%~dp0\install.wim" (
+	echo ----------------------------------------------------------------
+	echo  %ESC%[91mPlace install.wim in the Installer folder and try again.%ESC%[0m
+	pause
+	goto ChooseDev
+)
+Goto LogNameInit
+:DriverMissing
+echo ----------------------------------------------------------------
+echo  %ESC%[91mExtract Drivers to Drivers folder and try again.
+echo  Remember NEVER creates Subfolders or extract subfolders.%ESC%[0m
+pause
+goto ChooseDev
+::---------------------------------------------------------------
 :LogNameInit
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ mkdir Logs
@@ -364,23 +318,8 @@ if exist %Date1%-*.log (
 :LoggerInit
 cd ..
 set ErrNum=0
-Set Logger=2^>CurrentError.log ^>^>%LogName% ^& call Logger.bat
-Set SevLogger=2^>CurrentError.log ^>^>%LogName% ^& call SevLogger.bat
-set PriBat=%0
-echo>>Logger.bat set Err=%%Errorlevel%%
-echo>>Logger.bat for /f "tokens=*" %%%%a in (CurrentError.log) do (echo [EROR] %%%%a) ^>^> ErrorConsole.log
-echo>>Logger.bat type ErrorConsole.log
-echo>>Logger.bat type CurrentError.log ^>^>%LogName%
-echo>>Logger.bat del ErrorConsole.log
-echo>>Logger.bat if not Err==0 set /a ErrNum=ErrNum+1 ^>nul ^& echo %ESC%[33m[WARN] An error has occurred, installation will continue.
-attrib +h Logger.bat
-echo>>SevLogger.bat set SevErr=%%Errorlevel%%
-echo>>SevLogger.bat for /f "tokens=*" %%%%a in (CurrentError.log) do (echo [EROR] %%%%a) ^>^> ErrorConsole.log
-echo>>SevLogger.bat type ErrorConsole.log
-echo>>SevLogger.bat type CurrentError.log ^>^>%LogName%
-echo>>SevLogger.bat del ErrorConsole.log
-echo>>SevLogger.bat if not SevErr==0 ( set /a ErrNum=ErrNum+1 ^>nul ^& call %PriBat% SevErrFounded )
-attrib +h SevLogger.bat
+Set Logger=2^>CurrentError.log ^>^>%LogName% ^& set Err=%Errorlevel% ^& (for /f "tokens=*" %%a in (CurrentError.log) do (echo [EROR] %%a) ^>^> ErrorConsole.log) ^& (if exist ErrorConsole.log type ErrorConsole.log) ^& type CurrentError.log ^>^>%LogName% ^& (if exist ErrorConsole.log del ErrorConsole.log) ^& (if %Err% NEQ 0 set /a ErrNum=ErrNum+1 ^>nul ^& echo %ESC%[33m[WARN] An error has occurred, installation will continue.)
+Set SevLogger=2^>CurrentError.log ^>^>%LogName% ^& set SevErr=%Errorlevel% ^& for /f "tokens=*" %%a in (CurrentError.log) do (echo [EROR] %%a) ^>^> ErrorConsole.log ^& (if exist ErrorConsole.log type ErrorConsole.log) ^& type CurrentError.log ^>^>%LogName% ^& (if exist ErrorConsole.log del ErrorConsole.log) ^& (if not SevErr==0 set /a ErrNum=ErrNum+1 ^>nul ^& goto SevErrFounded)
 :ToBeContinued2
 echo #### INSTALLATION STARTED #### >>%LogName%
 echo ======================================== >>%LogName%
@@ -504,8 +443,6 @@ echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 attrib +h diskpart.txt %Logger%
 diskpart /s diskpart.txt %Logger%
 del /A:H diskpart.txt %Logger%
-del /A:H Logger.bat
-del /A:H SevLogger.bat
 ::---------------------------------------------------------------
 echo.
 echo %ESC%[96m[INFO] Unmounting VHDX Image ...%ESC%[91m
@@ -518,8 +455,6 @@ echo ======================================== >>%LogName%
 echo.
 echo #### INSTALLATION CANCELED #### >>%LogName%
 if exist diskpart.txt del /A:H diskpart.txt
-if exist Logger.bat del /A:H Logger.bat
-if exist SevLogger.bat del /A:H SevLogger.bat
 echo %ESC%[96m[INFO] Installation was cancelled due to a%ESC%[91m severe error %ESC%[96moccurred.
 echo %ESC%[33m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.

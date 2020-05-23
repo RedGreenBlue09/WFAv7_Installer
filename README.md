@@ -55,17 +55,17 @@
     . Thanks to @Gus33000
   - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
 ### Credits
-  - fadilfadz01 (Fadil Fadz)     : Helping me write the script
+  - FadilFadz01 (Fadil Fadz)     : Helping me write the script
   - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
-  - demonttl (John Anderson)     : Explaining WimBoot doesn't work in Windows 10
+  - Heathcliff74 (Rene Lergner)  : WPinternals
   - driver1998                   : Windows 10 For ARMv7 Image
   - Windows ARM32 Telegram group : Testing my script
-  - Microsoft                    : Command Prompt, Windows, DISM, BCDEDIT, PowerShell, Notepad, ...
-  - SmartSVN                     : SVN downloader
-  - Igor Pavlov                  : 7-Zip extractor
-  - GNU                          : WGET downloader
+  - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
+  - SmartSVN                     : SVN
+  - Igor Pavlov                  : 7-Zip
+  - GNU                          : WGET
   - RedGreenBlue123 (Me)         : Writing the script
-  - Adoxa                        : ansicon
+  - Adoxa                        : Ansicon
 ### Screenshots
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7-S1")
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")
