@@ -1,9 +1,9 @@
 
 ABOUT THIS SOFTWARE:
- Windows 10 for ARMv7 Installer (VHDX) PR3
+ Windows 10 for ARMv7 Installer (VHDX)
  Type    : Batch script
  Made by : RedGreenBlue123
- Version : 0.9.9 (PR3.9)
+ Version : 1.0 (R1)
 
 DISCLAIMER:
     * I'm not responsible for bricked devices, dead SD cards,
@@ -21,6 +21,7 @@ SUPPORTED DEVICES:
     - Microsoft Lumia 640 XL LTE (Global, AT&T)
     - Microsoft Lumia 950 & XL
     * No support for Lumia 2520 due to lack of drivers.
+    * You can use 735 Drivers for 730 but you will face a few problems.
     * No support for Spec A devices because these devices don't support VHD boot.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
@@ -63,12 +64,13 @@ DOWNLOADS:
       Thanks to @Gus33000
     - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
 
-CREDITS:
-    - FadilFadz01 (Fadil Fadz)     : Helping me write the script
+THANKS TO:
+    - fadilfadz01 (Fadil Fadz)     : Helping me write the script
     - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
     - Heathcliff74 (Rene Lergner)  : WPinternals
     - driver1998                   : Windows 10 For ARMv7 Image
     - Windows ARM32 Telegram group : Testing my script
+    - Stack Overflow Community     : Help me write the script
     - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
     - SmartSVN                     : SVN
     - Igor Pavlov                  : 7-Zip
@@ -77,11 +79,23 @@ CREDITS:
     - Adoxa                        : Ansicon
 
 CHANGELOGS:
+ - Release 1.0 (R1)
+   + Code optimization
+   + Correct some spelling mistakes & hard to understand sentences
+   + 2X Faster & More accurate Powershell cmdlets check
+   + Verbose compatibility check
+   + Fixed a lot of bugs in PR 3.9
+   + Fixed Installer crashes when user enter: & ; ^ > < , | to the Installer.
+   + Renamed Installer from Bat to Cmd for correct Errorlevel check.
+   + Minor fixes
+  *KNOWN ISSUES:
+   + Installer crashes when user enter " to the Installer.
+   - Try and tell me :)
  - Proximal Release 3.8 & 3.9 (PR3.8 & 3.9)
    + Added Windows build check
    + Bring up colors for Windows 8.1 (Thanks to @adoxa for "ansicon")
    + Installer only has one version for both Windows 8.1 and 10 now
-   + Installer now starts 5X faster thanks to new compatibility check method.
+   + Installer now starts 5X faster than PR 3.7
    + Installation will be cancelled if a severe issue ocurred during installation
    + Improved UI a lot
    + Improved Logs
@@ -95,7 +109,7 @@ CHANGELOGS:
    + PR 3.9 fixes "Installation always failed" in PR 3.8
    + Block 8.1 users from installing WFAv7 to 8 GB devices to fix compact errors.
    + Check for Drivers and install.wim after select model for more accurate result.
-   + Code cleanup
+   + Minor Code cleanup
    + Misc improvements & fixes
  - Proximal Release 3.6 and 3.7 (PR3.6 & 3.7)
    + Better UI
@@ -106,7 +120,6 @@ CHANGELOGS:
    + Updated DriverDownloader and Installer to use new driver repo structure
    + DriverDownloader now parse definition files provided every driver repo update
    + Fixed WFAv7 Uninstaller MainOS!\EFIESP\efi\Microsoft\Recovery\BCD not found
-
  - Proximal Release 3.5 (PR3.5)
    + Fixed could not find diskpart.txt
    + Fixed Powershell pattern... when press enter at MainOS partition
@@ -129,9 +142,6 @@ CHANGELOGS:
    + Restored CompactOS (PR2.3)
    + Check for drives mounted that only visible to normal user, not exist in Admin
    + Many more fixes ...
-  *KNOWN ISSUES:
-   - Installer crashes when user enter: & ; ^ > < , | " [enter] to the installer.
-   - Try and tell me :)
  - Proximal Release 2 (PR2)
    + Fixed severe Installer exit issues (PR1.2 & PR1.3)
    + Fixed severe Downloader crash issue (PR1.1)

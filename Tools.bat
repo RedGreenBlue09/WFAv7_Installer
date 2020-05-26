@@ -68,8 +68,10 @@ if %Tool%==2 (
 	setlocal EnableDelayedExpansion
 	echo.
 	if exist diskpart.txt del /A:H diskpart.txt
-	if exist diskpart1.txt del /A:H diskpart1.txt
-	if exist diskpart2.txt del /A:H diskpart2.txt
+	if exist Commands.txt del Commands.txt
+	if exist ErrorConsole.log del ErrorConsole.log
+	if exist CurrentError.log del CurrentError.log
+	if exist Logs rd /s /q Logs
 	:Choice
 	set /p CYN=%ESC%[97mDo you want to delete Drivers folder? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m] %ESC%[0m
 	if "!CYN!"=="" goto Choice
