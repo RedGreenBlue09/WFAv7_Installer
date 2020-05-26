@@ -62,7 +62,7 @@ DOWNLOADS:
       Thanks to @driver1998 (Image owner) and @FadilFadz (link).
     - Drivers: Run Driver Downloader to feltch drivers for your device automatically.
       Thanks to @Gus33000
-    - To download GitHub: Click "Clone or Download" button, select "Download ZIP"
+    - To download Installer: go to Releases page, click assets, download latest build.
 
 THANKS TO:
     - fadilfadz01 (Fadil Fadz)     : Helping me write the script
