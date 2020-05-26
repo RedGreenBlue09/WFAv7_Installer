@@ -1,5 +1,6 @@
 @echo off
 if not "%~1"=="" call :%~1
+if %Errorlevel% NEQ 0 goto :EOF
 :Check1
 cd ..
 echo Checking compatibility ...
@@ -241,15 +242,15 @@ echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathc
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
 echo.
 if %Storage%==8 (if %WinBuild% LSS 10240 echo %ESC%[91m - Installing WFAv7 to 8 GB devices on Windows 8.1 is not supported.%ESC%[0m & echo. & pause & goto ChooseDev)
-if %Storage%==8 echo  - You need at least ^> %ESC%[4m4.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.
-if %Storage%==16 echo  - You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.
-if %Storage%==32 echo  - You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.
+if %Storage%==8 echo  - You need at least ^> %ESC%[4m4.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.%ESC%[0m
+if %Storage%==16 echo  - You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.%ESC%[0m
+if %Storage%==32 echo  - You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.%ESC%[0m
 echo.
 pause
 :MOSPath
 set MainOS=
 echo.
-set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[0m
+set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[93m
 if not defined MainOS (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
@@ -316,7 +317,7 @@ set LogNum=1
 :LogName
 if exist %Date1%-*.log (
     if exist %Date1%-%LogNum%.log (
-        set /A LogNum=LogNum+1
+        set /A "LogNum+=1"
         goto LogName
     ) else (
         set LogName=Logs\%Date1%-%LogNum%.log
@@ -339,7 +340,7 @@ set SevLogger=2^>CurrentError.log ^>^> "%LogName%" ^&^
  (if exist ErrorConsole.log type ErrorConsole.log) ^&^
  type CurrentError.log ^>^> "%LogName%" ^&^
  (if exist ErrorConsole.log del ErrorConsole.log) ^&^
- (if ^^!SevErr^^! NEQ 0 set /a ErrNum=ErrNum+1 ^>nul ^& goto SevErrFound)
+ (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
 :ToBeContinued2
 echo #### INSTALLATION STARTED #### >>%LogName%
 echo ======================================== >>%LogName%
@@ -486,13 +487,13 @@ exit
 :MissionCompleted
 if %ErrNum% GTR 0 (
 	echo.
-	echo #### INSTALLATION COMPLETED WITH ERROR(S) ####>>%LogName%
+	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>%LogName%
 	echo %ESC%[96m[INFO] Installation is completed with%ESC%[91m %ErrNum% error^(s^)%ESC%[96m!
 	echo %ESC%[33m[WARN] Please check installation log in Logs folder.%ESC%[0m
 	echo.
 	pause
 )
-if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY ####>>%LogName%
+if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>%LogName%
 if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation completed successfully!
 echo.
 echo %ESC%[92m================================================================================================

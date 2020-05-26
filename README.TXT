@@ -84,6 +84,7 @@ CHANGELOGS:
    + 2X Faster & More accurate Powershell cmdlets check
    + Verbose compatibility check
    + Fixed a lot of bugs in PR 3.9
+   + Fixed Installer crashes at the end of installation.
    + Fixed Installer crashes when user enter: & ; ^ > < , | to the Installer.
    + Renamed Installer from Bat to Cmd for correct Errorlevel check.
    + Minor fixes
