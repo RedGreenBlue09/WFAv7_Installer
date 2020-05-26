@@ -32,14 +32,13 @@
   1. Download Windows 10 for ARMv7 build 15035 to your Computer.
   2. Extract <ISOFILE>\sources\install.wim  to  Installer folder.
      You can mount it and copy install.wim to Installer folder.
-  3. Download Drivers for your device.
-  4. Extract Drivers to <InstallerFolder>\Drivers (NEVER create subfolders or Extract Subfolders)
-  5. Run Installer.bat and follow the Instruction in the installer.
-  6. After installation finished, boot and setup Windows 10.
+  3. Run Driver Downloader and download Drivers for your device.
+  4. Run Installer.bat and follow the Instruction in the installer.
+  5. After installation finished, boot and setup Windows 10.
      Don't connect to Wi-Fi on setup. It will makes the setup stuck.
-  7. After setup complete (Desktop appears), reboot to mass storage mode.
-  8. Run PostInstall.bat to fix Windows Phone crash.
-  9. Now, you can dualboot Windows Phone and Windows 10.
+  6. After setup complete (Desktop appears), reboot to mass storage mode.
+  7. Run PostInstall.bat to fix Windows Phone crash.
+  8. Now, you can dualboot Windows Phone and Windows 10.
 ### Notes
   * This is not a software, this is a set of programs that combined to make the installation easier.
   * Editing the files or folders may cause damage to the intaller.
