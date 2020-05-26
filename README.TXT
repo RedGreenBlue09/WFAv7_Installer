@@ -45,9 +45,8 @@ INSTRUCTION:
     5. After installation finished, boot and setup Windows 10.
        Don't connect to Wi-Fi on setup. It will makes the setup stuck.
     6. After setup complete (Desktop appears), reboot to mass storage mode.
-    7. Double click MainOS\Data\windows10arm.vhdx
-    8. Run PostInstall.bat to fix Windows Phone crash.
-    9. Now, you can dualboot Windows Phone and Windows 10.
+    7. Run PostInstall.bat to fix Windows Phone crash.
+    8. Now, you can dualboot Windows Phone and Windows 10.
 
 NOTES:
     * This is not a software, this is a set of programs that combined to make the installation easier.
