@@ -79,17 +79,18 @@ THANKS TO:
 
 CHANGELOGS:
  - Release 1.0 (R1)
-   + Code optimization
-   + Correct some spelling mistakes & hard to understand sentences
-   + 2X Faster & More accurate Powershell cmdlets check
-   + Verbose compatibility check
-   + Fixed a lot of bugs in PR 3.9
-   + Fixed Installer crashes at the end of installation.
-   + Fixed Installer crashes when user enter: & ; ^ > < , | to the Installer.
-   + Renamed Installer from Bat to Cmd for correct Errorlevel check.
+   + Code optimization (Preview 1 & 2)
+   + Correct some spelling mistakes & hard to understand sentences (Preview 1)
+   + 2X Faster & More accurate Powershell cmdlets check (Preview 1)
+   + Verbose compatibility check (Preview 1)
+   + Fixed a lot of bugs in PR 3.9 (Preview 1)
+   + Fixed Installer crashes at the end of installation. (Preview 2)
+   + Fixed Installer & Driver Downloader crashes when user enters: & ; ^ > < , | (Preview 1 & 3)
+   + Renamed Installer from Bat to Cmd for correct Errorlevel check (Preview 1)
+   + Reduced Installer & Driver Downloader size (Preview 3)
    + Minor fixes
   *KNOWN ISSUES:
-   + Installer crashes when user enter " to the Installer.
+   + Installer & Driver Downloader crashes when user enter "
    - Try and tell me :)
  - Proximal Release 3.8 & 3.9 (PR3.8 & 3.9)
    + Added Windows build check

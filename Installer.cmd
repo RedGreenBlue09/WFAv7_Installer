@@ -148,7 +148,7 @@ del Commands.txt
 title ERROR!
 color 0C
 echo ----------------------------------------------------------------
-echo  Hyper-V is not fully enabled.
+echo  Hyper-V is not fully enabled or not enabled correctly.
 pause
 exit
 
@@ -284,14 +284,10 @@ if %Model%==5 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
 if %Model%==6 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
 if %Model%==7 (if not exist Drivers\Lumia830 goto MissingDrivers)
 if %Model%==8 (if not exist Drivers\Lumia735 goto MissingDrivers)
-if %Model%==A (if not exist Drivers\Lumia640XL goto MissingDrivers)
-if %Model%==B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if %Model%==C (if not exist Drivers\Lumia950 goto MissingDrivers)
-if %Model%==d (if not exist Drivers\Lumia950XL goto MissingDrivers)
-if %Model%==a (if not exist Drivers\Lumia640XL goto MissingDrivers)
-if %Model%==b (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if %Model%==c (if not exist Drivers\Lumia950 goto MissingDrivers)
-if %Model%==d (if not exist Drivers\Lumia950XL goto MissingDrivers)
+if /I %Model%==A (if not exist Drivers\Lumia640XL goto MissingDrivers)
+if /I %Model%==B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
+if /I %Model%==C (if not exist Drivers\Lumia950 goto MissingDrivers)
+if /I %Model%==d (if not exist Drivers\Lumia950XL goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	echo ----------------------------------------------------------------
 	echo  %ESC%[91mPlace install.wim in the Installer folder and try again.%ESC%[0m
@@ -391,22 +387,18 @@ if %Storage%==32 Powershell -C "Expand-WindowsImage -ImagePath install.wim -Appl
 echo.
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[33m[WARN] Error outputs will not be showed here.%ESC%[91m
-if %model%==1 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
-if %model%==2 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
-if %model%==3 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %model%==4 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %model%==5 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %model%==6 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %model%==7 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if %model%==8 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if %model%==A Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if %model%==B Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if %model%==C Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if %model%==D Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
-if %model%==a Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if %model%==b Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if %model%==c Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if %model%==d Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
+if %Model%==1 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
+if %Model%==2 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
+if %Model%==3 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model%==4 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model%==5 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model%==6 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model%==7 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
+if %Model%==8 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
+if /I %Model%==A Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
+if /I %Model%==B Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
+if /I %Model%==C Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
+if /I %Model%==D Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
 ::---------------------------------------------------------------
 echo ======================================== >>%LogName%
 echo.

@@ -97,19 +97,19 @@ if %Tool%==3 (
 	if !Operation!==1 (
 		:MOSPath10
 		set /p MainOS=%ESC%[92mEnter MainOS Path: 
-		if not exist !MainOS!\EFIESP (
+		if not exist "!MainOS!\EFIESP" (
 			ECHO  %ESC%[91mNot a valid MainOS partition!
 			GOTO MOSPath10
 		)
-		if not exist !MainOS!\Data (
+		if not exist "!MainOS!\Data" (
 			ECHO  %ESC%[91mNot a valid MainOS partition!
 			GOTO MOSPath10
 		)
-		if not exist !MainOS!\Data\windows10arm.vhdx (
+		if not exist "!MainOS!\Data\windows10arm.vhdx" (
 			ECHO  %ESC%[91mWindows 10 for ARMv7 is not installed.%ESC%[0m
 			PAUSE
 		) else (
-			%ESC%[93mMounting VHDX ...%ESC%[96m
+			echo %ESC%[93mMounting VHDX ...%ESC%[96m
 			powershell Mount-VHD -Path !MainOS!\Data\windows10arm.vhdx
 			set Completed=1
 		)
@@ -117,25 +117,25 @@ if %Tool%==3 (
 	if !Operation!==2 (
 		:MOSPath11
 		set /p MainOS=%ESC%[92mEnter MainOS Path: 
-		if not exist !MainOS!\EFIESP (
+		if not exist "!MainOS!\EFIESP" (
 			ECHO  %ESC%[91mNot a valid MainOS partition!
 			GOTO MOSPath10
 		)
-		if not exist !MainOS!\Data (
+		if not exist "!MainOS!\Data" (
 			ECHO  %ESC%[91mNot a valid MainOS partition!
 			GOTO MOSPath10
 		)
-		if not exist !MainOS!\Data\windows10arm.vhdx (
+		if not exist "!MainOS!\Data\windows10arm.vhdx" (
 			ECHO  %ESC%[91mWindows 10 for ARMv7 is not installed.%ESC%[0m
 			PAUSE
 		) else (
-			%ESC%[93mUnmounting VHDX ...%ESC%[96m
+			echo %ESC%[93mUnmounting VHDX ...%ESC%[96m
 			powershell Dismount-VHD -Path !MainOS!\Data\windows10arm.vhdx
 			set Completed=1
 		)
 	)
 	if !Completed!==1 (
-		echo %ESC%[92mDone^!%ESC%[0m
+		echo %ESC%[92mDone^^!%ESC%[0m
 		Pause
 	)
 	if not !Completed!==1 goto ChooseOperation
@@ -150,7 +150,7 @@ if %Tool%==4 (
 	echo.
 	:MOSPath
 	set /p MainOS=%ESC%[92mEnter MainOS Path%ESC%[32m: 
-	if not exist !MainOS!\EFIESP (
+	if not exist "!MainOS!\EFIESP" (
 		ECHO  %ESC%[91mNot a valid MainOS partition!
 		GOTO MOSPath
 	)
@@ -203,7 +203,7 @@ if %Tool%==5 (
 		GOTO MOSPath2
 	)
 	
-	if not exist !MainOS!\Data\windows10arm.vhdx (
+	if not exist "!MainOS!\Data\windows10arm.vhdx" (
 		ECHO  Windows 10 for ARMv7 is not installed.
 		PAUSE
 	) else (
@@ -214,7 +214,7 @@ if %Tool%==5 (
 		bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
 		del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 		echo.
-		echo %ESC%[93mDone^!%ESC%[0m
+		echo %ESC%[93mDone^^!%ESC%[0m
 		pause
 	)
 	endlocal
@@ -257,7 +257,7 @@ if %Tool%==6 (
 		bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /deletevalue {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot & set Completed=1
 	)
 	if !Completed!==1 (
-		echo %ESC%[92mDone^!%ESC%[0m
+		echo %ESC%[92mDone^^!%ESC%[0m
 		Pause
 	)
 	if not !Completed!==1 goto ChooseOperation
