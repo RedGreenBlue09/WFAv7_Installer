@@ -1,4 +1,6 @@
 @echo off
+setlocal EnableExtensions
+setlocal
 if not "%~1"=="" call :%~1
 if %Errorlevel% NEQ 0 goto :EOF
 :Check1
@@ -11,7 +13,7 @@ if EXIST M:\ (
 	echo ----------------------------------------------------------------
 	echo   Please Unmount Drive [M:]
 	pause
-	exit
+	exit /B
 )
 echo  - Checking Drive [N:] ...
 if EXIST N:\ (
@@ -20,7 +22,7 @@ if EXIST N:\ (
 	echo ----------------------------------------------------------------
 	echo   Please Unmount Drive [N:]
 	pause
-	exit
+	exit /B
 )
 ::---------------------------------------------------------------
 :GetAdministrator
@@ -59,7 +61,7 @@ if %WinBuild% LSS 9600 (
 	echo   Please use Windows 8.1+ Pro or Enterprise ^(Build 9600+^) 
 	echo   Current OS build: %WinBuild%
 	pause
-	exit
+	exit /B
 )
 
 echo  - Checking Windows Powershell ...
@@ -73,7 +75,7 @@ if %PLV% NEQ 0 (
 	echo   Please enable Powershell and continue.
 	echo   Error code: %PLV%
 	pause
-	exit
+	exit /B
 )
 echo  - Checking Dism ...
 where DISM >nul
@@ -83,7 +85,7 @@ if %errorlevel% NEQ 0 (
 	echo ----------------------------------------------------------------
 	echo   DISM isn't found or it has problem.
 	pause
-	exit
+	exit /B
 )
 echo  - Checking Bcdedit ...
 where bcdedit >nul
@@ -93,7 +95,7 @@ if %errorlevel% NEQ 0 (
 	echo ----------------------------------------------------------------
 	echo   BCDEDIT wasn't found or it has problem.
 	PAUSE
-	EXIT
+	exit /B
 )
 
 echo  - Checking Hyper-V ...
@@ -104,7 +106,7 @@ if %errorlevel% NEQ 0 (
 	echo ----------------------------------------------------------------
 	echo  Please enable Hyper-V in Windows Features.
 	pause
-	exit
+	exit /B
 )
 echo  - Getting CmdLets ...
 Powershell -C "(Get-Command).name" >> Commands.txt
@@ -142,7 +144,7 @@ echo ----------------------------------------------------------------
 echo  You used Windows 7 / Windows Home edition / Customized Windows.
 echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 pause
-exit
+exit /B
 :MissingCommandHyperV
 del Commands.txt
 title ERROR!
@@ -150,7 +152,7 @@ color 0C
 echo ----------------------------------------------------------------
 echo  Hyper-V is not fully enabled or not enabled correctly.
 pause
-exit
+exit /B
 
 
 :ToBeContinued0
@@ -200,7 +202,7 @@ echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m 
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
-echo %ESC%[92mChoose your Device Model below:
+echo %ESC%[92mChoose your device model below:
 echo  %ESC%[36m1) %ESC%[97mLumia 930
 echo  %ESC%[36m2) %ESC%[97mLumia 929 (Icon)
 echo  %ESC%[36m3) %ESC%[97mLumia 1520
@@ -358,13 +360,13 @@ if %Storage%==32 (
 )
 echo.
 echo %ESC%[96m[INFO] Creating Partition Table ...%ESC%[91m
-Powershell -C "Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx; exit $Error.count" %SevLogger%
+Powershell -C "Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx; exit /B $Error.count" %SevLogger%
 Powershell -C "Initialize-Disk -Number (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -PartitionStyle GPT -confirm:$false; exit $Error.count" %SevLogger%
 :: Create ESP
 echo.
 echo %ESC%[96m[INFO] Creating EFI System Partition ...%ESC%[91m
 Powershell -C "New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}' -Size 100MB -DriveLetter M; exit $Error.count" %SevLogger%
-Powershell -C "Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "ESP" -confirm:$false; exit $Error.count" %SevLogger%
+Powershell -C "Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "ESP" -confirm:$false; exit /B $Error.count" %SevLogger%
 :: Create MSR
 echo.
 echo %ESC%[96m[INFO] Creating Microsoft Reserved Partition ...%ESC%[91m
@@ -474,7 +476,7 @@ echo %ESC%[96m[INFO] Installation is cancelled because a%ESC%[91m severe error %
 echo %ESC%[33m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.
 pause
-exit
+exit /B
 
 :MissionCompleted
 if %ErrNum% GTR 0 (
@@ -496,4 +498,4 @@ echo  - Run PostInstall.bat.
 echo ================================================================================================%ESC%[0m
 echo.
 pause
-exit
+exit /b

@@ -88,7 +88,8 @@ CHANGELOGS:
    + Fixed Installer & Driver Downloader crashes when user enters: & ; ^ > < , | (Preview 1 & 3)
    + Renamed Installer from Bat to Cmd for correct Errorlevel check (Preview 1)
    + Reduced Installer & Driver Downloader size (Preview 3)
-   + Minor fixes
+   + Use exit from batch instead of exit cmd (Final)
+   + Minor changes
   *KNOWN ISSUES:
    + Installer & Driver Downloader crashes when user enter "
    - Try and tell me :)
