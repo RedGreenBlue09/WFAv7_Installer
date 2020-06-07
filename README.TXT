@@ -3,7 +3,7 @@ ABOUT THIS SOFTWARE:
  Windows 10 for ARMv7 Installer (VHDX)
  Type    : Batch script
  Made by : RedGreenBlue123
- Version : 1.0 (R1)
+ Version : 2.0 (R2)
 
 DISCLAIMER:
     * I'm not responsible for bricked devices, dead SD cards,
@@ -20,15 +20,11 @@ SUPPORTED DEVICES:
     - NOKIA Lumia 735 Global
     - Microsoft Lumia 640 XL LTE (Global, AT&T)
     - Microsoft Lumia 950 & XL
-    * No support for Lumia 2520 due to lack of drivers.
+    - NOKIA Lumia 640 [No Touch]
+    - Microsoft Lumia 535 [No Touch]
     * You can use 735 Drivers for 730 but you will face a few problems.
-    * No support for Spec A devices because these devices don't support VHD boot.
-    * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
-      Use normal method is better than dual boot on a 8 GB storage.
-
 REQUIREMENTS:
-    - Full Windows 8.1+ Pro or Enterprise (16+ GB phones only)
-    - Full Windows 10 Pro or Enterprise version 1511+ (All models)
+    - Full Windows 8.1+ Pro or Enterprise
     - Windows Powershell Enabled
     - Windows Powershell Modules Installed
       (Don't care about this if you have a full installation of Windows 10)

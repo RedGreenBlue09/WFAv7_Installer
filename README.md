@@ -52,6 +52,7 @@
   - Drivers: Run Driver Downloader to feltch drivers for your device automatically
     . Thanks to @Gus33000
   - To download Installer: go to Releases page, click assets, download latest build.
+  * Don't download using Download ZIP selection.
 ### Credits
   - FadilFadz01 (Fadil Fadz)     : Helping me write the script
   - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
