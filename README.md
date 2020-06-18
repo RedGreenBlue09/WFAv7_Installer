@@ -51,7 +51,7 @@
     . Thanks to @driver1998 (Image owner) and @FadilFadz (link).
   - Drivers: Run Driver Downloader to feltch drivers for your device automatically
     . Thanks to @Gus33000
-  - To download Installer: go to Releases page, click assets, download latest build.
+  - Installer: [GitHub Releases](https://github.com/RedGreenBlue09/WFAv7_Installer/releases)
   * Don't download using Download ZIP selection.
 ### Credits
   - FadilFadz01 (Fadil Fadz)     : Helping me write the script
