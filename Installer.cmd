@@ -48,6 +48,8 @@ if %errorlevel% NEQ 0 (
 :GotAdministrator
 	pushd "%CD%"
 	cd /D "%~dp0"
+	if exist "%~dp0Temp\" rd /s /q "%~dp0Temp\"
+	if not exist "%~dp0Temp\" md "%~dp0Temp"
 ::---------------------------------------------------------------
 :Check2
 title Checking compatibility ...
@@ -65,7 +67,7 @@ if %WinBuild% LSS 9600 (
 )
 
 echo  - Checking Windows Powershell ...
-Powershell /? >nul
+Powershell /? >nul 2>&1
 set PLV=%errorlevel%
 if %PLV% NEQ 0 (
 	title ERROR!
@@ -78,7 +80,7 @@ if %PLV% NEQ 0 (
 	exit /B
 )
 echo  - Checking Dism ...
-where DISM >nul
+where DISM >nul 2>&1
 if %errorlevel% NEQ 0 (
 	title ERROR!
 	color 0C
@@ -88,7 +90,7 @@ if %errorlevel% NEQ 0 (
 	exit /B
 )
 echo  - Checking Bcdedit ...
-where bcdedit >nul
+where bcdedit >nul 2>&1
 if %errorlevel% NEQ 0 (
 	TITLE ERROR!
 	COLOR 0C
@@ -99,7 +101,7 @@ if %errorlevel% NEQ 0 (
 )
 
 echo  - Checking Hyper-V ...
-(Powershell -Command "(Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-Management-Powershell -Online).State" | findstr /I "Enabled") >nul
+(Powershell -Command "(Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-Management-Powershell -Online).State" | findstr /I "Enabled") >nul 2>&1
 if %errorlevel% NEQ 0 (
 	title ERROR!
 	color 0C
@@ -109,35 +111,21 @@ if %errorlevel% NEQ 0 (
 	exit /B
 )
 echo  - Getting CmdLets ...
-Powershell -C "(Get-Command).name" >> Commands.txt
-echo  - Checking New-VHD ...
-FindStr /X /C:"New-VHD" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommandHyperV
-echo  - Checking Mount-VHD ...
-FindStr /X /C:"Mount-VHD" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommandHyperV
-echo  - Checking Dismount-VHD ...
-FindStr /X /C:"Dismount-VHD" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommandHyperV
-echo  - Checking Initialize-Disk ...
-FindStr /X /C:"Initialize-Disk" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommand
+Powershell -C "(Get-Command).name" >> Temp\Commands.txt
 echo  - Checking New-Partition ...
-FindStr /X /C:"New-Partition" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommand
+FindStr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Format-Volume ...
-FindStr /X /C:"Format-Volume" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommand
+FindStr /X /C:"Format-Volume" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Expand-WindowsImage ...
-FindStr /X /C:"Expand-WindowsImage" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommand
+FindStr /X /C:"Expand-WindowsImage" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-Partition ...
-FindStr /X /C:"Get-Partition" Commands.txt >nul
-if %errorlevel% NEQ 0 goto MissingCommand
-del Commands.txt
+FindStr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
+echo  - Checking Get-WmiObject ...
+FindStr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
+del Temp\Commands.txt
 goto ToBeContinued0
 :MissingCommand
-del Commands.txt
+del Temp\Commands.txt
 title ERROR!
 color 0C
 echo ----------------------------------------------------------------
@@ -160,8 +148,8 @@ cls
 echo Installer is loading ... [100%%]
 :Start
 if %WinBuild% LSS 10586 (
-	if %PROCESSOR_ARCHITECTURE%==x86 Files\ansicon32 -p
-	if %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
+	if /i %PROCESSOR_ARCHITECTURE%==X86 Files\ansicon32 -p
+	if /i %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
 )
 ::for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 set ESC=
@@ -170,34 +158,50 @@ cls
 mode 96,1200
 echo Initializing ...
 Powershell -C "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
+:Disclaimer
 cls
-title Windows 10 for ARMv7 Installer (VHDX) 1.0
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        %ESC%[97mWindows 10 for ARMv7 Installer (VHDX) 1.0%ESC%[93m                         //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
+title Windows 10 for ARMv7 Installer 2.0
 echo.
-echo %ESC%[95mDISCLAIMER:
-echo     * I'm not responsible for bricked devices, dead SD cards,
-echo       thermonuclear war, or you getting fired because the alarm app failed.
-echo     * YOU are choosing to make these modifications,
-echo       and if you point the finger at me for messing up your device, I will laugh at you.
-echo     * Your warranty will be void if you tamper with any part of your device / software.
-echo %ESC%[36mPREPARATION:
-echo     - Read README.TXT and instruction before using this Installer.
-echo     - Make sure your phone is fully charged and it's battery is not wear too much.
-echo     - Make sure no drives mounted in M and N.
-echo     - Unlocked bootloader and booted into Mass Storage Mode.
-echo     - Closed all programs during installation.%ESC%[0m
 echo.
-pause
+echo                            %ESC%[97m%ESC%[1mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
+echo.
+echo                     %ESC%[93m=======================================================
+echo.
+echo                                           %ESC%[91mDISCLAIMER:
+echo %ESC%[95m
+echo    %ESC%[36m+----------------------------------------------------------------------------------------+
+echo    ^|                                                                                        ^|
+echo    ^|%ESC%[95m  * I'm not responsible for bricked devices, dead SD cards,                             %ESC%[36m^|
+echo    ^|%ESC%[95m    thermonuclear war, or you getting fired because the alarm app failed.               %ESC%[36m^|
+echo    ^|                                                                                        ^|
+echo    ^|%ESC%[95m  * YOU are choosing to make these modifications,                                       %ESC%[36m^|
+echo    ^|%ESC%[95m    and if you point the finger at me for messing up your device, I will laugh at you.  %ESC%[36m^|
+echo    ^|                                                                                        ^|
+echo    ^|%ESC%[95m  * Your warranty will be void if you tamper with any part of your device / software.   %ESC%[36m^|
+echo    ^|                                                                                        ^|
+echo    +----------------------------------------------------------------------------------------+%ESC%[0m
+echo.
+set /p Disclaimer="%ESC%[97mDo you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+if /i "%Disclaimer%"=="N" (
+	cls
+	echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
+	echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+	echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
+	echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
+	echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
+	echo.
+	echo  %ESC%[91mYou MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
+	echo.
+	pause
+	exit /b
+)
+if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
 ::---------------------------------------------------------------
 :ChooseDev
 set Model=
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        %ESC%[97mWindows 10 for ARMv7 Installer (VHDX) 1.0%ESC%[93m                         //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -214,7 +218,11 @@ echo  %ESC%[36m8) %ESC%[97mLumia 735 Global
 echo  %ESC%[36mA) %ESC%[97mLumia 640 XL LTE Global
 echo  %ESC%[36mB) %ESC%[97mLumia 640 XL LTE AT^&T
 echo  %ESC%[36mC) %ESC%[97mLumia 950
-echo  %ESC%[36mD) %ESC%[97mLumia 950 XL%ESC%[0m
+echo  %ESC%[36mD) %ESC%[97mLumia 950 XL
+echo  %ESC%[36mE) %ESC%[97mLumia 1020
+echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
+echo  %ESC%[36mG) %ESC%[97mLumia 920
+echo  %ESC%[36mH) %ESC%[97mBSP Method (All devices) [COMMING SOON]%ESC%[0m
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
 if "%Model%"=="" goto ChooseDev
 if "%Model%"=="1" set Storage=32 & goto ToBeContinued1
@@ -225,30 +233,93 @@ if "%Model%"=="5" set Storage=32 & goto ToBeContinued1
 if "%Model%"=="6" set Storage=16 & goto ToBeContinued1
 if "%Model%"=="7" set Storage=16 & goto ToBeContinued1
 if "%Model%"=="8" set Storage=8 & goto ToBeContinued1
-if "%Model%"=="A" set Storage=8 & goto ToBeContinued1
-if "%Model%"=="B" set Storage=8 & goto ToBeContinued1
-if "%Model%"=="C" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="D" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="a" set Storage=8 & goto ToBeContinued1
-if "%Model%"=="b" set Storage=8 & goto ToBeContinued1
-if "%Model%"=="c" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="d" set Storage=32 & goto ToBeContinued1
+if /i "%Model%"=="A" set Storage=8 & goto ToBeContinued1
+if /i "%Model%"=="B" set Storage=8 & goto ToBeContinued1
+if /i "%Model%"=="C" set Storage=32 & goto ToBeContinued1
+if /i "%Model%"=="D" set Storage=32 & goto ToBeContinued1
+if /i "%Model%"=="E" set Storage=32A & goto ToBeContinued1
+if /i "%Model%"=="F" set Storage=32A & goto ToBeContinued1
+if /i "%Model%"=="G" set Storage=32A & goto ToBeContinued1
+:: if /i "%Model%"=="H" goto BSP
 goto ChooseDev
 ::---------------------------------------------------------------
 :ToBeContinued1
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                        %ESC%[97mWindows 10 for ARMv7 Installer (VHDX) 1.0%ESC%[93m                         //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[97m
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
-if %Storage%==8 (if %WinBuild% LSS 10240 echo %ESC%[91m - Installing WFAv7 to 8 GB devices on Windows 8.1 is not supported.%ESC%[0m & echo. & pause & goto ChooseDev)
-if %Storage%==8 echo  - You need at least ^> %ESC%[4m4.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.%ESC%[0m
-if %Storage%==16 echo  - You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.%ESC%[0m
-if %Storage%==32 echo  - You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[97m of Phone Storage to continue.%ESC%[0m
+echo %ESC%[92m PREPARATION:
+echo   - Read README.TXT and instruction before using this Installer.
+echo   - Make sure your phone is fully charged and it's battery is not wear too much.
+echo   - Make sure no drives mounted with letter N.
+echo   - Closed all programs during installation.
+echo   * Highly recommend you to flash the original FFU of your phone
+echo     before installing Windows 10 ARMv7.
+if %Storage%==8 echo   * You need at least ^> %ESC%[4m4.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
+if %Storage%==16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
+if %Storage%==32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
+echo.
+echo %ESC%[95m WARNING:
+echo   * After pressing any key, the Installation will begin. As a batch script,
+echo     Installation cannot be cancelled correctly without any damage to your device.
+echo   * If you want to cancel the installation, close this console RIGHT NOW.
+echo   * You can partially pause the installation by clicking any where on the console.%ESC%[0m
 echo.
 pause
+goto MOSAutoDetect
+:MOSAutoDetectFail
+echo %ESC%[93mFailed to auto detect MainOS.%ESC%[0m
+if exist Temp\GPT del Temp\GPT
+if exist Temp\GPT* del Temp\GPT*
+set Skip=
+goto MOSPath
+:MOSAutoDetect
+cls
+echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
+echo.
+echo %ESC%[96mTrying to detect MainOS ...%ESC%[0m
+:: DiskNumber
+for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set DiskNumber=%%i
+if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set DiskNumber=%%i)
+if "%DiskNumber%"=="" goto MOSAutoDetectFail
+if not exist Temp\ md Temp
+Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
+set Skip=512
+for /l %%i in (1,1,48) do (
+	Files\dd if=Temp\GPT of=Temp\GPT%%i bs=1 skip=!Skip! count=128 2>nul
+	set /A Skip+=128
+)
+for /l %%i in (1,1,48) do (
+	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
+	if !Errorlevel!==0 set MOSGPT=%%i& goto PartitionNumber
+)
+goto MOSAutoDetectFail
+
+:PartitionNumber
+Files\dd if=Temp\GPT%MOSGPT% of=Temp\GPT%MOSGPT%-UUID bs=1 skip=16 count=16 2>nul
+For /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT%MOSGPT%-UUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
+for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
+	set Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p
+)
+For /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"') do set PartitionNumber=%%p
+For /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter"') do set DriveLetter=%%d
+if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
+if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
+if not exist %DriveLetter%:\DPP goto MOSAutoDetectFail
+set DLMOS=%DriveLetter%
+set MainOS=%DriveLetter%:
+del Temp\GPT
+del Temp\GPT*
+set Skip=
+echo %ESC%[96mDetected MainOS at %DriveLetter%%ESC%[0m
+goto CheckReqFiles
 :MOSPath
 set MainOS=
 echo.
@@ -266,16 +337,17 @@ if not exist "%MainOS%\EFIESP" (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
 )
-
 if not exist "%MainOS%\Data" (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
 )
-if exist "%MainOS%\Data\windows10arm.vhdx" (
-	echo  %ESC%[91mWindows 10 for ARMv7 is installed. Please uninstall it first.
-	pause
-	goto ChooseDev
+if not exist "%MainOS%\DPP" (
+	echo  %ESC%[91mNot a valid MainOS partition.
+	goto MOSPath
 )
+set DLMOS=%MainOS:~0,-1%
+for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
+for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set PartitionNumber=%%i
 ::---------------------------------------------------------------
 :CheckReqFiles
 if %Model%==1 (if not exist Drivers\Lumia930 goto MissingDrivers)
@@ -331,7 +403,7 @@ set Logger=2^>CurrentError.log ^>^> "%LogName%" ^&^
  (if exist ErrorConsole.log type ErrorConsole.log) ^&^
  type CurrentError.log ^>^> "%LogName%" ^&^
  (if exist ErrorConsole.log del ErrorConsole.log) ^&^
- (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[33m[WARN] An error has occurred, installation will continue.%ESC%[91m)
+ (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)
 set SevLogger=2^>CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (CurrentError.log) do echo [EROR] %%a) ^>^> ErrorConsole.log ^&^
@@ -340,55 +412,51 @@ set SevLogger=2^>CurrentError.log ^>^> "%LogName%" ^&^
  (if exist ErrorConsole.log del ErrorConsole.log) ^&^
  (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
 :ToBeContinued2
-echo #### INSTALLATION STARTED #### >>%LogName%
-echo ======================================== >>%LogName%
+set StartTime=%Time%
+echo.
+echo %ESC%[96m[INFO] Installation was started at %StartTime%
+echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>%LogName%
+echo ========================================================= >>%LogName%
 echo ## Device is %Model%  ## >>%LogName%
 echo ## MainOS is %MainOS% ## >>%LogName%
 echo. >>%LogName%
 echo.
+echo.
+if not exist Temp\ mkdir Temp\
+echo %ESC%[96m[INFO] Getting Partition Infos
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumberEFIESP=%%i
+if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
 if %Storage%==8 (
-	echo %ESC%[96m[INFO] Creating 4 GB VHDX image ...%ESC%[91m
-	Powershell -C "New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 4096MB; exit $Error.count" %SevLogger%
+	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
+	echo %ESC%[96m[INFO] Formatting MainOS for Windows 10 for ARMv7 ...%ESC%[91m
+	rd %MainOS%\Data 
 )
 if %Storage%==16 (
-	echo %ESC%[96m[INFO] Creating 8 GB VHDX image ...%ESC%[91m
-	Powershell -C "New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 8192MB; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitioNumber %PartitionNumberData% -Size 8192MB; exit $Error.count" %SevLogger%
+	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
+	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 )
 if %Storage%==32 (
-	echo %ESC%[96m[INFO] Creating 16 GB VHDX image ...%ESC%[91m
-	Powershell -C "New-VHD -Path %MainOS%\Data\windows10arm.vhdx -Fixed -SizeBytes 16384MB; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitioNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
+	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 )
-echo.
-echo %ESC%[96m[INFO] Creating Partition Table ...%ESC%[91m
-Powershell -C "Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx; exit /B $Error.count" %SevLogger%
-Powershell -C "Initialize-Disk -Number (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -PartitionStyle GPT -confirm:$false; exit $Error.count" %SevLogger%
-:: Create ESP
-echo.
-echo %ESC%[96m[INFO] Creating EFI System Partition ...%ESC%[91m
-Powershell -C "New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}' -Size 100MB -DriveLetter M; exit $Error.count" %SevLogger%
-Powershell -C "Format-Volume -DriveLetter M -FileSystem Fat32 -NewFileSystemLabel "ESP" -confirm:$false; exit /B $Error.count" %SevLogger%
-:: Create MSR
-echo.
-echo %ESC%[96m[INFO] Creating Microsoft Reserved Partition ...%ESC%[91m
-Powershell -C "New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{e3c9e316-0b5c-4db8-817d-f92df00215ae}' -Size 128MB; exit $Error.count" %SevLogger%
-:: Create Win10 Partition
-echo.
-echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
-Powershell -C "New-Partition -DiskNumber (Get-VHD -Path %MainOS%\Data\windows10arm.vhdx).DiskNumber -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
-if %Storage%==8 ( format N: /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger% )
-if %Storage%==16 ( format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger% )
-if %Storage%==32 ( format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger% )
+if %Storage%==8 (format %MainOS% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%)
+if %Storage%==16 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
+if %Storage%==32 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
 ::---------------------------------------------------------------
-echo ======================================== >>%LogName%
+echo ========================================================= >>%LogName%
 echo.
 echo %ESC%[96m[INFO] Installing Windows 10 for ARMv7 ...%ESC%[91m
-if %Storage%==8 Powershell -C "Expand-WindowsImage -ImagePath install.wim -ApplyPath N:\ -Index 1 -Compact; exit $Error.count" %SevLogger%
-if %Storage%==16 Powershell -C "Expand-WindowsImage -ImagePath install.wim -ApplyPath N:\ -Index 1; exit $Error.count" %SevLogger%
-if %Storage%==32 Powershell -C "Expand-WindowsImage -ImagePath install.wim -ApplyPath N:\ -Index 1; exit $Error.count" %SevLogger%
+if %Storage%==8 Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
+if %Storage%==16 Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
+if %Storage%==32 Files\wimlib apply install.wim 1 %MainOS%\ %SevLogger%
 ::---------------------------------------------------------------
 echo.
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
-echo %ESC%[33m[WARN] Error outputs will not be showed here.%ESC%[91m
+echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 if %Model%==1 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
 if %Model%==2 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
 if %Model%==3 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
@@ -396,32 +464,48 @@ if %Model%==4 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse
 if %Model%==5 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
 if %Model%==6 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
 if %Model%==7 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if %Model%==8 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if /I %Model%==A Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if /I %Model%==B Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /I %Model%==C Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if /I %Model%==D Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
+if %Model%==8 Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
+if /i %Model%==A Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
+if /i %Model%==B Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
+if /i %Model%==C Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
+if /i %Model%==D Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
+if /i %Model%==E Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i %Model%==F Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if /i %Model%==G Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
 ::---------------------------------------------------------------
-echo ======================================== >>%LogName%
+echo ========================================================= >>%LogName%
 echo.
-echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
-xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
-echo.
-echo %ESC%[96m[INFO] Setting Up BCD ...
-echo %ESC%[33m[WARN] Error outputs will not be showed here.%ESC%[91m
-bcdboot N:\Windows /s M: /l en-us /f UEFI %SevLogger%
-::---------------------------------------------------------------
-echo ======================================== >>%LogName%
+if %Storage% NEQ 8 (
+	echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
+	xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
+)
 echo.
 echo %ESC%[96m[INFO] Adding BCD Entry ...
-echo %ESC%[33m[WARN] Error outputs will not be showed here.%ESC%[91m
+echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 SET bcdLoc="%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>%LogName% 
 SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
 bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
-bcdedit /store %bcdLoc% /set %id% "device" "vhd=[%MainOS%\Data]\windows10arm.vhdx" %SevLogger%
-bcdedit /store %bcdLoc% /set %id% "osdevice" "vhd=[%MainOS%\Data]\windows10arm.vhdx" %SevLogger%
-bcdedit /store %bcdLoc% /set %id% "path" "\windows\system32\winload.efi" %SevLogger%
+if %Storage%==8 (
+	bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
+	bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
+	bcdedit /store %bcdLoc% /set "{default}" description "Ignore This" %Logger%
+	bcdedit /store %bcdLoc% /default %id% %Logger%
+) else (
+	if %Storage% NEQ 32A (
+		bcdedit /store %bcdLoc% /set %id% "device" "partition=N:" %SevLogger%
+		bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=N:" %SevLogger%
+		bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+	)
+)
+if %Storage%==32A (
+	bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
+	bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
+	bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+)
+if %Storage%==32A (
+	bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
+) else (bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%)
 bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
 bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
 bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
@@ -438,52 +522,45 @@ bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" yes %SevLogger%
 bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
 echo.
 ::---------------------------------------------------------------
-echo ======================================== >>%LogName%
+echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 mkdir %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
-copy M:\EFI\Microsoft\Recovery\BCD %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD /Y %Logger%
-set BCDRec=%MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD >>%LogName%
-bcdedit /store %BCDRec% /set {bootmgr} "device" "partition=%MainOS%\EFIESP" %Logger%
-bcdedit /store %BCDRec% /set {bootmgr} "path" "\EFI\Boot\Bootarm.efi" %Logger%
-bcdedit /store %BCDRec% /set {bootmgr} "timeout" "5" %Logger%
+bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD
 set DLMOS=%MainOS:~0,-1%
 echo. >>%LogName%
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
-echo ## PartitionNumber is %PartitionNumber% ## >>%LogName%
-for /f %%f in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
-echo ## DiskNumber is %DiskNumber% ## >>%LogName%
-echo>>diskpart.txt sel dis %DiskNumber%
-echo>>diskpart.txt sel par %PartitionNumber%
-echo>>diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
-attrib +h diskpart.txt %Logger%
-diskpart /s diskpart.txt %Logger%
-del /A:H diskpart.txt %Logger%
-::---------------------------------------------------------------
-echo.
-echo %ESC%[96m[INFO] Unmounting VHDX Image ...%ESC%[91m
-Powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx" %Logger%
-del CurrentError.log
-goto MissionCompleted
+echo ## EfiespPartitionNumber is %PartitionNumber% ## >>%LogName%
+if %Storage%==8 (
+	echo>>Temp\diskpart1.txt sel dis %DiskNumber%
+	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
+	echo>>Temp\diskpart1.txt assign mount=%MainOS%\EFIESP
+	mkdir %MainOS%\EFIESP
+	diskpart /s Temp\diskpart1.txt %Logger%
+)
+echo>>Temp\diskpart.txt sel dis %DiskNumber%
+echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
+echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+diskpart /s Temp\diskpart.txt %Logger%
+rd /s /q Temp\
 ::---------------------------------------------------------------
 :SevErrFound
-Powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx" >nul
 del CurrentError.log
-echo ======================================== >>%LogName%
+echo ========================================================= >>%LogName%
 echo.
 echo #### INSTALLATION CANCELED ####>>%LogName%
-if exist diskpart.txt del /A:H diskpart.txt
+rd /s /q Temp\
 echo %ESC%[96m[INFO] Installation is cancelled because a%ESC%[91m severe error %ESC%[96moccurred.
-echo %ESC%[33m[WARN] Please check installation log in Logs folder.%ESC%[0m
+echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.
 pause
 exit /B
 
 :MissionCompleted
 if %ErrNum% GTR 0 (
+	rd /s /q Temp\
 	echo.
 	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>%LogName%
 	echo %ESC%[96m[INFO] Installation is completed with%ESC%[91m %ErrNum% error^(s^)%ESC%[96m!
-	echo %ESC%[33m[WARN] Please check installation log in Logs folder.%ESC%[0m
+	echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 	echo.
 	pause
 )

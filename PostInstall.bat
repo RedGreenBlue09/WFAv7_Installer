@@ -58,11 +58,9 @@ if not exist "%MainOS%\Data" (
 )
 if not exist %MainOS%\Data\windows10arm.vhdx echo %ESC%[41mWFAv7 is not installed. & pause & exit
 echo.
-echo %ESC%[96mMounting Windows 10 for ARMv7 ...%ESC%[0m
-powershell Mount-VHD -Path %MainOS%\Data\windows10arm.vhdx
 :WinPath
 echo.
-set /p WinDir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
+set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
 if not exist "%WinDir%\Windows" (
 	ECHO  %ESC%[91mNot a valid Windows partition!
 	GOTO WinPath
@@ -76,7 +74,7 @@ for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"'
 echo>>diskpart1.txt sel dis %DiskNumber%
 echo>>diskpart1.txt sel par %PartitionNumber%
 echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
-echo>>diskpart1.txt assign mount=%WinDir%\EFIESP
+if not exist %WFAv7Dir%\EFIESP echo>>diskpart1.txt assign mount=%WFAv7Dir%\EFIESP
 attrib +h diskpart1.txt
 mkdir "%WinDir%\EFIESP"
 echo.

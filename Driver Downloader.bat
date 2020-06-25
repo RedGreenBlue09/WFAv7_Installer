@@ -58,11 +58,11 @@ setlocal EnableDelayedExpansion
 title Downloading Drivers ...
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md %WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md
+if not exist README.md %WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md --no-check-certificate
 title Downloading Drivers ...
 if "%Model%"=="1" (
 	if exist Lumia930\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/930.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/930.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (930.txt) do (
 		set Drv=%%A
@@ -73,7 +73,7 @@ if "%Model%"=="1" (
 )
 if "%Model%"=="2" (
 	if exist LumiaIcon\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/icon.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/icon.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (icon.txt) do (
 		set Drv=%%A
@@ -84,7 +84,7 @@ if "%Model%"=="2" (
 )
 if "%Model%"=="3" (
 	if exist Lumia1520\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520upsidedown.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520upsidedown.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1520upsidedown.txt) do (
 		set Drv=%%A
@@ -95,7 +95,7 @@ if "%Model%"=="3" (
 )
 if "%Model%"=="4" (
 	if exist Lumia1520-AT^&T\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520attupsidedown.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520attupsidedown.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1520attupsidedown.txt) do (
 		set Drv=%%A
@@ -106,7 +106,7 @@ if "%Model%"=="4" (
 )
 if "%Model%"=="5" (
 	if exist Lumia830\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/830.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/830.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (830.txt) do (
 		set Drv=%%A
@@ -117,7 +117,7 @@ if "%Model%"=="5" (
 )
 if "%Model%"=="6" (
 	if exist Lumia735\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/735.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/735.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (735.txt) do (
 		set Drv=%%A
@@ -128,7 +128,7 @@ if "%Model%"=="6" (
 )
 if "%Model%"=="7" (
 	if exist Lumia640XL\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xl.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xl.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (640xl.txt) do (
 		set Drv=%%A
@@ -139,7 +139,7 @@ if "%Model%"=="7" (
 )
 if "%Model%"=="8" (
 	if exist Lumia640XL-AT^&T\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xlatt.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xlatt.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (640xlatt.txt) do (
 		set Drv=%%A
@@ -150,7 +150,7 @@ if "%Model%"=="8" (
 )
 if /I "%Model%"=="A" (
 	if exist Lumia920\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/920.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/920.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (920.txt) do (
 		set Drv=%%A
@@ -161,7 +161,7 @@ if /I "%Model%"=="A" (
 )
 if /I "%Model%"=="B" (
 	if exist Lumia1020\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020.txt) do (
 		set Drv=%%A
@@ -172,7 +172,7 @@ if /I "%Model%"=="B" (
 )
 if /I "%Model%"=="C" (
 	if exist Lumia1020-AT^&T\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020att.txt
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020att.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020att.txt) do (
 		set Drv=%%A
@@ -185,20 +185,20 @@ if /I "%Model%"=="D" (
 	if not exist Lumia950 mkdir Lumia950
 	if not exist Lumia950\components\ mkdir Lumia950\components\
 	cd Lumia950\components\
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip
-	if not exist DEVICE.SOC_QC8994.TALKMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.TALKMAN.zip
-	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip
-	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip
-	if not exist OEM.SOC_QC8994.MMO_SOC8992\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8992.zip
-	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip
-	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip
-	if not exist PLATFORM.SOC_QC8994.SOC8992\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8992.zip
-	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip
-	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip
-	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip
-	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip --no-check-certificate
+	if not exist DEVICE.SOC_QC8994.TALKMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.TALKMAN.zip --no-check-certificate
+	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip --no-check-certificate
+	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip --no-check-certificate
+	if not exist OEM.SOC_QC8994.MMO_SOC8992\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8992.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.SOC8992\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8992.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip --no-check-certificate
 	if exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip %SzLoc% x DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip DEVICE.INPUT.SYNAPTICS_RMI4_F12_10
 	if exist DEVICE.SOC_QC8994.TALKMAN.zip %SzLoc% x DEVICE.SOC_QC8994.TALKMAN.zip DEVICE.SOC_QC8994.TALKMAN
 	if exist DEVICE.USB.MMO_USBC.zip %SzLoc% x DEVICE.USB.MMO_USBC.zip DEVICE.USB.MMO_USBC
@@ -219,20 +219,20 @@ if /I "%Model%"=="E" (
 	if not exist Lumia950XL mkdir Lumia950XL
 	if not exist Lumia950XL\components\ mkdir Lumia950XL\components\
 	cd Lumia950XL\components\
-	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip
-	if not exist DEVICE.SOC_QC8994.CITYMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.CITYMAN.zip
-	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip
-	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip
-	if not exist OEM.SOC_QC8994.MMO_SOC8994\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8994.zip
-	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip
-	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip
-	if not exist PLATFORM.SOC_QC8994.SOC8994\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994.zip
-	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip
-	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip
-	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip
-	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip
-	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip
-	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip
+	if not exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10\ %WGETLoc% %ReleaseLoc%DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip --no-check-certificate
+	if not exist DEVICE.SOC_QC8994.CITYMAN\ %WGETLoc% %ReleaseLoc%DEVICE.SOC_QC8994.CITYMAN.zip --no-check-certificate
+	if not exist DEVICE.USB.MMO_USBC\ %WGETLoc% %ReleaseLoc%DEVICE.USB.MMO_USBC.zip --no-check-certificate
+	if not exist OEM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO.zip --no-check-certificate
+	if not exist OEM.SOC_QC8994.MMO_SOC8994\ %WGETLoc% %ReleaseLoc%OEM.SOC_QC8994.MMO_SOC8994.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.BASE\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.BASE.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.MMO\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.MMO.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.SOC8994\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994.zip --no-check-certificate
+	if not exist PLATFORM.SOC_QC8994.SOC8994AB\ %WGETLoc% %ReleaseLoc%PLATFORM.SOC_QC8994.SOC8994AB.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.BASE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.BASE.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.EXTRAS.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.MMO_EXTRAS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MMO_EXTRAS.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.MOBILE_BRIDGE\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_BRIDGE.zip --no-check-certificate
+	if not exist SUPPORT.DESKTOP.MOBILE_COMPONENTS\ %WGETLoc% %ReleaseLoc%SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip --no-check-certificate
 	if exist DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip %SzLoc% x DEVICE.INPUT.SYNAPTICS_RMI4_F12_10.zip DEVICE.INPUT.SYNAPTICS_RMI4_F12_10
 	if exist DEVICE.SOC_QC8994.CITYMAN.zip %SzLoc% x DEVICE.SOC_QC8994.CITYMAN.zip DEVICE.SOC_QC8994.CITYMAN
 	if exist DEVICE.USB.MMO_USBC.zip %SzLoc% x DEVICE.USB.MMO_USBC.zip DEVICE.USB.MMO_USBC

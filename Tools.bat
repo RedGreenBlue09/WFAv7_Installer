@@ -263,7 +263,7 @@ if %Tool%==6 (
 	if not !Completed!==1 goto ChooseOperation
 	endlocal
 )
-if %Tool%==7 call Installer.bat Start
+if %Tool%==7 call Installer.cmd Start
 if not %Tool%==1 goto ChooseTool
 if not %Tool%==2 goto ChooseTool
 if not %Tool%==3 goto ChooseTool

@@ -23,6 +23,7 @@ SUPPORTED DEVICES:
     - NOKIA Lumia 640 [No Touch]
     - Microsoft Lumia 535 [No Touch]
     * You can use 735 Drivers for 730 but you will face a few problems.
+
 REQUIREMENTS:
     - Full Windows 8.1+ Pro or Enterprise
     - Windows Powershell Enabled
@@ -30,19 +31,20 @@ REQUIREMENTS:
       (Don't care about this if you have a full installation of Windows 10)
     - Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
     - 3 GB of storage
-    - Windows Phone installed in your Lumia
+    - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia
     - A few brain cells (VERY IMPORTANT)
 
 INSTRUCTION:
     1. Download Windows 10 for ARMv7 build 15035 to your Computer.
     2. Extract Win10.7z\sources\install.wim  to  Installer folder.
     3. Run Driver Downloader and download Drivers for your device.
-    4. Run Installer.bat and follow the Instruction in the installer.
-    5. After installation finished, boot and setup Windows 10.
+    4. Unlock bootloader and boot into Mass Storage Mode (see WPinternals.net)
+    5. Run Installer.bat and follow the Instruction in the installer.
+    6. After installation finished, boot and setup Windows 10.
        Don't connect to Wi-Fi on setup. It will makes the setup stuck.
-    6. After setup complete (Desktop appears), reboot to mass storage mode.
-    7. Run PostInstall.bat to fix Windows Phone crash.
-    8. Now, you can dualboot Windows Phone and Windows 10.
+    7. After setup complete (Desktop appears), reboot to mass storage mode.
+    8. Run PostInstall.bat to fix Windows Phone crash.
+    9. Now, you can dualboot Windows Phone and Windows 10.
 
 NOTES:
     * This is not a software, this is a set of programs that combined to make the installation easier.
@@ -57,7 +59,6 @@ DOWNLOADS:
       Thanks to @driver1998 (Image owner) and @FadilFadz (link).
     - Drivers: Run Driver Downloader to feltch drivers for your device automatically.
       Thanks to @Gus33000
-    - To download Installer: go to Releases page, click assets, download latest build.
 
 THANKS TO:
     - fadilfadz01 (Fadil Fadz)     : Helping me write the script
