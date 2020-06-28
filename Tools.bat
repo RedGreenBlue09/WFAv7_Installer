@@ -147,8 +147,6 @@ if not exist %MainOS%\Windows\WFAv7Storage.txt (
 	endlocal
 	goto ChooseTool
 )
-endlocal
-goto ChooseTool
 for /f %%i in (%MainOS%\Windows\WFAv7Storage.txt) do (set Storage=%%i)
 if %Storage%==8 (
 	echo.
@@ -224,6 +222,8 @@ if %Storage%==32A (
 	echo.
 	pause
 )
+endlocal
+goto ChooseTool
 
 :Tool4
 setlocal
