@@ -86,43 +86,6 @@ goto ChooseTool
 
 :Tool3
 setlocal
-:ChooseDev
-cls
-echo.
-echo %ESC%[92mChoose your device model below:
-echo  %ESC%[36m1) %ESC%[97mLumia 930
-echo  %ESC%[36m2) %ESC%[97mLumia 929 (Icon)
-echo  %ESC%[36m3) %ESC%[97mLumia 1520
-echo  %ESC%[36m4) %ESC%[97mLumia 1520 (16GB)
-echo  %ESC%[36m5) %ESC%[97mLumia 1520 AT^&T
-echo  %ESC%[36m6) %ESC%[97mLumia 1520 AT^&T (16GB)
-echo  %ESC%[36m7) %ESC%[97mLumia 830 Global
-echo  %ESC%[36m8) %ESC%[97mLumia 735 Global
-echo  %ESC%[36mA) %ESC%[97mLumia 640 XL LTE Global
-echo  %ESC%[36mB) %ESC%[97mLumia 640 XL LTE AT^&T
-echo  %ESC%[36mC) %ESC%[97mLumia 950
-echo  %ESC%[36mD) %ESC%[97mLumia 950 XL
-echo  %ESC%[36mE) %ESC%[97mLumia 1020
-echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
-echo  %ESC%[36mG) %ESC%[97mLumia 920
-set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
-if "%Model%"=="" goto ChooseDev
-if "%Model%"=="1" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="2" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="3" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="4" set Storage=16 & goto ToBeContinued1
-if "%Model%"=="5" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="6" set Storage=16 & goto ToBeContinued1
-if "%Model%"=="7" set Storage=16 & goto ToBeContinued1
-if "%Model%"=="8" set Storage=8 & goto ToBeContinued1
-if /i "%Model%"=="A" set Storage=8 & goto ToBeContinued1
-if /i "%Model%"=="B" set Storage=8 & goto ToBeContinued1
-if /i "%Model%"=="C" set Storage=32 & goto ToBeContinued1
-if /i "%Model%"=="D" set Storage=32 & goto ToBeContinued1
-if /i "%Model%"=="E" set Storage=32A & goto ToBeContinued1
-if /i "%Model%"=="F" set Storage=32A & goto ToBeContinued1
-if /i "%Model%"=="G" set Storage=32A & goto ToBeContinued1
-:ToBeContinued1
 cls
 echo.
 echo %ESC%[93m - Connect your phone in mass storage mode to the computer.%ESC%[0m
