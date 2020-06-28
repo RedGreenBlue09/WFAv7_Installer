@@ -100,16 +100,6 @@ if %errorlevel% NEQ 0 (
 	exit /B
 )
 
-echo  - Checking Hyper-V ...
-(Powershell -Command "(Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-Management-Powershell -Online).State" | findstr /I "Enabled") >nul 2>&1
-if %errorlevel% NEQ 0 (
-	title ERROR!
-	color 0C
-	echo ----------------------------------------------------------------
-	echo  Please enable Hyper-V in Windows Features.
-	pause
-	exit /B
-)
 echo  - Getting CmdLets ...
 Powershell -C "(Get-Command).name" >> Temp\Commands.txt
 echo  - Checking New-Partition ...
@@ -122,6 +112,8 @@ echo  - Checking Get-Partition ...
 FindStr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-WmiObject ...
 FindStr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
+echo  - Checking Get-PartitionSupportedSize ...
+FindStr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
 del Temp\Commands.txt
 goto ToBeContinued0
 :MissingCommand
@@ -133,15 +125,6 @@ echo  You used Windows 7 / Windows Home edition / Customized Windows.
 echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 pause
 exit /B
-:MissingCommandHyperV
-del Commands.txt
-title ERROR!
-color 0C
-echo ----------------------------------------------------------------
-echo  Hyper-V is not fully enabled or not enabled correctly.
-pause
-exit /B
-
 
 :ToBeContinued0
 cls
@@ -182,7 +165,7 @@ echo    ^|                                                                      
 echo    +----------------------------------------------------------------------------------------+%ESC%[0m
 echo.
 echo.
-set /p Disclaimer="%ESC%[97mDo you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set /p Disclaimer="%ESC%[97mAre you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%Disclaimer%"=="N" (
 	cls
 	echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
@@ -257,12 +240,12 @@ echo   - Read README.TXT and instruction before using this Installer.
 echo   - Make sure your phone is fully charged and it's battery is not wear too much.
 echo   - Make sure no drives mounted with letter N.
 echo   - Closed all programs during installation.
-echo   * Highly recommend you to flash the original FFU of your phone
+echo   * Highly recommend you to flash the original FFU of your phone.
 echo     before installing Windows 10 ARMv7.
-if %Storage%==8 echo   * You need at least ^> %ESC%[4m4.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
-if %Storage%==16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
-if %Storage%==32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
-if %Storage%==32A echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of Phone Storage to continue.%ESC%[0m
+if %Storage%==8 echo   * This will remove Windows Phone to save space for WFAv7.%ESC%[0m
+if %Storage%==16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
+if %Storage%==32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
+if %Storage%==32A echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
 echo.
 echo %ESC%[95m WARNING:
 echo   * After pressing any key, the Installation will begin. As a batch script,
@@ -379,7 +362,7 @@ goto ChooseDev
 ::---------------------------------------------------------------
 :LogNameInit
 if not exist Logs\NUL del Logs /Q 2>nul
-if not exist Logs\ mkdir Logs
+if not exist Logs\ md Logs
 cd Logs
 for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy"') do set Date1=%%d
 if not exist %Date1%.log set LogName=Logs\%Date1%.log & goto LoggerInit
@@ -420,7 +403,7 @@ echo ========================================================= >>%LogName%
 echo ## Device is %Model%  ## >>%LogName%
 echo ## MainOS is %MainOS% ## >>%LogName%
 echo. >>%LogName%
-if not exist Temp\ mkdir Temp\
+if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumberEFIESP=%%i
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
@@ -431,17 +414,19 @@ if %Storage%==8 (
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Formatting MainOS for Windows 10 for ARMv7 ...%ESC%[91m
-	rd %MainOS%\Data 
+	rd %MainOS%\Data
 )
 if %Storage%==16 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 8192MB; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
+	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set WUuid=%%i
 )
 if %Storage%==32 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
+	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set WUuid=%%i
 )
 if %Storage%==8 (format %MainOS% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%)
 if %Storage%==16 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
@@ -449,12 +434,21 @@ if %Storage%==32 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Installing Windows 10 for ARMv7 ...%ESC%[91m
-if %Storage%==8 Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
-if %Storage%==16 Files\wimlib apply install.wim 1 N:\ --compact=xpress8k %SevLogger%
-if %Storage%==32 Files\wimlib apply install.wim 1 N:\ %SevLogger%
+if %Storage%==8 (
+	Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
+	copy nul %MainOS%\Windows\UUID.txt
+)
+if %Storage%==16 (
+	Files\wimlib apply install.wim 1 N:\ --compact=xpress8k %SevLogger%
+	echo %WUuid% > N:\Windows\UUID.txt
+)
+if %Storage%==32 (
+	Files\wimlib apply install.wim 1 N:\ %SevLogger%
+	echo %WUuid% > N:\Windows\UUID.txt
+)
 if %Storage%==32A (
-	mkdir %MainOS%\Windows10Arm
-	Files\wimlib apply install.wim 1 %MainOS%\Windows10Arm\ %SevLogger%
+	md %MainOS%\Windows10Arm
+	Files\wimlib apply install.wim 1 %MainOS%\Data\Windows10Arm\ %SevLogger%
 )
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
@@ -471,16 +465,16 @@ if /i %Model%==A Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL
 if /i %Model%==B Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
 if /i %Model%==C Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
 if /i %Model%==D Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
-if /i %Model%==E Dism /Image:%MainOS%\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i %Model%==F Dism /Image:%MainOS%\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
-if /i %Model%==G Dism /Image:%MainOS%\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if /i %Model%==E Dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i %Model%==F Dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if /i %Model%==G Dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 if %Storage%==8 (
 	echo>>Temp\diskpart1.txt sel dis %DiskNumber%
 	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
 	echo>>Temp\diskpart1.txt assign mount=%MainOS%\EFIESP
-	mkdir %MainOS%\EFIESP
+	md %MainOS%\EFIESP
 	diskpart /s Temp\diskpart1.txt %Logger%
 )
 echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
@@ -505,8 +499,8 @@ if %Storage%==8 (
 	)
 )
 if %Storage%==32A (
-	bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
-	bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
+	bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
+	bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
 	bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
 )
 if %Storage%==32A (
@@ -515,7 +509,9 @@ if %Storage%==32A (
 bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
 bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
 bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
-bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
+if if %Storage%==32A (bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
+	bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
+)
 bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
 bcdedit /store %bcdLoc% /set %id% "detecthal" Yes %Logger%
 bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
@@ -529,15 +525,15 @@ bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
-mkdir %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
+md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 set DLMOS=%MainOS:~0,-1%
-echo. >>%LogName%
 echo>>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
 echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
 rd /s /q Temp\
+echo %Storage% > %MainOS%\Windows\WFAv7Storage.txt
 goto MissionCompleted
 ::---------------------------------------------------------------
 :SevErrFound
@@ -564,12 +560,19 @@ if %ErrNum% GTR 0 (
 if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>%LogName%
 if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation completed successfully!
 echo.
-echo %ESC%[92m================================================================================================
-echo  - Now, reboot your phone.
+pause
+cls
+echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
+echo.
+echo  %ESC%[92mWindows 10 for ARMv7 has been installed on your phone.
+echo  %ESC%[97m- Now, reboot your phone.
 echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7.
-echo  - Boot and setup Windows 10 for the first time. Then reboot the phone to mass storage mode.
-echo  - Run PostInstall.bat.
-echo ================================================================================================%ESC%[0m
+echo  - Boot and setup Windows 10 for the first time. Then reboot the phone to Mass Storage Mode.
+echo  - Run PostInstall.bat. (With Spec A devices, WFAv7 Path is MainOS:\Data\Windows10Arm)%ESC%[0m
 echo.
 pause
 exit /b

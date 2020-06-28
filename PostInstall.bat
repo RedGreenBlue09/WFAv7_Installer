@@ -52,39 +52,30 @@ if not exist "%MainOS%\EFIESP" (
 	ECHO  %ESC%[91mNot a valid MainOS partition!
 	GOTO MOSPath
 )
-if not exist "%MainOS%\Data" (
-	ECHO  %ESC%[91mNot a valid MainOS partition!
-	GOTO MOSPath
-)
-if not exist %MainOS%\Data\windows10arm.vhdx echo %ESC%[41mWFAv7 is not installed. & pause & exit
 echo.
 :WinPath
-echo.
 set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
-if not exist "%WinDir%\Windows" (
+if not exist "%WFAv7Dir%\Windows" (
 	ECHO  %ESC%[91mNot a valid Windows partition!
 	GOTO WinPath
 )
 :ToBeContinued
 echo.
-echo %ESC%[93mGetting partitions info ...%ESC%[96m
+echo %ESC%[96mGetting partitions info ...%ESC%[0m
 set DLMOS=%MainOS:~0,-1%
 for /f %%i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
 for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
 echo>>diskpart1.txt sel dis %DiskNumber%
 echo>>diskpart1.txt sel par %PartitionNumber%
 echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
-if not exist %WFAv7Dir%\EFIESP echo>>diskpart1.txt assign mount=%WFAv7Dir%\EFIESP
+if not exist %WFAv7Dir%\EFIESP mkdir %WFAv7Dir%\EFIESP & echo>>diskpart1.txt assign mount=%WFAv7Dir%\EFIESP
 attrib +h diskpart1.txt
 mkdir "%WinDir%\EFIESP"
 echo.
-echo %ESC%[93mEnabling Dual Boot ...%ESC%[96m
+echo %ESC%[96mEnabling Dual Boot ...%ESC%[0m
 diskpart /s diskpart1.txt
 del /A:H diskpart1.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
-echo.
-echo %ESC%[93mUnmounting VHDX Image ...%ESC%[91m
-powershell Dismount-VHD -Path "%MainOS%\Data\windows10arm.vhdx"
 echo.
 echo %ESC%[92m=====================================================================================
 echo  - Done. Now, you have Windows 10 for ARMv7 Dualboot with Windows Phone.
@@ -94,4 +85,4 @@ echo  - Don't use Vol Down button at the boot menu because it will boot Reset My
 echo    And an exclamation mark will apears. This will not cause damage to your phone.
 echo =====================================================================================%ESC%[0m
 pause
-exit
+exit /b
