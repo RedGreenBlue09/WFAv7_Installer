@@ -1,4 +1,4 @@
-# Windows 10 for ARMv7 Installer (VHDX) PR3
+# Windows 10 for ARMv7 Installer (VHDX) 1.0
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7")
 ### Disclaimer
     * I'm not responsible for bricked devices, dead SD cards,
