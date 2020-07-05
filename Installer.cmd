@@ -60,7 +60,7 @@ if %WinBuild% LSS 9600 (
 	color 0C
 	echo ----------------------------------------------------------------
 	echo   This Windows version is not supported by WFAv7 Installer.
-	echo   Please use Windows 8.1+ Pro or Enterprise ^(Build 9600+^) 
+	echo   Please use Windows 8.1+ ^(Build 9600+^) 
 	echo   Current OS build: %WinBuild%
 	pause
 	exit /B
@@ -102,18 +102,16 @@ if %errorlevel% NEQ 0 (
 
 echo  - Getting CmdLets ...
 Powershell -C "(Get-Command).name" >> Temp\Commands.txt
+echo  - Checking Get-Date ...
+FindStr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking New-Partition ...
 FindStr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
-echo  - Checking Format-Volume ...
-FindStr /X /C:"Format-Volume" Temp\Commands.txt >nul || goto MissingCommand
-echo  - Checking Expand-WindowsImage ...
-FindStr /X /C:"Expand-WindowsImage" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-Partition ...
 FindStr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-WmiObject ...
 FindStr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-PartitionSupportedSize ...
-FindStr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
+FindStr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto MissingCommand
 del Temp\Commands.txt
 goto ToBeContinued0
 :MissingCommand
@@ -125,6 +123,15 @@ echo  You used Windows 7 / Windows Home edition / Customized Windows.
 echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 pause
 exit /B
+:MissingCommandHyperV
+del Commands.txt
+title ERROR!
+color 0C
+echo ----------------------------------------------------------------
+echo  Hyper-V is not fully enabled or not enabled correctly.
+pause
+exit /B
+
 
 :ToBeContinued0
 cls
@@ -206,7 +213,7 @@ echo  %ESC%[36mD) %ESC%[97mLumia 950 XL
 echo  %ESC%[36mE) %ESC%[97mLumia 1020
 echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
 echo  %ESC%[36mG) %ESC%[97mLumia 920
-echo  %ESC%[36mH) %ESC%[97mBSP Method (All devices) [COMMING SOON]%ESC%[0m
+echo  %ESC%[36mH) %ESC%[97mBSP Method (Most devices) [COMMING SOON]%ESC%[0m
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
 if "%Model%"=="" goto ChooseDev
 if "%Model%"=="1" set Storage=32 & goto ToBeContinued1
@@ -313,8 +320,8 @@ if not defined MainOS (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
 )
-for /f %%m in ('Powershell -C "(echo %MainOS%).length -eq 2"') do set Lenght2=%%m
-if %Lenght2%==False (
+echo %MainOS%| Files\grep -Pi "^[A-Z]\x3A$" >nul
+if %errorlevel% NEQ 0 (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
 )
@@ -391,7 +398,7 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
- type CurrentError.log ^>^> "%LogName%" ^&^
+ type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
 :ToBeContinued2
@@ -407,7 +414,7 @@ if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumberEFIESP=%%i
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
-echo ## EFIESP PN is %PartitionNumberEFIESP%  ## >>%LogName%
+echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
 if %Storage%==8 (
@@ -417,7 +424,7 @@ if %Storage%==8 (
 	rd %MainOS%\Data
 )
 if %Storage%==16 (
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 8192MB; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set WUuid=%%i
@@ -435,39 +442,47 @@ if %Storage%==32 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Installing Windows 10 for ARMv7 ...%ESC%[91m
 if %Storage%==8 (
-	Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
+	if %WinBuild% LSS 10240 (
+		Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
+	) else (
+		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\ /Compact %SevLogger%
+	)
 	copy nul %MainOS%\Windows\UUID.txt
 )
 if %Storage%==16 (
-	Files\wimlib apply install.wim 1 N:\ --compact=xpress8k %SevLogger%
+	if %WinBuild% LSS 10240 (
+		Files\wimlib apply install.wim 1 N:\ --compact=xpress8k %SevLogger%
+	) else (
+		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
+	)
 	echo %WUuid% > N:\Windows\UUID.txt
 )
 if %Storage%==32 (
-	Files\wimlib apply install.wim 1 N:\ %SevLogger%
+	Dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
 	echo %WUuid% > N:\Windows\UUID.txt
 )
 if %Storage%==32A (
 	md %MainOS%\Windows10Arm
-	Files\wimlib apply install.wim 1 %MainOS%\Data\Windows10Arm\ %SevLogger%
+	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ /Compact %SevLogger%
 )
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-if %Model%==1 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
-if %Model%==2 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
-if %Model%==3 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %Model%==4 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %Model%==5 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %Model%==6 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %Model%==7 Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if %Model%==8 Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if /i %Model%==A Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if /i %Model%==B Dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /i %Model%==C Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if /i %Model%==D Dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
-if /i %Model%==E Dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i %Model%==F Dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
-if /i %Model%==G Dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if %Model%==1 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
+if %Model%==2 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
+if %Model%==3 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model%==4 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model%==5 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model%==6 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model%==7 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
+if %Model%==8 Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
+if /i %Model%==A Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
+if /i %Model%==B Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
+if /i %Model%==C Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
+if /i %Model%==D Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
+if /i %Model%==E Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i %Model%==F Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if /i %Model%==G Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 if %Storage%==8 (
@@ -485,48 +500,48 @@ echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 SET bcdLoc="%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>%LogName% 
 SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
-bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
+Files\bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
 if %Storage%==8 (
-	bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
-	bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
-	bcdedit /store %bcdLoc% /set "{default}" description "Ignore This" %Logger%
-	bcdedit /store %bcdLoc% /default %id% %Logger%
+	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
+	Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
+	Files\bcdedit /store %bcdLoc% /set "{default}" description "Ignore This" %Logger%
+	Files\bcdedit /store %bcdLoc% /default %id% %Logger%
 ) else (
 	if %Storage% NEQ 32A (
-		bcdedit /store %bcdLoc% /set %id% "device" "partition=N:" %SevLogger%
-		bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=N:" %SevLogger%
-		bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=N:" %SevLogger%
+		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=N:" %SevLogger%
+		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
 	)
 )
 if %Storage%==32A (
-	bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
-	bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
-	bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
+	Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
+	Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
 )
 if %Storage%==32A (
-	bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
-) else (bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%)
-bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
-bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
-bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
-if if %Storage%==32A (bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
-	bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
+	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
+) else (Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%)
+Files\bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
+if %Storage%==32A (Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
+	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
 )
-bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
-bcdedit /store %bcdLoc% /set %id% "detecthal" Yes %Logger%
-bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
-bcdedit /store %bcdLoc% /set %id% "ems" No %Logger%
-bcdedit /store %bcdLoc% /set %id% "bootdebug" No %Logger%
-bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
-bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" yes %Logger%
-bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5 %Logger%
-bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" yes %SevLogger%
-bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
+Files\bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "detecthal" Yes %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "ems" No %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "bootdebug" No %Logger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" yes %Logger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5 %Logger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" yes %SevLogger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
-bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
+Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 set DLMOS=%MainOS:~0,-1%
 echo>>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
@@ -550,7 +565,6 @@ exit /B
 :MissionCompleted
 if %ErrNum% GTR 0 (
 	rd /s /q Temp\
-	echo.
 	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>%LogName%
 	echo %ESC%[96m[INFO] Installation is completed with%ESC%[91m %ErrNum% error^(s^)%ESC%[96m!
 	echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m

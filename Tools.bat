@@ -73,14 +73,16 @@ echo.
 if exist Temp\ rd /s /q Temp
 if exist Logs\ rd /s /q Logs
 :Choice1
-set /p CYN=%ESC%[97mDo you want to delete Drivers folder? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m] %ESC%[0m
-if "!CYN!"=="" goto Choice
-if !CYN!==Y rd /s /q Drivers\ & set Completed=1
-if !CYN!==y rd /s /q Drivers\ & set Completed=1
-if !CYN!==N set Completed=1
-if !CYN!==n set Completed=1
+if exist Drivers\ (
+	set /p CYN=%ESC%[97mDo you want to delete Drivers folder? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m] %ESC%[0m
+	if "!CYN!"=="" goto Choice
+	if !CYN!==Y rd /s /q Drivers\ & set Completed=1
+	if !CYN!==y rd /s /q Drivers\ & set Completed=1
+	if !CYN!==N set Completed=1
+	if !CYN!==n set Completed=1
+) else (set Completed=1)
 if not !Completed!==1 goto Choice1
-if !Completed!==1 echo. & echo Done. & echo. & pause
+if !Completed!==1 echo. & echo %ESC%[92mDone^^!%ESC%[0m & echo. & pause
 endlocal
 goto ChooseTool
 
@@ -137,7 +139,13 @@ if %Storage%==16 (
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
 	for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size (Get-PartitionSupportedSize -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).sizeMax"
-	echo Done^^!
+	echo.
+	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
+	echo.
+	echo %ESC%[92mDone^^!%ESC%[0m
 	echo.
 	pause
 	endlocal
@@ -160,7 +168,13 @@ if %Storage%==32 (
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
 	for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size (Get-PartitionSupportedSize -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).sizeMax"
-	echo Done^^!
+	echo.
+	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
+	echo.
+	echo %ESC%[92mDone^^!%ESC%[0m
 	echo.
 	pause
 	endlocal
@@ -179,8 +193,14 @@ if %Storage%==32A (
 	takeown /F %MainOS%\Data\Windows10Arm
 	takeown /F %MainOS%\Data\Windows10Arm /R /D Y
 	icacls %MainOS%\Data\Windows10Arm /grant Administrators:F /C /Q
-	icacls %MainOS%\Data\Windows10Arm /grant Administrators:F /T /C /Q /Reset
+	icacls %MainOS%\Data\Windows10Arm /grant Administrators:F /T /C /Q
 	rd /s /q %MainOS%\Data\Windows10Arm
+	echo.
+	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
+	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
+	echo.
 	echo %ESC%[92mDone^^!%ESC%[0m
 	echo.
 	pause
@@ -194,14 +214,14 @@ setlocal
 set Operation=
 cls
 echo.
-echo %ESC%[97mChoose operation below:
+echo %ESC%[92mChoose operation below:
 echo %ESC%[0m1^)%ESC%[97m Enable Safe Mode for WFAv7
 echo %ESC%[0m2^)%ESC%[97m Disable Safe Mode for WFAv7
 set /p Operation=%ESC%[93mOperation: %ESC%[0m
 if not defined Operation goto ChooseOperation2
-if !Operation!==1 (
+if %Operation%==1 (
 	:MOSPath10
-	set /p MainOS=%ESC%[92mEnter MainOS Path: 
+	set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[0m
 	if not exist !MainOS!\EFIESP (
 		ECHO  %ESC%[91mNot a valid MainOS partition!
 		GOTO MOSPath10
@@ -212,7 +232,7 @@ if !Operation!==1 (
 	)
 	bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /set {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot minimal & set Completed=1
 )
-if !Operation!==2 (
+if %Operation%==2 (
 	:MOSPath11
 	set /p MainOS=%ESC%[92mEnter MainOS Path: 
 	if not exist !MainOS!\EFIESP (

@@ -26,7 +26,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 2.3%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 2.4%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -39,9 +39,9 @@ echo  %ESC%[36m5)%ESC%[97m Lumia 830 Global                %ESC%[91m+-----------
 echo  %ESC%[36m6)%ESC%[97m Lumia 735 Global
 echo  %ESC%[36m7)%ESC%[97m Lumia 640 XL LTE Global
 echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[36mA)%ESC%[97m Lumia 920 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[36mB)%ESC%[97m Lumia 1020 %ESC%[0m[Will not be used in the Installer]
-echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T %ESC%[0m[Will not be used in the Installer]
+echo  %ESC%[36mA)%ESC%[97m Lumia 920
+echo  %ESC%[36mB)%ESC%[97m Lumia 1020
+echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
 echo  %ESC%[36mD)%ESC%[97m Lumia 950
 echo  %ESC%[36mE)%ESC%[97m Lumia 950 XL
 set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
@@ -251,15 +251,15 @@ if /I "%Model%"=="E" (
 )
 echo.
 color 0a
-echo Downloading Drivers Done!
+echo Downloading Drivers Done^^!
 pause
 goto ChooseDev
 :OldExist
 color 0c
-title Old Drivers Exist!
+title Old Drivers Exist.
 cls
 echo.
-echo Old Drivers Exist
+echo Old Drivers Exist.
 echo Please delete or move it to another place
 pause
 goto ChooseDev

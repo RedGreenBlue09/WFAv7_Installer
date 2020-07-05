@@ -14,6 +14,8 @@
   - Nokia Lumia 735 Global
   - Microsoft Lumia 640 XL LTE (Global, AT&T)
   - Microsoft Lumia 950 & XL
+  - Nokia Lumia 1020 (Global & AT&T)
+  - Nokia Lumia 920
   - Notes:
     * No support for Lumia 2520 due to lack of drivers.
     * No support for Spec A devices because these devices don't support VHD boot.
@@ -38,7 +40,7 @@
      Don't connect to Wi-Fi on setup. It will makes the setup stuck.
   6. After setup complete (Desktop appears), reboot to mass storage mode.
   7. Run PostInstall.bat to fix Windows Phone crash.
-  8. Now, you can dualboot Windows Phone and Windows 10.
+  8. Now, you can dualboot Windows Phone and Windows 10. (single boot for 8 GB deivces)
 ### Notes
   * This is not a software, this is a set of programs that combined to make the installation easier.
   * Editing the files or folders may cause damage to the intaller.
