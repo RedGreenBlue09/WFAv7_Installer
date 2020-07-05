@@ -124,28 +124,28 @@ if %Storage%==8 (
 )
 if %Storage%==16 (
 	:WinPath1
-	set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
-	if not exist "%WFAv7Dir%\Windows" (
+	set /p WFADir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
+	if not exist "!WFADir!\Windows" (
 		ECHO  %ESC%[91mNot a valid Windows partition!
 		GOTO WinPath1
 	)
 	echo %ESC%[96mDeleting Windows 10 for ARMv7 Partition ...%ESC%[0m
-	for /f %%i in (%WFAv7Dir%\Windows\UUID.txt) do (set UUID=%%i)
+	for /f %%i in (!WFADir!\Windows\UUID.txt) do (set UUID=%%i)
 	echo Y >Y
-	Powershell -C "Get-Partition | ? { $_.Guid -eq '%UUID%'} | Remove-Partition" < Y
+	Powershell -C "Get-Partition | ? { $_.Guid -eq '!UUID!'} | Remove-Partition" < Y
 	del Y
 	set DLMOS=%MainOS:~0,-1%
 	echo %ESC%[96mExtending Data Partition ...%ESC%[0m
-	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
+	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter !DLMOS!).DiskNumber"') do set DiskNumber=%%i
 	for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size (Get-PartitionSupportedSize -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).sizeMax"
+	Powershell -C "Resize-Partition -DiskNumber !DiskNumber! -PartitionNumber !PartitionNumberData! -Size (Get-PartitionSupportedSize -DiskNumber !DiskNumber! -PartitionNumber !PartitionNumberData!).sizeMax"
 	echo.
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
 	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 	echo.
-	echo %ESC%[92mDone^^!%ESC%[0m
+	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
 	pause
 	endlocal
@@ -153,28 +153,28 @@ if %Storage%==16 (
 )
 if %Storage%==32 (
 	:WinPath2
-	set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
-	if not exist "%WFAv7Dir%\Windows" (
+	set /p WFADir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
+	if not exist "!WFADir!\Windows" (
 		ECHO  %ESC%[91mNot a valid Windows partition!
 		GOTO WinPath2
 	)
 	echo %ESC%[96mDeleting Windows 10 for ARMv7 Partition ...%ESC%[0m
-	for /f %%i in (%WFAv7Dir%\Windows\UUID.txt) do (set UUID=%%i)
+	for /f %%i in (!WFADir!\Windows\UUID.txt) do (set UUID=%%i)
 	echo Y >Y
-	Powershell -C "Get-Partition | ? { $_.Guid -eq '%UUID%'} | Remove-Partition" < Y
+	Powershell -C "Get-Partition | ? { $_.Guid -eq '!UUID!'} | Remove-Partition" < Y
 	del Y
 	set DLMOS=%MainOS:~0,-1%
 	echo %ESC%[96mExtending Data Partition ...%ESC%[0m
-	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
+	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter !DLMOS!).DiskNumber"') do set DiskNumber=%%i
 	for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size (Get-PartitionSupportedSize -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).sizeMax"
+	Powershell -C "Resize-Partition -DiskNumber !DiskNumber! -PartitionNumber !PartitionNumberData! -Size (Get-PartitionSupportedSize -DiskNumber !DiskNumber! -PartitionNumber !PartitionNumberData!).sizeMax"
 	echo.
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
 	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 	echo.
-	echo %ESC%[92mDone^^!%ESC%[0m
+	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
 	pause
 	endlocal
@@ -201,8 +201,9 @@ if %Storage%==32A (
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
 	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
 	echo.
-	echo %ESC%[92mDone^^!%ESC%[0m
+	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
+	del !MainOS!\Windows\WFAv7Storage.txt
 	pause
 )
 endlocal
