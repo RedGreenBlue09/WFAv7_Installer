@@ -6,15 +6,6 @@ if %Errorlevel% NEQ 0 goto :EOF
 :Check1
 cd ..
 echo Checking compatibility ...
-echo  - Checking Drive [M:] ...
-if EXIST M:\ (
-	title ERROR!
-	color 0C
-	echo ----------------------------------------------------------------
-	echo   Please Unmount Drive [M:]
-	pause
-	exit /B
-)
 echo  - Checking Drive [N:] ...
 if EXIST N:\ (
 	title ERROR!
@@ -77,26 +68,6 @@ if %PLV% NEQ 0 (
 	echo   Please enable Powershell and continue.
 	echo   Error code: %PLV%
 	pause
-	exit /B
-)
-echo  - Checking Dism ...
-where DISM >nul 2>&1
-if %errorlevel% NEQ 0 (
-	title ERROR!
-	color 0C
-	echo ----------------------------------------------------------------
-	echo   DISM isn't found or it has problem.
-	pause
-	exit /B
-)
-echo  - Checking Bcdedit ...
-where bcdedit >nul 2>&1
-if %errorlevel% NEQ 0 (
-	TITLE ERROR!
-	COLOR 0C
-	echo ----------------------------------------------------------------
-	echo   BCDEDIT wasn't found or it has problem.
-	PAUSE
 	exit /B
 )
 
