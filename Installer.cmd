@@ -123,15 +123,6 @@ echo  You used Windows 7 / Windows Home edition / Customized Windows.
 echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
 pause
 exit /B
-:MissingCommandHyperV
-del Commands.txt
-title ERROR!
-color 0C
-echo ----------------------------------------------------------------
-echo  Hyper-V is not fully enabled or not enabled correctly.
-pause
-exit /B
-
 
 :ToBeContinued0
 cls
