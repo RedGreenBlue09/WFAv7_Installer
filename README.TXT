@@ -79,93 +79,102 @@ THANKS TO:
     - Dariusz Stanislawek          : DSFO
 
 CHANGELOGS:
+ - Release 2.0 (R2)
+   + BIG CHANGE: Removed VHDX method.
+   + Added support for Lumia 920, 1020.
+   + Added MainOS auto detect. (Thanks to WPinternals source code)
+   + Added support for CompactOS on Windows 8.1.
+   + Updated UI.
+   + Updated Driver Downloader.
+   + Improved startup time.
+   + Installer no longer require Hyper-V and Windows Pro Edition.
  - Release 1.0 (R1)
-   + Code optimization (Preview 1 & 2)
-   + Correct some spelling mistakes & hard to understand sentences (Preview 1)
-   + 2X Faster & More accurate Powershell cmdlets check (Preview 1)
-   + Verbose compatibility check (Preview 1)
-   + Fixed a lot of bugs in PR 3.9 (Preview 1)
+   + Code optimization. (Preview 1 & 2)
+   + Correct some spelling mistakes & hard to understand sentences. (Preview 1)
+   + 2X Faster & More accurate Powershell cmdlets check. (Preview 1)
+   + Verbose compatibility check. (Preview 1)
+   + Fixed a lot of bugs in PR 3.9. (Preview 1)
    + Fixed Installer crashes at the end of installation. (Preview 2)
    + Fixed Installer & Driver Downloader crashes when user enters: & ; ^ > < , | (Preview 1 & 3)
-   + Renamed Installer from Bat to Cmd for correct Errorlevel check (Preview 1)
-   + Reduced Installer & Driver Downloader's size (Preview 3)
-   + Use exit from batch instead of exit cmd (Final)
-   + Minor changes
+   + Renamed Installer from Bat to Cmd for correct Errorlevel check. (Preview 1)
+   + Reduced Installer & Driver Downloader's size. (Preview 3)
+   + Use exit from batch instead of exit cmd. (Final)
+   + Misc changes.
   *KNOWN ISSUES:
    + Installer & Driver Downloader crashes when user enter "
    - Try and tell me :)
  - Proximal Release 3.8 & 3.9 (PR3.8 & 3.9)
-   + Added Windows build check
-   + Bring up colors for Windows 8.1 (Thanks to @adoxa for "ansicon")
-   + Installer only has one version for both Windows 8.1 and 10 now
-   + Improved Installer startup time (up to 5X)
-   + Installation will be cancelled if a severe issue ocurred during installation
-   + Improved UI a lot
-   + Improved Logs
-   + Powershell cmdlets now return errorlevel 1 if error occurred
-   + Use Expand-WindowsImage instead of DISM for progress bar
-   + Added number of errors at the end of installation
-   + Added Safe Mode enabler / disabler for WFAv7 (Tools)
-   + Added option to run Installer without compatibility check (Tools)
-   + Fixed SetLocal error when download too much drivers (Driver Downloader)
-   + Use SVN Export instead of SVN Checkout (Driver Downloader)
-   + Fixed "Installation always failed" in PR 3.8 (PR3.9)
+   + Added Windows build check.
+   + Bring up colors for Windows 8.1. (Thanks to @adoxa for "ansicon")
+   + Installer only has one version for both Windows 8.1 and 10 now.
+   + Improved Installer startup time. (up to 5X)
+   + Installation will be cancelled if a severe issue ocurred during installation.
+   + Improved UI a lot.
+   + Improved Logs.
+   + Powershell cmdlets now return errorlevel 1 if error occurred.
+   + Use Expand-WindowsImage instead of DISM for progress bar.
+   + Added number of errors at the end of installation.
+   + Added Safe Mode enabler / disabler for WFAv7. (Tools)
+   + Added option to run Installer without compatibility check. (Tools)
+   + Fixed SetLocal error when download too much drivers. (Driver Downloader)
+   + Use SVN Export instead of SVN Checkout. (Driver Downloader)
+   + Fixed "Installation always failed" in PR 3.8. (PR3.9)
    + Block 8.1 users from installing WFAv7 to 8 GB devices to fix compact errors.
    + Added check for Drivers.
-   + Minor Code cleanup
-   + Misc improvements & fixes
+   + Minor Code cleanup.
+   + Misc improvements & fixes.
  - Proximal Release 3.6 and 3.7 (PR3.6 & 3.7)
-   + Improved UI
-   + Added Logging
-   + Added Mount VHDX to PostInstall
-   + Remove Lumia 650 from Driver Downloader
-   + Updated DriverDownloader and Installer to use new driver repo structure
-   + DriverDownloader now parse definition files provided every driver repo update
-   + Fixed WFAv7 Uninstaller MainOS!\EFIESP\efi\Microsoft\Recovery\BCD not found
+   + Improved UI.
+   + Added Logging.
+   + Added Mount VHDX to PostInstall.
+   + Remove Lumia 650 from Driver Downloader.
+   + Updated DriverDownloader and Installer to use new driver repo structure.
+   + DriverDownloader now parse definition files provided every driver repo update.
+   + Fixed WFAv7 Uninstaller MainOS!\EFIESP\efi\Microsoft\Recovery\BCD not found.
  - Proximal Release 3.5 (PR3.5)
-   + Fixed could not find diskpart.txt
-   + Fixed Powershell pattern... when press enter at MainOS partition
-   + Fixed console size error if console width smaller than 96
-   + Added support for Lumia 950 & XL
-   + Added colors to Installer & Other scripts (Windows 10 Only)
-   + Installer now has Windows 8.1 and 10 version
-   + Misc changes
+   + Fixed could not find diskpart.txt.
+   + Fixed Powershell pattern... when press enter at MainOS partition.
+   + Fixed console size error if console width smaller than 96.
+   + Added support for Lumia 950 & XL.
+   + Added colors to Installer & Other scripts. (Windows 10 Only)
+   + Installer now has Windows 8.1 and 10 version.
+   + Misc changes.
  - Proximal Release 3 (PR3)
-   + Fixed PostInstall not enabling WP boot (PR2.1)
-   + Fixed severe Installer exit issue from 2.1 (PR2.3)
-   + Fixed choice in Tools.bat (PR2.3)
-   + Fixed title shows Beta 3
-   + Fixed Installer crashes when setting up ESP & in PostInstall.bat
-   + Fixed console changed to Raster Font when run Powershell commands
-   + Changed window resize method to Powershell: Enable scroll bar
-   + Changed format method from Powershell & Diskpart to Format command (PR2.3)
+   + Fixed PostInstall not enabling WP boot. (PR2.1)
+   + Fixed severe Installer exit issue from 2.1. (PR2.3)
+   + Fixed choice in Tools.bat. (PR2.3)
+   + Fixed title shows Beta 3.
+   + Fixed Installer crashes when setting up ESP & in PostInstall.bat.
+   + Fixed console changed to Raster Font when run Powershell commands.
+   + Changed window resize method to Powershell: Enable scroll bar.
+   + Changed format method from Powershell & Diskpart to Format command. (PR2.3)
    + Force MainOS must be 2 characters (Allow E:, F:, etc and error on E:\, etc)
-   + Minimized Driver Downloader size & make it easy for edit
+   + Minimized Driver Downloader size & make it easy for edit.
    + Restored CompactOS (PR2.3)
-   + Added Check for drives mounted that only visible to normal user, not exist in Admin
+   + Added Check for drives mounted that only visible to normal user, not exist in Admin.
    + Many more changes ...
  - Proximal Release 2 (PR2)
-   + Fixed severe Installer exit issues (PR1.2 & PR1.3)
-   + Fixed severe Downloader crash issue (PR1.1)
-   + Fixed Installer create 4 GB VHDX on Lumia 830
-   + Fixed Clean.bat diskpart.txt errors
-   + Fixed Clean.bat choice loop
-   + Introduce VHDX Mounter and Unmounter
-   + Use DiskPart method to format partition as compressed for 8 GB devices
-   + Removed support for Lumia 650 until drivers completed
-   + Added auto mount EFIESP to Windows 10 for ARMv7 partition (PostInstall.bat)
-   + Improved PostInstall.bat
-   + Bundle Clean.bat, WFAv7 Uninstaller, FixUpdate, VHDX Mounter into Tools.bat
+   + Fixed severe Installer exit issues. (PR1.2 & PR1.3)
+   + Fixed severe Downloader crash issue. (PR1.1)
+   + Fixed Installer create 4 GB VHDX on Lumia 830.
+   + Fixed Clean.bat diskpart.txt errors.
+   + Fixed Clean.bat choice loop.
+   + Introduce VHDX Mounter and Unmounter.
+   + Use DiskPart method to format partition as compressed for 8 GB devices.
+   + Removed support for Lumia 650 until drivers completed.
+   + Added auto mount EFIESP to Windows 10 for ARMv7 partition. (PostInstall.bat)
+   + Improved PostInstall.bat.
+   + Bundle Clean.bat, WFAv7 Uninstaller, FixUpdate, VHDX Mounter into Tools.bat.
  - Proximal Release 1 (PR1)
-   + Rewrited Installer to 1 file
-   + Rewrited Driver Downloader to 1 file
-   + Fixed 2nd time downloading drivers without reopen downloader failed
-   + Fixed "Parameter is incorrect" in PostInstall.bat
-   + Added "All Drivers" option in Driver Downloader with auto extract
-   + Added Title to Driver Downloader
-   + Added Colors to Driver Downloader
-   + Added Credits section in README.TXT
-   + Minimize downloader binaries
+   + Rewrited Installer to 1 file.
+   + Rewrited Driver Downloader to 1 file.
+   + Fixed 2nd time downloading drivers without reopen downloader failed.
+   + Fixed "Parameter is incorrect" in PostInstall.bat.
+   + Added "All Drivers" option in Driver Downloader with auto extract.
+   + Added Title to Driver Downloader.
+   + Added Colors to Driver Downloader.
+   + Added Credits section in README.TXT.
+   + Minimize downloader binaries.
    + A lot more ...
  - Beta 3 (B3)
    + Support for Spec A devices has dropped due to unsupported hardware.
