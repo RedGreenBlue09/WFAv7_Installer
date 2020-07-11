@@ -117,6 +117,7 @@ if %Storage%==8 (
 	echo.
 	echo - Windows 10 for ARMv7 cannot be uninstalled on 8 GB devices
 	echo   because Windows Phone is removed by the Installer.
+	echo - Reflash your phone's original FFU.
 	echo.
 	pause
 	endlocal
@@ -143,7 +144,7 @@ if %Storage%==16 (
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
-	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD !WFADir!\Windows\UUID.txt !MainOS!\Windows\WFAv7Storage.txt
 	echo.
 	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
@@ -172,7 +173,7 @@ if %Storage%==32 (
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
-	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD !WFADir!\Windows\UUID.txt !MainOS!\Windows\WFAv7Storage.txt
 	echo.
 	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
@@ -189,11 +190,12 @@ if %Storage%==32A (
 		endlocal
 		goto ChooseTool
 	)
-	echo %ESC%[96mUninstalling Windows 10 for ARMv7 ...%ESC%[0m
-	takeown /F %MainOS%\Data\Windows10Arm
-	takeown /F %MainOS%\Data\Windows10Arm /R /D Y
+	echo %ESC%[96mGranting Permissions ...%ESC%[0m
+	takeown /F %MainOS%\Data\Windows10Arm /A
+	takeown /F %MainOS%\Data\Windows10Arm /R /D Y /A
 	icacls %MainOS%\Data\Windows10Arm /grant Administrators:F /C /Q
 	icacls %MainOS%\Data\Windows10Arm /grant Administrators:F /T /C /Q
+	echo %ESC%[96mRemoving Windows 10 for ARMv7 ...%ESC%[0m
 	rd /s /q %MainOS%\Data\Windows10Arm
 	echo.
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
@@ -203,7 +205,7 @@ if %Storage%==32A (
 	echo.
 	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
-	del !MainOS!\Windows\WFAv7Storage.txt
+	del !MainOS!\Windows\WFAv7Storage.txt !WFADir!\Windows\UUID.txt
 	pause
 )
 endlocal

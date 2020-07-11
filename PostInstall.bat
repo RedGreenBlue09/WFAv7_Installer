@@ -52,7 +52,21 @@ if not exist "%MainOS%\EFIESP" (
 	ECHO  %ESC%[91mNot a valid MainOS partition!
 	GOTO MOSPath
 )
+if not exist %MainOS%\Windows\WFAv7Storage.txt (
+	echo.
+	echo %ESC%[91m - Windows 10 for ARMv7 is not installed.%ESC%[0m
+	echo.
+	pause
+	endlocal
+	goto ChooseTool
+)
+for /f %%i in (%MainOS%\Windows\WFAv7Storage.txt) do (set Storage=%%i)
 echo.
+if %Storage%==8 (set WFAv7Dir=%MainOS%& goto ToBeContinued)
+if %Storage%==16 (goto WinPath)
+if %Storage%==32 (goto WinPath)
+if %Storage%==32A (set WFAv7Dir=%MainOS%\Data\Windows10Arm& goto ToBeContinued)
+
 :WinPath
 set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
 if not exist "%WFAv7Dir%\Windows" (
@@ -61,21 +75,20 @@ if not exist "%WFAv7Dir%\Windows" (
 )
 :ToBeContinued
 echo.
+md Temp\
 echo %ESC%[96mGetting partitions info ...%ESC%[0m
 set DLMOS=%MainOS:~0,-1%
 for /f %%i in ('powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumber=%%i
 for /f %%f in ('powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%f
-echo>>diskpart1.txt sel dis %DiskNumber%
-echo>>diskpart1.txt sel par %PartitionNumber%
-echo>>diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
-if not exist %WFAv7Dir%\EFIESP mkdir %WFAv7Dir%\EFIESP & echo>>diskpart1.txt assign mount=%WFAv7Dir%\EFIESP
-attrib +h diskpart1.txt
-mkdir "%WinDir%\EFIESP"
+echo>>Temp\diskpart1.txt sel dis %DiskNumber%
+echo>>Temp\diskpart1.txt sel par %PartitionNumber%
+echo>>Temp\diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+if not exist %WFAv7Dir%\EFIESP md %WFAv7Dir%\EFIESP & echo>>Temp\diskpart1.txt assign mount=%WFAv7Dir%\EFIESP
 echo.
 echo %ESC%[96mEnabling Dual Boot ...%ESC%[0m
-diskpart /s diskpart1.txt
-del /A:H diskpart1.txt
+diskpart /s Temp\diskpart1.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
+rd /s /q Temp\
 echo.
 echo %ESC%[92m=====================================================================================
 echo  - Done. Now, you have Windows 10 for ARMv7 Dualboot with Windows Phone.

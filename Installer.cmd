@@ -211,7 +211,7 @@ echo   - Make sure no drives mounted with letter N.
 echo   - Closed all programs during installation.
 echo   * Highly recommend you to flash the original FFU of your phone.
 echo     before installing Windows 10 ARMv7.
-if %Storage%==8 echo   * This will remove Windows Phone to save space for WFAv7.%ESC%[0m
+if %Storage%==8 echo   * This will remove Windows Phone to get more space for WFAv7.%ESC%[0m
 if %Storage%==16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
 if %Storage%==32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
 if %Storage%==32A echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
@@ -426,6 +426,7 @@ if %Storage%==32 (
 if %Storage%==32A (
 	md %MainOS%\Windows10Arm
 	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ /Compact %SevLogger%
+	copy nul %MainOS%\Windows\UUID.txt
 )
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
@@ -526,7 +527,6 @@ exit /B
 
 :MissionCompleted
 if %ErrNum% GTR 0 (
-	rd /s /q Temp\
 	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>%LogName%
 	echo %ESC%[96m[INFO] Installation is completed with%ESC%[91m %ErrNum% error^(s^)%ESC%[96m!
 	echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
@@ -548,7 +548,7 @@ echo  %ESC%[92mWindows 10 for ARMv7 has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
 echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7.
 echo  - Boot and setup Windows 10 for the first time. Then reboot the phone to Mass Storage Mode.
-echo  - Run PostInstall.bat. (With Spec A devices, WFAv7 Path is MainOS:\Data\Windows10Arm)%ESC%[0m
+echo  - Run PostInstall.bat.%ESC%[0m
 echo.
 pause
 exit /b
