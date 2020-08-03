@@ -59,7 +59,7 @@ if %WinBuild% LSS 9600 (
 
 echo  - Checking Windows Powershell ...
 Powershell /? >nul 2>&1
-set PLV=%errorlevel%
+set "PLV=%errorlevel%"
 if %PLV% NEQ 0 (
 	title ERROR!
 	color 0C
@@ -104,7 +104,7 @@ if %WinBuild% LSS 10586 (
 	if /i %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
 )
 ::for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
-set ESC=
+set "ESC="
 ::---------------------------------------------------------------
 cls
 mode 96,1200
@@ -151,7 +151,7 @@ if /i "%Disclaimer%"=="N" (
 if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
 ::---------------------------------------------------------------
 :ChooseDev
-set Model=
+set "Model="
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
@@ -172,27 +172,27 @@ echo  %ESC%[36mA) %ESC%[97mLumia 640 XL LTE Global
 echo  %ESC%[36mB) %ESC%[97mLumia 640 XL LTE AT^&T
 echo  %ESC%[36mC) %ESC%[97mLumia 950
 echo  %ESC%[36mD) %ESC%[97mLumia 950 XL
-echo  %ESC%[36mE) %ESC%[97mLumia 1020
+echo  %ESC%[36mE) %ESC%[97mLumia 1020 [BLUE SCREEN]
 echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
 echo  %ESC%[36mG) %ESC%[97mLumia 920
-echo  %ESC%[36mH) %ESC%[97mBSP Method (Most devices) [COMMING SOON]%ESC%[0m
+echo  %ESC%[36mH) %ESC%[97mBSP Method (More devices) [COMMING SOON]%ESC%[0m
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
 if "%Model%"=="" goto ChooseDev
-if "%Model%"=="1" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="2" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="3" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="4" set Storage=16 & goto ToBeContinued1
-if "%Model%"=="5" set Storage=32 & goto ToBeContinued1
-if "%Model%"=="6" set Storage=16 & goto ToBeContinued1
-if "%Model%"=="7" set Storage=16 & goto ToBeContinued1
-if "%Model%"=="8" set Storage=8 & goto ToBeContinued1
-if /i "%Model%"=="A" set Storage=8 & goto ToBeContinued1
-if /i "%Model%"=="B" set Storage=8 & goto ToBeContinued1
-if /i "%Model%"=="C" set Storage=32 & goto ToBeContinued1
-if /i "%Model%"=="D" set Storage=32 & goto ToBeContinued1
-if /i "%Model%"=="E" set Storage=32A & goto ToBeContinued1
-if /i "%Model%"=="F" set Storage=32A & goto ToBeContinued1
-if /i "%Model%"=="G" set Storage=32A & goto ToBeContinued1
+if "%Model%"=="1" set "Storage=32" & goto ToBeContinued1
+if "%Model%"=="2" set "Storage=32" & goto ToBeContinued1
+if "%Model%"=="3" set "Storage=32" & goto ToBeContinued1
+if "%Model%"=="4" set "Storage=16" & goto ToBeContinued1
+if "%Model%"=="5" set "Storage=32" & goto ToBeContinued1
+if "%Model%"=="6" set "Storage=16" & goto ToBeContinued1
+if "%Model%"=="7" set "Storage=16" & goto ToBeContinued1
+if "%Model%"=="8" set "Storage=8" & goto ToBeContinued1
+if /i "%Model%"=="A" set "Storage=8" & goto ToBeContinued1
+if /i "%Model%"=="B" set "Storage=8" & goto ToBeContinued1
+if /i "%Model%"=="C" set "Storage=32" & goto ToBeContinued1
+if /i "%Model%"=="D" set "Storage=32" & goto ToBeContinued1
+if /i "%Model%"=="E" set "Storage=32A" & goto ToBeContinued1
+if /i "%Model%"=="F" set "Storage=32A" & goto ToBeContinued1
+if /i "%Model%"=="G" set "Storage=32A" & goto ToBeContinued1
 :: if /i "%Model%"=="H" goto BSP
 goto ChooseDev
 ::---------------------------------------------------------------
@@ -228,7 +228,7 @@ goto MOSAutoDetect
 echo %ESC%[93mFailed to auto detect MainOS.%ESC%[0m
 if exist Temp\GPT del Temp\GPT
 if exist Temp\GPT* del Temp\GPT*
-set Skip=
+set "Skip="
 goto MOSPath
 :MOSAutoDetect
 setlocal EnableDelayedExpansion
@@ -246,10 +246,10 @@ if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskD
 if "%DiskNumber%"=="" goto MOSAutoDetectFail
 if not exist Temp\ md Temp
 Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
-set Skip=512
+set "Skip=512"
 for /l %%i in (1,1,48) do (
 	Files\dsfo Temp\GPT !Skip! 128 Temp\GPT%%i >nul
-	set /A Skip+=128
+	set /a "Skip+=128"
 )
 for /l %%i in (1,1,48) do (
 	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
@@ -261,21 +261,21 @@ goto MOSAutoDetectFail
 Files\dd if=Temp\GPT%MOSGPT% of=Temp\GPT%MOSGPT%-UUID bs=1 skip=16 count=16 2>nul
 For /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT%MOSGPT%-UUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
-	set Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p
+	set "Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p"
 )
 For /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"') do set PartitionNumber=%%p
 For /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter"') do set DriveLetter=%%d
 if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
 if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
-set DLMOS=%DriveLetter%
-set MainOS=%DriveLetter%:
+set "DLMOS=%DriveLetter%"
+set "MainOS=%DriveLetter%:"
 del Temp\GPT
 del Temp\GPT*
-set Skip=
+set "Skip="
 echo %ESC%[96mDetected MainOS at %DriveLetter%%ESC%[0m
 goto CheckReqFiles
 :MOSPath
-set MainOS=
+set "MainOS="
 echo.
 set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[93m
 if not defined MainOS (
@@ -295,7 +295,7 @@ if not exist "%MainOS%\Data" (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
 )
-set DLMOS=%MainOS:~0,-1%
+set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set PartitionNumber=%%i
 ::---------------------------------------------------------------
@@ -336,35 +336,35 @@ cd Logs
 for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy"') do set Date1=%%d
 if not exist %Date1%.log set LogName=Logs\%Date1%.log & goto LoggerInit
 if not exist %Date1%-1.log set LogName=Logs\%Date1%-1.log & goto LoggerInit
-set LogNum=1
+set "LogNum=1"
 :LogName
 if exist %Date1%-*.log (
     if exist %Date1%-%LogNum%.log (
-        set /A "LogNum+=1"
+        set /a "LogNum+=1"
         goto LogName
     ) else (
-        set LogName=Logs\%Date1%-%LogNum%.log
+        set "LogName=Logs\%Date1%-%LogNum%.log"
     )
 )
 :LoggerInit
 cd ..
-set ErrNum=0
-set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
+set "ErrNum=0"
+set "Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "Err=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
- (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)
-set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
+ (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)"
+set "SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
- (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
+ (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)"
 :ToBeContinued2
-set StartTime=%Time%
+set "StartTime=%Time%"
 echo.
 echo %ESC%[96m[INFO] Installation was started at %StartTime%
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>%LogName%
@@ -460,9 +460,9 @@ xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %
 
 echo %ESC%[96m[INFO] Adding BCD Entry ...
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-SET bcdLoc="%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
+set "bcdLoc=%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>%LogName% 
-SET id="{703c511b-98f3-4630-b752-6d177cbfb89c}"
+set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 Files\bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
 if %Storage%==8 (
 	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
@@ -505,7 +505,7 @@ echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
-set DLMOS=%MainOS:~0,-1%
+set "DLMOS=%MainOS:~0,-1%"
 echo>>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
 echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
