@@ -239,10 +239,10 @@ echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m 
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
-echo %ESC%[96mTrying to detect MainOS ...%ESC%[0m
+echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
-for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set DiskNumber=%%i
-if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set DiskNumber=%%i)
+for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
+if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
 if "%DiskNumber%"=="" goto MOSAutoDetectFail
 if not exist Temp\ md Temp
 Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
@@ -259,12 +259,12 @@ goto MOSAutoDetectFail
 
 :PartitionNumber
 Files\dd if=Temp\GPT%MOSGPT% of=Temp\GPT%MOSGPT%-UUID bs=1 skip=16 count=16 2>nul
-For /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT%MOSGPT%-UUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
+for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT%MOSGPT%-UUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
 	set "Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p"
 )
-For /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"') do set PartitionNumber=%%p
-For /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter"') do set DriveLetter=%%d
+For /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"') do set "PartitionNumber=%%p"
+For /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter"') do set "DriveLetter=%%d"
 if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
 if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
 set "DLMOS=%DriveLetter%"
@@ -296,8 +296,8 @@ if not exist "%MainOS%\Data" (
 	goto MOSPath
 )
 set "DLMOS=%MainOS:~0,-1%"
-for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set DiskNumber=%%i
-for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set PartitionNumber=%%i
+for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
+for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
 ::---------------------------------------------------------------
 :CheckReqFiles
 if %Model%==1 (if not exist Drivers\Lumia930 goto MissingDrivers)
@@ -333,7 +333,7 @@ goto ChooseDev
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ md Logs
 cd Logs
-for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy"') do set Date1=%%d
+for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy"') do set "Date1=%%d"
 if not exist %Date1%.log set LogName=Logs\%Date1%.log & goto LoggerInit
 if not exist %Date1%-1.log set LogName=Logs\%Date1%-1.log & goto LoggerInit
 set "LogNum=1"
@@ -349,20 +349,20 @@ if exist %Date1%-*.log (
 :LoggerInit
 cd ..
 set "ErrNum=0"
-set "Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
+set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "Err=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
- (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)"
-set "SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
+ (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)
+set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
- (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)"
+ (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
 :ToBeContinued2
 set "StartTime=%Time%"
 echo.
@@ -374,8 +374,8 @@ echo ## MainOS is %MainOS% ## >>%LogName%
 echo. >>%LogName%
 if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set PartitionNumberEFIESP=%%i
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set PartitionNumberData=%%i
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
@@ -389,13 +389,13 @@ if %Storage%==16 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
-	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set WUuid=%%i
+	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
 if %Storage%==32 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
-	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set WUuid=%%i
+	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
 if %Storage%==8 (format %MainOS% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%)
 if %Storage%==16 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
@@ -549,6 +549,5 @@ echo  %ESC%[97m- Now, reboot your phone.
 echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7.
 echo  - Boot and setup Windows 10 for the first time. Then reboot the phone to Mass Storage Mode.
 echo  - Run PostInstall.bat.%ESC%[0m
-echo.
 pause
 exit /b
