@@ -1,4 +1,4 @@
-# Windows 10 for ARMv7 Installer (VHDX) 1.0
+# Windows 10 for ARMv7 Installer 2.0
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7")
 ### Disclaimer
     * I'm not responsible for bricked devices, dead SD cards,
@@ -14,33 +14,33 @@
   - Nokia Lumia 735 Global
   - Microsoft Lumia 640 XL LTE (Global, AT&T)
   - Microsoft Lumia 950 & XL
-  - Nokia Lumia 1020 (Global & AT&T)
+  - Nokia Lumia 1020 (AT&T)
   - Nokia Lumia 920
   - Notes:
-    * No support for Lumia 2520 due to lack of drivers.
-    * No support for Spec A devices because these devices don't support VHD boot.
+	* Drivers for Lumia 1020 have been known to be not working.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 ### Requirements
-  - Full Windows 10 Pro or Enterprise (Windows 7 not working, Windows 8.1 don't support custom colors)
-  - Windows Powershell Enabled
-  - Windows Powershell Modules Installed
-    (Don't care about this if you have a full installation of Windows 8.1+)
-  - Microsoft Hyper-V Enabled (VT-x is not needed, just enable that feature)
-  - 3 GB of storage
-  - Windows Phone installed in your Lumia
+  - Windows 8.1+ (Non-customized)
+  - Windows Powershell Enabled.
+  - 3 GB of empty computer storage.
+  - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia.
+  - 8 GB of empty phone storage for 16 GB Spec B Lumias.
+  - 16 GB of empty phone storage for 32 GB Spec B Lumias.
+  - 8 GB of empty phone storage for 920 and 1020.
   - A few brain cells (VERY IMPORTANT)
+  * More information in the Installer.
 ### Instruction
-  1. Download Windows 10 for ARMv7 build 15035 to your Computer.
-  2. Extract <ISOFILE>\sources\install.wim  to  Installer folder.
-     You can mount it and copy install.wim to Installer folder.
+  1. Download Windows 10 for ARMv7 build 15035 to your computer.
+  2. Extract Win10.7z\sources\install.wim  to  Installer folder.
   3. Run Driver Downloader and download Drivers for your device.
-  4. Run Installer.bat and follow the Instruction in the installer.
-  5. After installation finished, boot and setup Windows 10.
+  4. Unlock bootloader and boot into Mass Storage Mode (see WPinternals.net)
+  5. Run Installer and follow the Instruction in the installer.
+  6. After installation finished, boot and setup Windows 10.
      Don't connect to Wi-Fi on setup. It will makes the setup stuck.
-  6. After setup complete (Desktop appears), reboot to mass storage mode.
-  7. Run PostInstall.bat to fix Windows Phone crash.
-  8. Now, you can dualboot Windows Phone and Windows 10. (single boot for 8 GB deivces)
+  7. When setup completes (Desktop appears), reboot to Mass Storage Mode.
+  8. Run PostInstall.bat to fix Windows Phone crash.
+  9. Now, you can dualboot Windows Phone and Windows 10.
 ### Notes
   * This is not a software, this is a set of programs that combined to make the installation easier.
   * Editing the files or folders may cause damage to the intaller.
@@ -56,7 +56,7 @@
   - WFAv7 Installer: [GitHub Releases](https://github.com/RedGreenBlue09/WFAv7_Installer/releases)
   * Don't download using Download ZIP selection.
 ### Credits
-  - FadilFadz01 (Fadil Fadz)     : Helping me write the script
+  - fadilfadz01 (Fadil Fadz)     : Helping me write the script
   - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
   - Heathcliff74 (Rene Lergner)  : WPinternals
   - driver1998                   : Windows 10 For ARMv7 Image
@@ -65,9 +65,12 @@
   - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
   - SmartSVN                     : SVN
   - Igor Pavlov                  : 7-Zip
-  - GNU                          : WGET
+  - GNU                          : WGET, GREP
   - RedGreenBlue123 (Me)         : Writing the script
   - Adoxa                        : Ansicon
+  - Wimlib                       : Wimlib-ImageX
+  - Jnewbigin                    : RawWrite dd for Windows
+  - Dariusz Stanislawek          : DSFO
 ### Screenshots
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7-S1")
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")

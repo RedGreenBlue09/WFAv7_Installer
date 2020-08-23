@@ -144,7 +144,7 @@ if %Storage%==16 (
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
-	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD !WFADir!\Windows\UUID.txt !MainOS!\Windows\WFAv7Storage.txt
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD !MainOS!\Windows\WFAv7Storage.txt
 	echo.
 	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
@@ -173,7 +173,7 @@ if %Storage%==32 (
 	echo %ESC%[93mRemoving BCD entry ...%ESC%[96m
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /delete {703c511b-98f3-4630-b752-6d177cbfb89c}
 	bcdedit /store !MainOS!\EFIESP\efi\Microsoft\Boot\BCD /set "{bootmgr}" "displaybootmenu" no
-	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD !WFADir!\Windows\UUID.txt !MainOS!\Windows\WFAv7Storage.txt
+	del !MainOS!\EFIESP\efi\Microsoft\Recovery\BCD !MainOS!\Windows\WFAv7Storage.txt
 	echo.
 	echo %ESC%[92mUninstallation Done.%ESC%[0m
 	echo.
@@ -237,7 +237,7 @@ if %Operation%==1 (
 )
 if %Operation%==2 (
 	:MOSPath11
-	set /p MainOS=%ESC%[92mEnter MainOS Path: 
+	set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[0m
 	if not exist !MainOS!\EFIESP (
 		ECHO  %ESC%[91mNot a valid MainOS partition!
 		GOTO MOSPath10

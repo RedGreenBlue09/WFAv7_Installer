@@ -51,7 +51,7 @@ set SVNLoc="%~dp0\Files\DownloaderFiles\svn"
 set WGETLoc="%~dp0\Files\DownloaderFiles\wget"
 set SzLoc="%~dp0\Files\DownloaderFiles\7za"
 set COMLoc=https://github.com/WOA-Project/Lumia-Drivers/trunk
-set ReleaseLoc=https://github.com/WOA-Project/Lumia-Drivers/releases/download/2003.2.2/
+set ReleaseLoc=https://github.com/WOA-Project/Lumia-Drivers/releases/download/2006/
 cls
 color 0b
 setlocal EnableDelayedExpansion

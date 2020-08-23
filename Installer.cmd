@@ -17,9 +17,9 @@ if EXIST N:\ (
 )
 ::---------------------------------------------------------------
 :GetAdministrator
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
+    if "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
+    if "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
+    if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
 	>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 ) else ( >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" )
 
@@ -386,13 +386,23 @@ if %Storage%==8 (
 	rd %MainOS%\Data
 )
 if %Storage%==16 (
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %Logger%
+	if %errorlevel% NEQ 0 (
+		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
+		chkdsk /f %MainOS%\Data
+		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
+	)
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
 if %Storage%==32 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+	if %errorlevel% NEQ 0 (
+		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
+		chkdsk /f %MainOS%\Data
+		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+	)
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
@@ -417,11 +427,11 @@ if %Storage%==16 (
 	) else (
 		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
 	)
-	echo %WUuid% > N:\Windows\UUID.txt
+	echo %WUuid%> N:\Windows\UUID.txt
 )
 if %Storage%==32 (
 	Dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
-	echo %WUuid% > N:\Windows\UUID.txt
+	echo %WUuid%> N:\Windows\UUID.txt
 )
 if %Storage%==32A (
 	md %MainOS%\Windows10Arm
@@ -511,7 +521,7 @@ echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
 echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
 rd /s /q Temp\
-echo %Storage% > %MainOS%\Windows\WFAv7Storage.txt
+echo %Storage%>%MainOS%\Windows\WFAv7Storage.txt
 goto MissionCompleted
 ::---------------------------------------------------------------
 :SevErrFound

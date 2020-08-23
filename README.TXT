@@ -31,8 +31,10 @@ REQUIREMENTS:
     - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia.
     - 8 GB of empty phone storage for 16 GB Spec B Lumias.
     - 16 GB of empty phone storage for 32 GB Spec B Lumias.
-    - 8 GB of empty phone storage for 920 and 1020.
+    - 8 GB of empty phone storage for Lumia 920 and 1020.
     - A few brain cells (VERY IMPORTANT)
+    * My Installer has compatibility for Windows 8.1, but it's not tested by myself.
+      You can test it and report bugs to me and I will fix them if possible.
     * More information is in the Installer.
 
 INSTRUCTION:
@@ -42,10 +44,10 @@ INSTRUCTION:
     4. Unlock bootloader and boot into Mass Storage Mode (see WPinternals.net)
     5. Run Installer and follow the Instruction in the installer.
     6. After installation finished, boot and setup Windows 10.
-       Don't connect to Wi-Fi on setup. It will makes the setup stuck.
+       Don't connect to Wi-Fi on setup, that will makes the setup stuck.
     7. When setup completes (Desktop appears), reboot to Mass Storage Mode.
     8. Run PostInstall.bat to fix Windows Phone crash.
-    9. Now, you can dualboot Windows Phone and Windows 10.
+    9. You completed the installation!
 
 NOTES:
     * This is not a software, this is a set of programs that combined to make the installation easier.
@@ -80,14 +82,19 @@ THANKS TO:
 
 CHANGELOGS:
  - Release 2.0 (R2)
-   + BIG CHANGE: Removed VHDX method.
+   + Removed VHDX method.
    + Added support for Lumia 920, 1020.
    + Added MainOS auto detect. (Thanks to WPinternals source code)
    + Added support for CompactOS on Windows 8.1.
+   + Added workaround for "volume contains error" error.
    + Updated UI.
    + Updated Driver Downloader.
    + Improved startup time.
    + Installer no longer require Hyper-V and Windows Pro Edition.
+  *KNOWN ISSUES:
+   - Installer & Driver Downloader crashes when user enter quotes.
+   - Weird color issue in "Done" messages. (WFAv7 Tools)
+   - Try and tell me :)
  - Release 1.0 (R1)
    + Code optimization. (Preview 1 & 2)
    + Correct some spelling mistakes & hard to understand sentences. (Preview 1)
@@ -100,9 +107,6 @@ CHANGELOGS:
    + Reduced Installer & Driver Downloader's size. (Preview 3)
    + Use exit from batch instead of exit cmd. (Final)
    + Misc changes.
-  *KNOWN ISSUES:
-   + Installer & Driver Downloader crashes when user enter "
-   - Try and tell me :)
  - Proximal Release 3.8 & 3.9 (PR3.8 & 3.9)
    + Added Windows build check.
    + Bring up colors for Windows 8.1. (Thanks to @adoxa for "ansicon")
