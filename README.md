@@ -1,4 +1,4 @@
-# Windows 10 for ARMv7 Installer 2.0
+# Windows 10 for ARMv7 Installer 2.0 RC2
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7")
 ### Disclaimer
     * I'm not responsible for bricked devices, dead SD cards,
