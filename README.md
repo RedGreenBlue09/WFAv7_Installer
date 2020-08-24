@@ -46,8 +46,6 @@
   * Editing the files or folders may cause damage to the intaller.
   * On Spec A devices, using Reset Phone feature on Windows Phone will delete Windows 10 for ARMv7.
   * UPDATING WINDOWS PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
-    If you accidentally updated, reboot to mass storage mode,
-    run Tools.bat and choose Fix Update tool to fix BCD (not tested).
 ### Downloads
   - Windows 10 for ARMv7  : https://bit.ly/33ap8dq
     . Thanks to @driver1998 (Image owner) and @FadilFadz (link).
