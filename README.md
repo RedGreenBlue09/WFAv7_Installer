@@ -1,5 +1,5 @@
 # Windows 10 for ARMv7 Installer 2.0
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.BMP "WFAv7")
 ### Disclaimer
     * I'm not responsible for bricked devices, dead SD cards,
       thermonuclear war, or you getting fired because the alarm app failed (like it did for me...).
@@ -44,8 +44,8 @@
 ### Notes
   * This is not a software, this is a set of programs that combined to make the installation easier.
   * Editing the files or folders may cause damage to the intaller.
-  * If you use Reset Phone feature on Windows Phone, it will delete Windows 10 for ARMv7.
-  * UPDATE WINDOWS PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
+  * On Spec A devices, using Reset Phone feature on Windows Phone will delete Windows 10 for ARMv7.
+  * UPDATING WINDOWS PHONE WILL BREAK WINDOWS 10'S BOOT OR IT MAY BRICK YOUR PHONE.
     If you accidentally updated, reboot to mass storage mode,
     run Tools.bat and choose Fix Update tool to fix BCD (not tested).
 ### Downloads
@@ -72,9 +72,9 @@
   - Jnewbigin                    : RawWrite dd for Windows
   - Dariusz Stanislawek          : DSFO
 ### Screenshots
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.JPG "WFAv7-S1")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.JPG "WFAv7-S2")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-3.JPG "WFAv7-DD")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-4.JPG "WFAv7-TL")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.BMP "WFAv7-S1")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.BMP "WFAv7-S2")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-3.BMP "WFAv7-DD")
+![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-4.BMP "WFAv7-TL")
 ### Changelogs
   - Changelogs included in README.TXT
