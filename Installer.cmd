@@ -133,8 +133,7 @@ echo    ^|%ESC%[95m  * Your warranty will be void if you tamper with any part of
 echo    ^|                                                                                        ^|
 echo    +----------------------------------------------------------------------------------------+%ESC%[0m
 echo.
-echo.
-set /p Disclaimer="%ESC%[97mAre you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set /p Disclaimer="%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%Disclaimer%"=="N" (
 	cls
 	echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
