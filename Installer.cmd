@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 setlocal
-if not "%~1"=="" call :%~1
+if not "%~1" EQU "" call :%~1
 if %Errorlevel% NEQ 0 goto :EOF
 :Check1
 cd ..
@@ -20,13 +20,13 @@ if EXIST N:\ (
     if "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
     if "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
     if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
-	>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-) else ( >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" )
+	"%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" >nul 2>&1
+) else ("%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" >nul 2>&1)
 
 if %errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
 	goto UserAccountControl
-) else ( goto GotAdministrator )
+) else (goto GotAdministrator)
 
 :UserAccountControl
 	echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
@@ -100,8 +100,8 @@ cls
 echo Installer is loading ... [100%%]
 :Start
 if %WinBuild% LSS 10586 (
-	if /i %PROCESSOR_ARCHITECTURE%==X86 Files\ansicon32 -p
-	if /i %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
+	if /i %PROCESSOR_ARCHITECTURE% EQU X86 Files\ansicon32 -p
+	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 ::for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 set "ESC="
@@ -134,7 +134,7 @@ echo    ^|                                                                      
 echo    +----------------------------------------------------------------------------------------+%ESC%[0m
 echo.
 set /p Disclaimer="%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
-if /i "%Disclaimer%"=="N" (
+if /i "%Disclaimer%" EQU "N" (
 	cls
 	echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 	echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
@@ -176,23 +176,23 @@ echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
 echo  %ESC%[36mG) %ESC%[97mLumia 920
 echo  %ESC%[36mH) %ESC%[97mBSP Method (More devices) [COMMING SOON]%ESC%[0m
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
-if "%Model%"=="" goto ChooseDev
-if "%Model%"=="1" set "Storage=32" & goto ToBeContinued1
-if "%Model%"=="2" set "Storage=32" & goto ToBeContinued1
-if "%Model%"=="3" set "Storage=32" & goto ToBeContinued1
-if "%Model%"=="4" set "Storage=16" & goto ToBeContinued1
-if "%Model%"=="5" set "Storage=32" & goto ToBeContinued1
-if "%Model%"=="6" set "Storage=16" & goto ToBeContinued1
-if "%Model%"=="7" set "Storage=16" & goto ToBeContinued1
-if "%Model%"=="8" set "Storage=8" & goto ToBeContinued1
-if /i "%Model%"=="A" set "Storage=8" & goto ToBeContinued1
-if /i "%Model%"=="B" set "Storage=8" & goto ToBeContinued1
-if /i "%Model%"=="C" set "Storage=32" & goto ToBeContinued1
-if /i "%Model%"=="D" set "Storage=32" & goto ToBeContinued1
-if /i "%Model%"=="E" set "Storage=32A" & goto ToBeContinued1
-if /i "%Model%"=="F" set "Storage=32A" & goto ToBeContinued1
-if /i "%Model%"=="G" set "Storage=32A" & goto ToBeContinued1
-:: if /i "%Model%"=="H" goto BSP
+if "%Model%" EQU "" goto ChooseDev
+if "%Model%" EQU "1" set "Storage=32" & goto ToBeContinued1
+if "%Model%" EQU "2" set "Storage=32" & goto ToBeContinued1
+if "%Model%" EQU "3" set "Storage=32" & goto ToBeContinued1
+if "%Model%" EQU "4" set "Storage=16" & goto ToBeContinued1
+if "%Model%" EQU "5" set "Storage=32" & goto ToBeContinued1
+if "%Model%" EQU "6" set "Storage=16" & goto ToBeContinued1
+if "%Model%" EQU "7" set "Storage=16" & goto ToBeContinued1
+if "%Model%" EQU "8" set "Storage=8" & goto ToBeContinued1
+if /i "%Model%" EQU "A" set "Storage=8" & goto ToBeContinued1
+if /i "%Model%" EQU "B" set "Storage=8" & goto ToBeContinued1
+if /i "%Model%" EQU "C" set "Storage=32" & goto ToBeContinued1
+if /i "%Model%" EQU "D" set "Storage=32" & goto ToBeContinued1
+if /i "%Model%" EQU "E" set "Storage=32A" & goto ToBeContinued1
+if /i "%Model%" EQU "F" set "Storage=32A" & goto ToBeContinued1
+if /i "%Model%" EQU "G" set "Storage=32A" & goto ToBeContinued1
+:: if /i "%Model%" EQU "H" goto BSP
 goto ChooseDev
 ::---------------------------------------------------------------
 :ToBeContinued1
@@ -210,10 +210,10 @@ echo   - Make sure no drives mounted with letter N.
 echo   - Closed all programs during installation.
 echo   * Highly recommend you to flash the original FFU of your phone.
 echo     before installing Windows 10 ARMv7.
-if %Storage%==8 echo   * This will remove Windows Phone to get more space for WFAv7.%ESC%[0m
-if %Storage%==16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
-if %Storage%==32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
-if %Storage%==32A echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
+if %Storage% EQU 8 echo   * This will remove Windows Phone to get more space for WFAv7.%ESC%[0m
+if %Storage% EQU 16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
+if %Storage% EQU 32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
+if %Storage% EQU 32A echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
 echo.
 echo %ESC%[95m WARNING:
 echo   * After pressing any key, the Installation will begin. As a batch script,
@@ -241,8 +241,8 @@ echo.
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
 for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
-if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
-if "%DiskNumber%"=="" goto MOSAutoDetectFail
+if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
+if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 if not exist Temp\ md Temp
 Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
 set "Skip=512"
@@ -252,7 +252,7 @@ for /l %%i in (1,1,48) do (
 )
 for /l %%i in (1,1,48) do (
 	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
-	if !Errorlevel!==0 set MOSGPT=%%i& goto PartitionNumber
+	if !Errorlevel! EQU 0 set MOSGPT=%%i& goto PartitionNumber
 )
 goto MOSAutoDetectFail
 
@@ -299,21 +299,21 @@ for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"'
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
 ::---------------------------------------------------------------
 :CheckReqFiles
-if %Model%==1 (if not exist Drivers\Lumia930 goto MissingDrivers)
-if %Model%==2 (if not exist Drivers\LumiaIcon goto MissingDrivers)
-if %Model%==3 (if not exist Drivers\Lumia1520 goto MissingDrivers)
-if %Model%==4 (if not exist Drivers\Lumia1520 goto MissingDrivers)
-if %Model%==5 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
-if %Model%==6 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
-if %Model%==7 (if not exist Drivers\Lumia830 goto MissingDrivers)
-if %Model%==8 (if not exist Drivers\Lumia735 goto MissingDrivers)
-if /I %Model%==A (if not exist Drivers\Lumia640XL goto MissingDrivers)
-if /I %Model%==B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if /I %Model%==C (if not exist Drivers\Lumia950 goto MissingDrivers)
-if /I %Model%==D (if not exist Drivers\Lumia950XL goto MissingDrivers)
-if /I %Model%==E (if not exist Drivers\Lumia1020 goto MissingDrivers)
-if /I %Model%==F (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
-if /I %Model%==G (if not exist Drivers\Lumia920 goto MissingDrivers)
+if %Model% EQU 1 (if not exist Drivers\Lumia930 goto MissingDrivers)
+if %Model% EQU 2 (if not exist Drivers\LumiaIcon goto MissingDrivers)
+if %Model% EQU 3 (if not exist Drivers\Lumia1520 goto MissingDrivers)
+if %Model% EQU 4 (if not exist Drivers\Lumia1520 goto MissingDrivers)
+if %Model% EQU 5 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
+if %Model% EQU 6 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
+if %Model% EQU 7 (if not exist Drivers\Lumia830 goto MissingDrivers)
+if %Model% EQU 8 (if not exist Drivers\Lumia735 goto MissingDrivers)
+if /I %Model% EQU A (if not exist Drivers\Lumia640XL goto MissingDrivers)
+if /I %Model% EQU B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
+if /I %Model% EQU C (if not exist Drivers\Lumia950 goto MissingDrivers)
+if /I %Model% EQU D (if not exist Drivers\Lumia950XL goto MissingDrivers)
+if /I %Model% EQU E (if not exist Drivers\Lumia1020 goto MissingDrivers)
+if /I %Model% EQU F (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
+if /I %Model% EQU G (if not exist Drivers\Lumia920 goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	echo ----------------------------------------------------------------
 	echo  %ESC%[91mPlace install.wim in the Installer folder and try again.%ESC%[0m
@@ -378,13 +378,13 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
-if %Storage%==8 (
+if %Storage% EQU 8 (
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
 	echo %ESC%[96m[INFO] Formatting MainOS for Windows 10 for ARMv7 ...%ESC%[91m
 	rd %MainOS%\Data
 )
-if %Storage%==16 (
+if %Storage% EQU 16 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %Logger%
 	if %errorlevel% NEQ 0 (
 		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
@@ -395,7 +395,7 @@ if %Storage%==16 (
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
-if %Storage%==32 (
+if %Storage% EQU 32 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	if %errorlevel% NEQ 0 (
 		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
@@ -406,13 +406,13 @@ if %Storage%==32 (
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
-if %Storage%==8 (format %MainOS% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%)
-if %Storage%==16 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
-if %Storage%==32 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
+if %Storage% EQU 8 (format %MainOS% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%)
+if %Storage% EQU 16 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
+if %Storage% EQU 32 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Installing Windows 10 for ARMv7 ...%ESC%[91m
-if %Storage%==8 (
+if %Storage% EQU 8 (
 	if %WinBuild% LSS 10240 (
 		Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
 	) else (
@@ -420,7 +420,7 @@ if %Storage%==8 (
 	)
 	copy nul %MainOS%\Windows\UUID.txt
 )
-if %Storage%==16 (
+if %Storage% EQU 16 (
 	if %WinBuild% LSS 10240 (
 		Files\wimlib apply install.wim 1 N:\ --compact=xpress8k %SevLogger%
 	) else (
@@ -428,11 +428,11 @@ if %Storage%==16 (
 	)
 	echo %WUuid%> N:\Windows\UUID.txt
 )
-if %Storage%==32 (
+if %Storage% EQU 32 (
 	Dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
 	echo %WUuid%> N:\Windows\UUID.txt
 )
-if %Storage%==32A (
+if %Storage% EQU 32A (
 	md %MainOS%\Windows10Arm
 	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ /Compact %SevLogger%
 	copy nul %MainOS%\Windows\UUID.txt
@@ -440,27 +440,27 @@ if %Storage%==32A (
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-if %Model%==1 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
-if %Model%==2 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
-if %Model%==3 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %Model%==4 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %Model%==5 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %Model%==6 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %Model%==7 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if %Model%==8 Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if /i %Model%==A Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if /i %Model%==B Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /i %Model%==C Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if /i %Model%==D Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
-if /i %Model%==E Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i %Model%==F Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
-if /i %Model%==G Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if %Model% EQU 1 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
+if %Model% EQU 2 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
+if %Model% EQU 3 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model% EQU 4 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model% EQU 5 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model% EQU 6 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model% EQU 7 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
+if %Model% EQU 8 Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
+if /i %Model% EQU A Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
+if /i %Model% EQU B Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
+if /i %Model% EQU C Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
+if /i %Model% EQU D Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
+if /i %Model% EQU E Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i %Model% EQU F Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if /i %Model% EQU G Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
-if %Storage%==8 (
-	echo>>Temp\diskpart1.txt sel dis %DiskNumber%
-	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
-	echo>>Temp\diskpart1.txt assign mount=%MainOS%\EFIESP
+if %Storage% EQU 8 (
+	echo sel dis %DiskNumber%>>Temp\diskpart1.txt
+	echo sel par %PartitionNumberEFIESP%>>Temp\diskpart1.txt
+	echo assign mount=%MainOS%\EFIESP>>Temp\diskpart1.txt
 	md %MainOS%\EFIESP
 	diskpart /s Temp\diskpart1.txt %Logger%
 )
@@ -473,7 +473,7 @@ set "bcdLoc=%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>%LogName% 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 Files\bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
-if %Storage%==8 (
+if %Storage% EQU 8 (
 	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
 	Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
 	Files\bcdedit /store %bcdLoc% /set "{default}" description "Ignore This" %Logger%
@@ -485,18 +485,18 @@ if %Storage%==8 (
 		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
 	)
 )
-if %Storage%==32A (
+if %Storage% EQU 32A (
 	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
 	Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
 	Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
 )
-if %Storage%==32A (
+if %Storage% EQU 32A (
 	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
 ) else (Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%)
 Files\bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
-if %Storage%==32A (Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
+if %Storage% EQU 32A (Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
 	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
 )
 Files\bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
@@ -515,9 +515,9 @@ echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 set "DLMOS=%MainOS:~0,-1%"
-echo>>Temp\diskpart.txt sel dis %DiskNumber%
-echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
-echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+echo sel dis %DiskNumber%>>Temp\diskpart.txt
+echo sel par %PartitionNumberEFIESP%>>Temp\diskpart.txt
+echo set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b>>Temp\diskpart.txt
 diskpart /s Temp\diskpart.txt %Logger%
 rd /s /q Temp\
 echo %Storage%>%MainOS%\Windows\WFAv7Storage.txt
