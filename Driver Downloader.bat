@@ -17,9 +17,8 @@ if %WinBuild% LSS 10586 (
 	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 title WFAv7 Driver Downloader 2.4
-mode 96,2400
-powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
+Files\windowresize 96 24 96 2000
+set "ESC="
 :ChooseDev
 cd /D "%~dp0"
 set Model=

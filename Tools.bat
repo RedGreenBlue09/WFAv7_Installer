@@ -24,7 +24,7 @@ if '%errorlevel%' NEQ '0' (
 	exit /B
 
 :GotAdministrator
-	pushd "%CD%"
+	pushd "%cd%"
 	CD /D "%~dp0"
 :---------------------------------------------------------------
 cd /D "%~dp0"
@@ -46,11 +46,10 @@ if %WinBuild% LSS 10586 (
 )
 @echo off
 title WFAv7 Tools by RedGreenBlue123
-mode 96,2000
-powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
+Files\windowresize 96 24 96 2000
+set "ESC="
 :ChooseTool
-set Tool=
+set "Tool="
 cls
 echo %ESC%[93m-----------------------------------------%ESC%[97m
 echo  %ESC%[92mChoose tool you want to use below:
@@ -62,11 +61,13 @@ echo   %ESC%[0m5)%ESC%[97m Run Installer without compatibility check (NOT RECOMM
 echo %ESC%[93m-----------------------------------------%ESC%[97m
 set /p Tool=%ESC%[92mTool%ESC%[32m: %ESC%[0m
 if not defined Tool goto ChooseTool
-if %Tool% EQU 1 call "Driver Downloader.bat"
+if %Tool% EQU 1 "Driver Downloader.bat"
 if %Tool% EQU 2 goto Tool2
 if %Tool% EQU 3 goto Tool3
 if %Tool% EQU 4 goto Tool4
-if %Tool% EQU 5 call Installer.cmd Start
+if %Tool% EQU 5 Installer.cmd Start
+goto ChooseTool
+
 :Tool2
 setlocal
 echo.
@@ -76,10 +77,8 @@ if exist Logs\ rd /s /q Logs
 if exist Drivers\ (
 	set /p CYN=%ESC%[97mDo you want to delete Drivers folder? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m] %ESC%[0m
 	if "!CYN!" EQU "" goto Choice
-	if !CYN! EQU Y rd /s /q Drivers\ & set Completed=1
-	if !CYN! EQU y rd /s /q Drivers\ & set Completed=1
-	if !CYN! EQU N set Completed=1
-	if !CYN! EQU n set Completed=1
+	if /i !CYN! EQU Y rd /s /q Drivers\ & set Completed=1
+	if /i !CYN! EQU N set Completed=1
 ) else (set Completed=1)
 if not !Completed! EQU 1 goto Choice1
 if !Completed! EQU 1 echo. & echo %ESC%[92mDone^^!%ESC%[0m & echo. & pause

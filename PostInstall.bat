@@ -23,13 +23,12 @@ if '%errorlevel%' NEQ '0' (
 	exit /B
 
 :GotAdministrator
-	pushd "%CD%"
+	pushd "%cd%"
 	CD /D "%~dp0"
 :---------------------------------------------------------------
 @echo off
-for /f "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
-mode 96,2000
-powershell -command "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
+Files\windowresize 96 24 96 2000
+set "ESC="
 cd /d "%~dp0"
 echo.
 echo  %ESC%[93mConnect your phone in mass storage mode to the computer. %ESC%[0m

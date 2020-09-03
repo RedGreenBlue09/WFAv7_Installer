@@ -37,7 +37,7 @@ if %errorlevel% NEQ 0 (
 	exit /B
 
 :GotAdministrator
-	pushd "%CD%"
+	pushd "%cd%"
 	cd /D "%~dp0"
 	if exist "%~dp0Temp\" rd /s /q "%~dp0Temp\"
 	if not exist "%~dp0Temp\" md "%~dp0Temp"
@@ -103,13 +103,11 @@ if %WinBuild% LSS 10586 (
 	if /i %PROCESSOR_ARCHITECTURE% EQU X86 Files\ansicon32 -p
 	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
-::for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
 set "ESC="
 ::---------------------------------------------------------------
 cls
-mode 96,1200
-echo Initializing ...
-Powershell -C "&{(get-host).ui.rawui.windowsize=@{width=96;height=24};}"
+:: windowresize <Window X> <Window Y> <Buffer X> <Buffer Y>
+Files\windowresize 96 24 96 2000
 :Disclaimer
 cls
 title Windows 10 for ARMv7 Installer 2.0
