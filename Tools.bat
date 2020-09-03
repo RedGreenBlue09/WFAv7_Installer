@@ -41,8 +41,8 @@ if %WinBuild% LSS 9600 (
 )
 echo Installer is loading ... [100%%]
 if %WinBuild% LSS 10586 (
-	if %PROCESSOR_ARCHITECTURE%==x86 Files\ansicon32 -p
-	if %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
+	if %PROCESSOR_ARCHITECTURE% EQU x86 Files\ansicon32 -p
+	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 @echo off
 title WFAv7 Tools by RedGreenBlue123
@@ -62,11 +62,11 @@ echo   %ESC%[0m5)%ESC%[97m Run Installer without compatibility check (NOT RECOMM
 echo %ESC%[93m-----------------------------------------%ESC%[97m
 set /p Tool=%ESC%[92mTool%ESC%[32m: %ESC%[0m
 if not defined Tool goto ChooseTool
-if %Tool%==1 call "Driver Downloader.bat"
-if %Tool%==2 goto Tool2
-if %Tool%==3 goto Tool3
-if %Tool%==4 goto Tool4
-if %Tool%==5 call Installer.cmd Start
+if %Tool% EQU 1 call "Driver Downloader.bat"
+if %Tool% EQU 2 goto Tool2
+if %Tool% EQU 3 goto Tool3
+if %Tool% EQU 4 goto Tool4
+if %Tool% EQU 5 call Installer.cmd Start
 :Tool2
 setlocal
 echo.
@@ -75,14 +75,14 @@ if exist Logs\ rd /s /q Logs
 :Choice1
 if exist Drivers\ (
 	set /p CYN=%ESC%[97mDo you want to delete Drivers folder? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m] %ESC%[0m
-	if "!CYN!"=="" goto Choice
-	if !CYN!==Y rd /s /q Drivers\ & set Completed=1
-	if !CYN!==y rd /s /q Drivers\ & set Completed=1
-	if !CYN!==N set Completed=1
-	if !CYN!==n set Completed=1
+	if "!CYN!" EQU "" goto Choice
+	if !CYN! EQU Y rd /s /q Drivers\ & set Completed=1
+	if !CYN! EQU y rd /s /q Drivers\ & set Completed=1
+	if !CYN! EQU N set Completed=1
+	if !CYN! EQU n set Completed=1
 ) else (set Completed=1)
-if not !Completed!==1 goto Choice1
-if !Completed!==1 echo. & echo %ESC%[92mDone^^!%ESC%[0m & echo. & pause
+if not !Completed! EQU 1 goto Choice1
+if !Completed! EQU 1 echo. & echo %ESC%[92mDone^^!%ESC%[0m & echo. & pause
 endlocal
 goto ChooseTool
 
@@ -98,7 +98,7 @@ set "TID=3"
 goto MOSAutoDetect
 :ToBeContinued3
 for /f %%i in (%MainOS%\Windows\WFAv7Storage.txt) do (set Storage=%%i)
-if %Storage%==8 (
+if %Storage% EQU 8 (
 	echo.
 	echo - Windows 10 for ARMv7 cannot be uninstalled on 8 GB devices
 	echo   because Windows Phone is removed by the Installer.
@@ -109,7 +109,7 @@ if %Storage%==8 (
 	endlocal
 	goto ChooseTool
 )
-if %Storage%==16 (
+if %Storage% EQU 16 (
 	:WinPath1
 	set /p WFADir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
 	if not exist "!WFADir!\Windows" (
@@ -139,7 +139,7 @@ if %Storage%==16 (
 	endlocal
 	goto ChooseTool
 )
-if %Storage%==32 (
+if %Storage% EQU 32 (
 	:WinPath2
 	set /p WFADir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
 	if not exist "!WFADir!\Windows" (
@@ -169,7 +169,7 @@ if %Storage%==32 (
 	endlocal
 	goto ChooseTool
 )
-if %Storage%==32A (
+if %Storage% EQU 32A (
 	if not exist %MainOS%\Data\Windows10Arm\ (
 		echo.
 		echo %ESC%[91m - Windows 10 for ARMv7 is not installed.%ESC%[0m
@@ -219,13 +219,13 @@ set "TID=4"
 goto MOSAutoDetect
 
 :ToBeContinued4
-if %Operation%==1 (bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /set {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot minimal & set Completed=1)
-if %Operation%==2 (bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /deletevalue {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot & set Completed=1)
-if !Completed!==1 (
+if %Operation% EQU 1 (bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /set {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot minimal & set Completed=1)
+if %Operation% EQU 2 (bcdedit /store "!MainOS!\EFIESP\efi\Microsoft\Boot\BCD" /deletevalue {703c511b-98f3-4630-b752-6d177cbfb89c} SafeBoot & set Completed=1)
+if !Completed! EQU 1 (
 	echo %ESC%[92mDone^^!%ESC%[0m
 	pause
 )
-if not !Completed!==1 goto ChooseOperation2
+if not !Completed! EQU 1 goto ChooseOperation2
 endlocal
 endlocal
 goto ChooseTool
@@ -242,8 +242,8 @@ setlocal
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
 for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
-if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
-if "%DiskNumber%"=="" goto MOSAutoDetectFail
+if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
+if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 if not exist Temp\ md Temp
 Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
 set "Skip=512"
@@ -253,7 +253,7 @@ for /l %%i in (1,1,48) do (
 )
 for /l %%i in (1,1,48) do (
 	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
-	if !Errorlevel!==0 set MOSGPT=%%i& goto PartitionNumber
+	if !Errorlevel! EQU 0 set MOSGPT=%%i& goto PartitionNumber
 )
 goto MOSAutoDetectFail
 :PartitionNumber

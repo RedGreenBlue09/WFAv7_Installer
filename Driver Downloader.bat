@@ -13,8 +13,8 @@ if %WinBuild% LSS 9600 (
 )
 echo Installer is loading ... [100%%]
 if %WinBuild% LSS 10586 (
-	if %PROCESSOR_ARCHITECTURE%==x86 Files\ansicon32 -p
-	if %PROCESSOR_ARCHITECTURE%==AMD64 Files\ansicon64 -p
+	if %PROCESSOR_ARCHITECTURE% EQU x86 Files\ansicon32 -p
+	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 title WFAv7 Driver Downloader 2.4
 mode 96,2400
@@ -45,7 +45,7 @@ echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
 echo  %ESC%[36mD)%ESC%[97m Lumia 950
 echo  %ESC%[36mE)%ESC%[97m Lumia 950 XL
 set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
-if "%Model%"=="" goto ChooseDev
+if "%Model%" EQU "" goto ChooseDev
 ::------------------------------------------------------------------
 set SVNLoc="%~dp0\Files\DownloaderFiles\svn"
 set WGETLoc="%~dp0\Files\DownloaderFiles\wget"
@@ -60,7 +60,7 @@ if not exist Drivers\ mkdir Drivers
 cd Drivers\
 if not exist README.md %WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md --no-check-certificate
 title Downloading Drivers ...
-if "%Model%"=="1" (
+if "%Model%" EQU "1" (
 	if exist Lumia930\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/930.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -71,7 +71,7 @@ if "%Model%"=="1" (
 	)
 	del 930.txt
 )
-if "%Model%"=="2" (
+if "%Model%" EQU "2" (
 	if exist LumiaIcon\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/icon.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -82,7 +82,7 @@ if "%Model%"=="2" (
 	)
 	del icon.txt
 )
-if "%Model%"=="3" (
+if "%Model%" EQU "3" (
 	if exist Lumia1520\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520upsidedown.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -93,7 +93,7 @@ if "%Model%"=="3" (
 	)
 	del 1520upsidedown.txt
 )
-if "%Model%"=="4" (
+if "%Model%" EQU "4" (
 	if exist Lumia1520-AT^&T\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520attupsidedown.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -104,7 +104,7 @@ if "%Model%"=="4" (
 	)
 	del 1520attupsidedown.txt
 )
-if "%Model%"=="5" (
+if "%Model%" EQU "5" (
 	if exist Lumia830\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/830.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -115,7 +115,7 @@ if "%Model%"=="5" (
 	)
 	del 830.txt
 )
-if "%Model%"=="6" (
+if "%Model%" EQU "6" (
 	if exist Lumia735\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/735.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -126,7 +126,7 @@ if "%Model%"=="6" (
 	)
 	del 735.txt
 )
-if "%Model%"=="7" (
+if "%Model%" EQU "7" (
 	if exist Lumia640XL\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xl.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -137,7 +137,7 @@ if "%Model%"=="7" (
 	)
 	del 640xl.txt
 )
-if "%Model%"=="8" (
+if "%Model%" EQU "8" (
 	if exist Lumia640XL-AT^&T\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xlatt.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -148,7 +148,7 @@ if "%Model%"=="8" (
 	)
 	del 640xlatt.txt
 )
-if /I "%Model%"=="A" (
+if /I "%Model%" EQU "A" (
 	if exist Lumia920\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/920.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -159,7 +159,7 @@ if /I "%Model%"=="A" (
 	)
 	del 920.txt
 )
-if /I "%Model%"=="B" (
+if /I "%Model%" EQU "B" (
 	if exist Lumia1020\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -170,7 +170,7 @@ if /I "%Model%"=="B" (
 	)
 	del 1020.txt
 )
-if /I "%Model%"=="C" (
+if /I "%Model%" EQU "C" (
 	if exist Lumia1020-AT^&T\ goto OldExist
 	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020att.txt --no-check-certificate
 	title Downloading Drivers ...
@@ -181,7 +181,7 @@ if /I "%Model%"=="C" (
 	)
 	del 1020att.txt
 )
-if /I "%Model%"=="D" (
+if /I "%Model%" EQU "D" (
 	if not exist Lumia950 mkdir Lumia950
 	if not exist Lumia950\components\ mkdir Lumia950\components\
 	cd Lumia950\components\
@@ -215,7 +215,7 @@ if /I "%Model%"=="D" (
 	if exist SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip %SzLoc% x SUPPORT.DESKTOP.MOBILE_COMPONENTS.zip SUPPORT.DESKTOP.MOBILE_COMPONENTS
 	del *.zip 2>NUL
 )
-if /I "%Model%"=="E" (
+if /I "%Model%" EQU "E" (
 	if not exist Lumia950XL mkdir Lumia950XL
 	if not exist Lumia950XL\components\ mkdir Lumia950XL\components\
 	cd Lumia950XL\components\

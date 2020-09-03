@@ -49,8 +49,8 @@ setlocal EnableDelayedExpansion
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
 for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
-if "%DiskNumber%"=="" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
-if "%DiskNumber%"=="" goto MOSAutoDetectFail
+if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
+if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 if not exist Temp\ md Temp
 Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
 set "Skip=512"
@@ -60,7 +60,7 @@ for /l %%i in (1,1,48) do (
 )
 for /l %%i in (1,1,48) do (
 	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
-	if !Errorlevel!==0 set MOSGPT=%%i& goto PartitionNumber
+	if !Errorlevel! EQU 0 set MOSGPT=%%i& goto PartitionNumber
 )
 goto MOSAutoDetectFail
 :PartitionNumber
@@ -117,10 +117,10 @@ if not exist %MainOS%\Windows\WFAv7Storage.txt (
 )
 for /f %%i in (%MainOS%\Windows\WFAv7Storage.txt) do (set Storage=%%i)
 echo.
-if %Storage%==8 (set WFAv7Dir=%MainOS%& goto ToBeContinued)
-if %Storage%==16 (goto WinPath)
-if %Storage%==32 (goto WinPath)
-if %Storage%==32A (set WFAv7Dir=%MainOS%\Data\Windows10Arm& goto ToBeContinued)
+if %Storage% EQU 8 (set WFAv7Dir=%MainOS%& goto ToBeContinued)
+if %Storage% EQU 16 (goto WinPath)
+if %Storage% EQU 32 (goto WinPath)
+if %Storage% EQU 32A (set WFAv7Dir=%MainOS%\Data\Windows10Arm& goto ToBeContinued)
 
 :WinPath
 set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
