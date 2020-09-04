@@ -27,7 +27,7 @@ if '%errorlevel%' NEQ '0' (
 	pushd "%cd%"
 	CD /D "%~dp0"
 :---------------------------------------------------------------
-cd /D "%~dp0"
+cd /d "%~dp0"
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a
 if %WinBuild% LSS 9600 (
 	title ERROR!
@@ -46,7 +46,7 @@ if %WinBuild% LSS 10586 (
 )
 @echo off
 title WFAv7 Tools by RedGreenBlue123
-Files\windowresize 96 24 96 2000
+Files\cmdresize 96 24 96 2000
 set "ESC="
 :ChooseTool
 set "Tool="

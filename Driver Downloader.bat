@@ -17,7 +17,7 @@ if %WinBuild% LSS 10586 (
 	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 title WFAv7 Driver Downloader 2.4
-Files\windowresize 96 24 96 2000
+Files\cmdresize 96 24 96 2000
 set "ESC="
 :ChooseDev
 cd /D "%~dp0"

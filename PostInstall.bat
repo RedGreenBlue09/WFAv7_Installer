@@ -27,7 +27,7 @@ if '%errorlevel%' NEQ '0' (
 	CD /D "%~dp0"
 :---------------------------------------------------------------
 @echo off
-Files\windowresize 96 24 96 2000
+Files\cmdresize 96 24 96 2000
 set "ESC="
 cd /d "%~dp0"
 echo.

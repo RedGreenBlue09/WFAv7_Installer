@@ -106,7 +106,7 @@ if %WinBuild% LSS 10586 (
 set "ESC="
 ::---------------------------------------------------------------
 cls
-Files\windowresize 96 24 96 2000
+Files\cmdresize 96 24 96 2000
 :Disclaimer
 cls
 title Windows 10 for ARMv7 Installer 2.0
