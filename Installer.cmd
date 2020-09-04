@@ -106,7 +106,6 @@ if %WinBuild% LSS 10586 (
 set "ESC="
 ::---------------------------------------------------------------
 cls
-:: windowresize <Window X> <Window Y> <Buffer X> <Buffer Y>
 Files\windowresize 96 24 96 2000
 :Disclaimer
 cls
