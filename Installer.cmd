@@ -45,7 +45,7 @@ if %errorlevel% NEQ 0 (
 :Check2
 title Checking compatibility ...
 echo  - Checking Windows Build ...
-for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set WinBuild=%%a
 if %WinBuild% LSS 9600 (
 	title ERROR!
 	color 0C
@@ -91,7 +91,7 @@ title ERROR!
 color 0C
 echo ----------------------------------------------------------------
 echo  You used Windows 7 / Windows Home edition / Customized Windows.
-echo  Please use Official Windows 8.1 Pro or Windows 10 Pro
+echo  Please use Official Windows 8.1 or Windows 10.
 pause
 exit /B
 
@@ -385,7 +385,7 @@ if %Storage% EQU 16 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %Logger%
 	if %errorlevel% NEQ 0 (
 		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
-		chkdsk /f %MainOS%\Data
+		chkdsk /f %MainOS%\Data %Logger%
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
 	)
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
@@ -396,7 +396,7 @@ if %Storage% EQU 32 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	if %errorlevel% NEQ 0 (
 		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
-		chkdsk /f %MainOS%\Data
+		chkdsk /f %MainOS%\Data %Logger%
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	)
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
@@ -430,8 +430,8 @@ if %Storage% EQU 32 (
 	echo %WUuid%> N:\Windows\UUID.txt
 )
 if %Storage% EQU 32A (
-	md %MainOS%\Windows10Arm
-	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ /Compact %SevLogger%
+	md %MainOS%\Data\Windows10Arm
+	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ %SevLogger%
 	copy nul %MainOS%\Windows\UUID.txt
 )
 ::---------------------------------------------------------------
