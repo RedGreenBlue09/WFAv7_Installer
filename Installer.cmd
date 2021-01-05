@@ -491,7 +491,7 @@ if %Storage% EQU 32A (
 	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
 ) else (Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%)
 Files\bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "testsigning" yes %Logger%
+Files\bcdedit /store %bcdLoc% /set %id% "testsigning" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
 if %Storage% EQU 32A (Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
 	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%

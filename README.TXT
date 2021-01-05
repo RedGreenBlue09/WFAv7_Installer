@@ -69,7 +69,7 @@ THANKS TO:
     - Windows ARM32 Telegram group : Testing my script
     - Stack Overflow Community     : Helping me write the script
     - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
-    - SmartSVN                     : SVN
+    - TortoiseSVN                  : SVN
     - Igor Pavlov                  : 7-Zip
     - GNU                          : WGET, GREP
     - RedGreenBlue123 (Me)         : Writing the script
