@@ -369,7 +369,7 @@ echo ## Device is %Model%  ## >>%LogName%
 echo ## MainOS is %MainOS% ## >>%LogName%
 echo. >>%LogName%
 if not exist Temp\ md Temp\
-echo %ESC%[96m[INFO] Getting Partition Infos
+echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
@@ -480,20 +480,22 @@ if %Storage% EQU 8 (
 		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=N:" %SevLogger%
 		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=N:" %SevLogger%
 		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
-	)
-)
-if %Storage% EQU 32A (
-	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
-	Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
-	Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+	) else (
+		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
+		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
+		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
 )
 if %Storage% EQU 32A (
 	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
-) else (Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%)
+) else (
+	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
+)
 Files\bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "testsigning" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
-if %Storage% EQU 32A (Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%) else (
+if %Storage% EQU 32A (
+	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
+) else (
 	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
 )
 Files\bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
@@ -502,9 +504,9 @@ Files\bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "ems" No %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "bootdebug" No %Logger%
 Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" yes %Logger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5 %Logger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" yes %SevLogger%
+Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%
 Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
@@ -512,7 +514,7 @@ echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 set "DLMOS=%MainOS:~0,-1%"
-echo sel dis %DiskNumber%>>Temp\diskpart.txt
+echo sel dis %DiskNumber%>Temp\diskpart.txt
 echo sel par %PartitionNumberEFIESP%>>Temp\diskpart.txt
 echo set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b>>Temp\diskpart.txt
 diskpart /s Temp\diskpart.txt %Logger%
