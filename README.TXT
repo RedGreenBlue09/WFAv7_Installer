@@ -25,7 +25,7 @@ SUPPORTED DEVICES:
     * You can use 735 Drivers for 730 but you will face some problems.
 
 REQUIREMENTS:
-    - Windows 8.1+ (Non-customized)
+    - Clean Windows 8.1+
     - Windows Powershell Enabled.
     - 3 GB of empty computer storage.
     - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia.
@@ -81,7 +81,7 @@ THANKS TO:
 CHANGELOGS:
  - Release 2.0 (R2)
    + Removed VHDX method.
-   + Added support for Lumia 920, 1020.
+   + Added support for Lumia 920, 1020 (Not working for now).
    + Added MainOS auto detect. (Thanks to WPinternals source code)
    + Added support for CompactOS on Windows 8.1.
    + Added workaround for "volume contains error" error.

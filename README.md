@@ -21,7 +21,7 @@
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 ### Requirements
-  - Windows 8.1+ (Non-customized)
+  - Clean Windows 8.1+
   - Windows Powershell Enabled.
   - 3 GB of empty computer storage.
   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia.

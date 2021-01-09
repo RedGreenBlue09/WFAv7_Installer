@@ -293,7 +293,18 @@ if not exist "%MainOS%\Data" (
 )
 set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
+set /a "Temp=%DiskNumber%%1" >nul
+if %Errorlevel% NEQ 0 {
+	echo  %ESC%[91mFailed to get phone's disk number.
+	goto MOSPath
+}
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
+set /a "Temp=%PartitionNumber%%1" >nul
+if %Errorlevel% NEQ 0 {
+	echo  %ESC%[91mFailed to get MainOS partition number.
+	goto MOSPath
+}
+set "Temp="
 ::---------------------------------------------------------------
 :CheckReqFiles
 if %Model% EQU 1 (if not exist Drivers\Lumia930 goto MissingDrivers)
@@ -371,7 +382,19 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
+set /a "Temp=%DiskNumber%%1" >nul
+if %Errorlevel% NEQ 0 {
+	echo %ESC%[91m[EROR] Failed to get EFIESP partition number.
+	set /a "ErrNum+=1" >nul
+	goto SevErrFound
+}
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
+set /a "Temp=%DiskNumber%%1" >nul
+if %Errorlevel% NEQ 0 {
+	echo %ESC%[91m[EROR] Failed to get Data partition number.
+	set /a "ErrNum+=1" >nul
+	goto SevErrFound
+}
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
@@ -411,7 +434,7 @@ echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Installing Windows 10 for ARMv7 ...%ESC%[91m
 if %Storage% EQU 8 (
 	if %WinBuild% LSS 10240 (
-		Files\wimlib apply install.wim 1 %MainOS%\ --compact=xpress8k %SevLogger%
+		Files\wimlib apply install.wim 1 %MainOS%\ --compact=lzx %SevLogger%
 	) else (
 		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\ /Compact %SevLogger%
 	)
@@ -419,14 +442,14 @@ if %Storage% EQU 8 (
 )
 if %Storage% EQU 16 (
 	if %WinBuild% LSS 10240 (
-		Files\wimlib apply install.wim 1 N:\ --compact=xpress8k %SevLogger%
+		Files\wimlib apply install.wim 1 N:\ --compact=lzx %SevLogger%
 	) else (
 		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
 	)
 	echo %WUuid%> N:\Windows\UUID.txt
 )
 if %Storage% EQU 32 (
-	Dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
+	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ %SevLogger%
 	echo %WUuid%> N:\Windows\UUID.txt
 )
 if %Storage% EQU 32A (
