@@ -14,10 +14,9 @@
   - Nokia Lumia 735 Global
   - Microsoft Lumia 640 XL LTE (Global, AT&T)
   - Microsoft Lumia 950 & XL
-  - Nokia Lumia 1020 (AT&T)
-  - Nokia Lumia 920
+  - Nokia Lumia 1020 (Global, AT&T) [NOT WORKING]
+  - Nokia Lumia 920 [NOT WORKING]
   - Notes:
-	* Drivers for Lumia 1020 have been known to be not working.
     * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
       Use normal method is better than dual boot on a 8 GB storage.
 ### Requirements

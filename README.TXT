@@ -20,8 +20,8 @@ SUPPORTED DEVICES:
     - Nokia Lumia 735 Global
     - Microsoft Lumia 640 XL LTE (Global, AT&T)
     - Microsoft Lumia 950 & XL
-    - Nokia Lumia 1020 (Global, AT&T)
-    - Nokia Lumia 920
+    - Nokia Lumia 1020 (Global, AT&T) [NOT WORKING]
+    - Nokia Lumia 920 [NOT WORKING]
     * You can use 735 Drivers for 730 but you will face some problems.
 
 REQUIREMENTS:
