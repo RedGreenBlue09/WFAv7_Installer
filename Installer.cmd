@@ -74,15 +74,15 @@ if %PLV% NEQ 0 (
 echo  - Getting CmdLets ...
 Powershell -C "(Get-Command).name" >> Temp\Commands.txt
 echo  - Checking Get-Date ...
-FindStr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking New-Partition ...
-FindStr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-Partition ...
-FindStr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-WmiObject ...
-FindStr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
 echo  - Checking Get-PartitionSupportedSize ...
-FindStr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto MissingCommand
 del Temp\Commands.txt
 goto ToBeContinued0
 :MissingCommand
@@ -382,14 +382,14 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
-set /a "Temp=%DiskNumber%%1" >nul
+set /a "Temp=%PartitionNumberEFIESP%%1" >nul
 if %Errorlevel% NEQ 0 {
 	echo %ESC%[91m[EROR] Failed to get EFIESP partition number.
 	set /a "ErrNum+=1" >nul
 	goto SevErrFound
 }
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
-set /a "Temp=%DiskNumber%%1" >nul
+set /a "Temp=%PartitionNumberDat%%1" >nul
 if %Errorlevel% NEQ 0 {
 	echo %ESC%[91m[EROR] Failed to get Data partition number.
 	set /a "ErrNum+=1" >nul
