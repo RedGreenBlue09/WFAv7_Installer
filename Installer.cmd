@@ -293,13 +293,13 @@ if not exist "%MainOS%\Data" (
 )
 set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
-set /a "Temp=%DiskNumber%%1" >nul
+set /a "Temp=%DiskNumber%%%1" >nul
 if %Errorlevel% NEQ 0 {
 	echo  %ESC%[91mFailed to get phone's disk number.
 	goto MOSPath
 }
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
-set /a "Temp=%PartitionNumber%%1" >nul
+set /a "Temp=%PartitionNumber%%%1" >nul
 if %Errorlevel% NEQ 0 {
 	echo  %ESC%[91mFailed to get MainOS partition number.
 	goto MOSPath
@@ -382,14 +382,14 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
-set /a "Temp=%PartitionNumberEFIESP%%1" >nul
+set /a "Temp=%PartitionNumberEFIESP%%%1" >nul
 if %Errorlevel% NEQ 0 {
 	echo %ESC%[91m[EROR] Failed to get EFIESP partition number.
 	set /a "ErrNum+=1" >nul
 	goto SevErrFound
 }
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
-set /a "Temp=%PartitionNumberDat%%1" >nul
+set /a "Temp=%PartitionNumberData%%%1" >nul
 if %Errorlevel% NEQ 0 {
 	echo %ESC%[91m[EROR] Failed to get Data partition number.
 	set /a "ErrNum+=1" >nul
