@@ -67,7 +67,6 @@ THANKS TO:
     - Heathcliff74 (Rene Lergner)  : WPinternals
     - driver1998                   : Windows 10 For ARMv7 Image
     - Windows ARM32 Telegram group : Testing my script
-    - Stack Overflow Community     : Helping me write the script
     - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
     - TortoiseSVN                  : SVN
     - Igor Pavlov                  : 7-Zip
