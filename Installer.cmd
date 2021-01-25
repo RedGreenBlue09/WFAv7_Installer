@@ -90,7 +90,7 @@ del Temp\Commands.txt
 title ERROR!
 color 0C
 echo ----------------------------------------------------------------
-echo  You used Windows 7 / Windows Home edition / Customized Windows.
+echo  You used Windows 7 / Customized Windows.
 echo  Please use Official Windows 8.1 or Windows 10.
 pause
 exit /B
@@ -293,17 +293,19 @@ if not exist "%MainOS%\Data" (
 )
 set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
-set /a "Temp=%DiskNumber%%%1" >nul
-if %Errorlevel% NEQ 0 {
-	echo  %ESC%[91mFailed to get phone's disk number.
+set "Temp="
+for /f "delims=0123456789" %%i in ("%DiskNumber%") do set Temp=%%i
+if not defined Temp (
+	echo  %ESC%[91mFailed to get phone disk number.
 	goto MOSPath
-}
+)
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
-set /a "Temp=%PartitionNumber%%%1" >nul
-if %Errorlevel% NEQ 0 {
+set "Temp="
+for /f "delims=0123456789" %%i in ("%PartitionNumber%") do set Temp=%%i
+if not defined Temp (
 	echo  %ESC%[91mFailed to get MainOS partition number.
 	goto MOSPath
-}
+)
 set "Temp="
 ::---------------------------------------------------------------
 :CheckReqFiles
@@ -382,19 +384,21 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
-set /a "Temp=%PartitionNumberEFIESP%%%1" >nul
-if %Errorlevel% NEQ 0 {
-	echo %ESC%[91m[EROR] Failed to get EFIESP partition number.
+set "Temp="
+for /f "delims=0123456789" %%i in ("%PartitionNumberEFIESP%") do set Temp=%%i
+if not defined Temp (
+	echo %ESC%[91m[EROR]Failed to get EFIESP partition number.
 	set /a "ErrNum+=1" >nul
 	goto SevErrFound
-}
+)
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
-set /a "Temp=%PartitionNumberData%%%1" >nul
-if %Errorlevel% NEQ 0 {
-	echo %ESC%[91m[EROR] Failed to get Data partition number.
+set "Temp="
+for /f "delims=0123456789" %%i in ("%PartitionNumberData%") do set Temp=%%i
+if not defined Temp (
+	echo %ESC%[91m[EROR]Failed to get Data partition number.
 	set /a "ErrNum+=1" >nul
 	goto SevErrFound
-}
+)
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
