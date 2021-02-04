@@ -268,7 +268,7 @@ set "MainOS=%DriveLetter%:"
 del Temp\GPT
 del Temp\GPT*
 set "Skip="
-echo %ESC%[96mDetected MainOS at %DriveLetter%%ESC%[0m
+echo %ESC%[96mDetected MainOS at %DriveLetter%:%ESC%[0m
 goto CheckReqFiles
 :MOSPath
 set "MainOS="
@@ -293,19 +293,7 @@ if not exist "%MainOS%\Data" (
 )
 set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
-set "Temp="
-for /f "delims=0123456789" %%i in ("%DiskNumber%") do set Temp=%%i
-if not defined Temp (
-	echo  %ESC%[91mFailed to get phone disk number.
-	goto MOSPath
-)
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
-set "Temp="
-for /f "delims=0123456789" %%i in ("%PartitionNumber%") do set Temp=%%i
-if not defined Temp (
-	echo  %ESC%[91mFailed to get MainOS partition number.
-	goto MOSPath
-)
 set "Temp="
 ::---------------------------------------------------------------
 :CheckReqFiles
