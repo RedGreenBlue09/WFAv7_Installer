@@ -499,7 +499,9 @@ if %Storage% EQU 8 (
 		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
 		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
 		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+	)
 )
+
 if %Storage% EQU 32A (
 	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
 ) else (
@@ -529,7 +531,7 @@ echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 set "DLMOS=%MainOS:~0,-1%"
-echo sel dis %DiskNumber%>Temp\diskpart.txt
+echo sel dis %DiskNumber%>>Temp\diskpart.txt
 echo sel par %PartitionNumberEFIESP%>>Temp\diskpart.txt
 echo set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b>>Temp\diskpart.txt
 diskpart /s Temp\diskpart.txt %Logger%
