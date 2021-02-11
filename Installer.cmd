@@ -372,21 +372,7 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
-set "Temp="
-for /f "delims=0123456789" %%i in ("%PartitionNumberEFIESP%") do set Temp=%%i
-if not defined Temp (
-	echo %ESC%[91m[EROR]Failed to get EFIESP partition number.
-	set /a "ErrNum+=1" >nul
-	goto SevErrFound
-)
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
-set "Temp="
-for /f "delims=0123456789" %%i in ("%PartitionNumberData%") do set Temp=%%i
-if not defined Temp (
-	echo %ESC%[91m[EROR]Failed to get Data partition number.
-	set /a "ErrNum+=1" >nul
-	goto SevErrFound
-)
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
