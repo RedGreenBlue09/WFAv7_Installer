@@ -517,9 +517,9 @@ echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 set "DLMOS=%MainOS:~0,-1%"
-echo sel dis %DiskNumber%>>Temp\diskpart.txt
-echo sel par %PartitionNumberEFIESP%>>Temp\diskpart.txt
-echo set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b>>Temp\diskpart.txt
+echo>Temp\diskpart.txt sel dis %DiskNumber%
+echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
+echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
 rd /s /q Temp\
 echo %Storage%>%MainOS%\Windows\WFAv7Storage.txt
