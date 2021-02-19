@@ -6,7 +6,7 @@ if %WinBuild% LSS 9600 (
 	color 0c
 	echo ----------------------------------------------------------------
 	echo   This Windows version is not supported by WFAv7 Installer.
-	echo   Please use Windows 8.1 Pro+ ^(Build 9600+^) 
+	echo   Please use Windows 8.1+ ^(Build 9600+^) 
 	echo   Current OS build: %WinBuild%
 	pause
 	exit
@@ -57,11 +57,11 @@ setlocal EnableDelayedExpansion
 title Downloading Drivers ...
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md %WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/README.md --no-check-certificate
+if not exist README.md %WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/README.md --no-check-certificate
 title Downloading Drivers ...
 if "%Model%" EQU "1" (
 	if exist Lumia930\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/930.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/930.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (930.txt) do (
 		set Drv=%%A
@@ -72,7 +72,7 @@ if "%Model%" EQU "1" (
 )
 if "%Model%" EQU "2" (
 	if exist LumiaIcon\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/icon.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/icon.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (icon.txt) do (
 		set Drv=%%A
@@ -83,7 +83,7 @@ if "%Model%" EQU "2" (
 )
 if "%Model%" EQU "3" (
 	if exist Lumia1520\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520upsidedown.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/1520upsidedown.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1520upsidedown.txt) do (
 		set Drv=%%A
@@ -94,7 +94,7 @@ if "%Model%" EQU "3" (
 )
 if "%Model%" EQU "4" (
 	if exist Lumia1520-AT^&T\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1520attupsidedown.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/1520attupsidedown.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1520attupsidedown.txt) do (
 		set Drv=%%A
@@ -105,7 +105,7 @@ if "%Model%" EQU "4" (
 )
 if "%Model%" EQU "5" (
 	if exist Lumia830\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/830.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/830.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (830.txt) do (
 		set Drv=%%A
@@ -116,7 +116,7 @@ if "%Model%" EQU "5" (
 )
 if "%Model%" EQU "6" (
 	if exist Lumia735\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/735.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/735.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (735.txt) do (
 		set Drv=%%A
@@ -127,7 +127,7 @@ if "%Model%" EQU "6" (
 )
 if "%Model%" EQU "7" (
 	if exist Lumia640XL\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xl.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/640xl.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (640xl.txt) do (
 		set Drv=%%A
@@ -138,7 +138,7 @@ if "%Model%" EQU "7" (
 )
 if "%Model%" EQU "8" (
 	if exist Lumia640XL-AT^&T\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/640xlatt.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/640xlatt.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (640xlatt.txt) do (
 		set Drv=%%A
@@ -149,7 +149,7 @@ if "%Model%" EQU "8" (
 )
 if /I "%Model%" EQU "A" (
 	if exist Lumia920\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/920.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/920.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (920.txt) do (
 		set Drv=%%A
@@ -160,7 +160,7 @@ if /I "%Model%" EQU "A" (
 )
 if /I "%Model%" EQU "B" (
 	if exist Lumia1020\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/1020.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020.txt) do (
 		set Drv=%%A
@@ -171,7 +171,7 @@ if /I "%Model%" EQU "B" (
 )
 if /I "%Model%" EQU "C" (
 	if exist Lumia1020-AT^&T\ goto OldExist
-	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/master/definitions/1020att.txt --no-check-certificate
+	%WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions/1020att.txt --no-check-certificate
 	title Downloading Drivers ...
 	for /F "tokens=*" %%A IN (1020att.txt) do (
 		set Drv=%%A
