@@ -90,6 +90,7 @@ CHANGELOGS:
    + Installer no longer require Hyper-V and Windows Pro Edition.
   *KNOWN ISSUES:
    - Installation for Spec A devices not working.
+   - PostInstall is not working for Windows 8.
    - Installer & Driver Downloader crashes when user enter quotes.
    - Weird color issue in "Done" messages. (WFAv7 Tools)
    - Try and tell me :)

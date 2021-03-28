@@ -28,6 +28,11 @@ if '%errorlevel%' NEQ '0' (
 :---------------------------------------------------------------
 @echo off
 Files\cmdresize 96 24 96 2000
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set WinBuild=%%a
+if %WinBuild% LSS 10586 (
+	if /i %PROCESSOR_ARCHITECTURE% EQU X86 Files\ansicon32 -p
+	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
+)
 set "ESC="
 cd /d "%~dp0"
 echo.
