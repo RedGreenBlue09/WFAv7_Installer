@@ -17,8 +17,8 @@
   - Nokia Lumia 1020 (Global, AT&T) [NOT WORKING]
   - Nokia Lumia 920 [NOT WORKING]
   - Notes:
-    * For 8 GB devices, i recommended use it to test only. If you want Windows 10 for ARMv7,
-      Use normal method is better than dual boot on a 8 GB storage.
+    * For 8 GB devices, i only recommend to use it to test only. If you want Windows 10 for ARMv7,
+      use FadilFads's installer is better than dual booting on a 8 GB storage.
 ### Requirements
   - Clean Windows 8.1+
   - Windows Powershell Enabled.
