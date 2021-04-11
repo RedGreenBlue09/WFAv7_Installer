@@ -33,7 +33,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.0%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.1%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -61,7 +61,7 @@ color 0b
 setlocal EnableDelayedExpansion
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md %WGETLoc% https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/README.md --no-check-certificate
+if not exist README.md "%WGETLoc%" https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/README.md --no-check-certificate -OReadme.md >nul 2>&1
 
 ::------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ if "%Model%" EQU "3" (
 	set "Def=1520upsidedown.txt"
 )
 if "%Model%" EQU "4" (
-	set "DrvDir=Lumia1520-AT^&T"
+	set "DrvDir=Lumia1520-AT&T"
 	set "DefLink=%DefDirLink%/1520attupsidedown.txt"
 	set "Def=1520attupsidedown.txt"
 )
@@ -101,7 +101,7 @@ if "%Model%" EQU "7" (
 	set "Def=640xl.txt"
 )
 if "%Model%" EQU "8" (
-	set "DrvDir=Lumia640XL-AT^&T"
+	set "DrvDir=Lumia640XL-AT&T"
 	set "DefLink=%DefDirLink%/640xlatt.txt"
 	set "Def=640xlatt.txt"
 )
@@ -116,7 +116,7 @@ if /I "%Model%" EQU "B" (
 	set "Def=1020.txt"
 )
 if /I "%Model%" EQU "C" (
-	set "DrvDir=Lumia1020-AT^&T"
+	set "DrvDir=Lumia1020-AT&T"
 	set "DefLink=%DefDirLink%/1020att.txt"
 	set "Def=1020att.txt"
 )
@@ -133,7 +133,7 @@ if /I "%Model%" EQU "E" (
 
 ::------------------------------------------------------------------
 
-if exist "!DrvDir!\" (
+if exist !DrvDir!\ (
 	echo Removing old drivers ...
 	rd /s /q !DrvDir!\
 )
