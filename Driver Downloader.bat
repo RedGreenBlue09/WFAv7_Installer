@@ -139,7 +139,7 @@ if exist !DrvDir!\ (
 )
 echo Downloading definition file ...
 "%WGETLoc%" %DefLink% --no-check-certificate -O!Def! >nul 2>&1
-for /F "tokens=*" %%A IN (!Def!) do (
+for /f "tokens=*" %%A in (!Def!) do (
 	set Drv=%%A
 	set DrvLink=!Drv:\=/!
 	title Downloading "!Drv!" package ...
