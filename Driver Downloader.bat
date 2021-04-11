@@ -24,9 +24,11 @@ set "ESC="
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
 set "WGETLoc=%~dp0\Files\DownloaderFiles\wget"
 set "SzLoc=%~dp0\Files\DownloaderFiles\7za"
+
+set "Tag=v2103.32"
 ::set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/trunk"
-set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/v2103.32"
-set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions"
+set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
+set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
 
 :ChooseDev
 cd /D "%~dp0"
@@ -34,7 +36,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.1%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.2%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -62,7 +64,7 @@ color 0b
 setlocal EnableDelayedExpansion
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md "%WGETLoc%" https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/README.md --no-check-certificate -OReadme.md >nul 2>&1
+if not exist README.md "%WGETLoc%" https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md --no-check-certificate -OReadme.md >nul 2>&1
 
 ::------------------------------------------------------------------
 
@@ -138,9 +140,10 @@ if exist !DrvDir!\ (
 	echo Removing old drivers ...
 	rd /s /q !DrvDir!\
 )
+md !DrvDir!
 echo Downloading definition file ...
-"%WGETLoc%" %DefLink% --no-check-certificate -O!Def! >nul 2>&1
-for /f "tokens=*" %%A in (!Def!) do (
+"%WGETLoc%" %DefLink% --no-check-certificate -O!DrvDir!\!Def! >null.txt 2>&1
+for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 	set Drv=%%A
 	set DrvLink=!Drv:\=/!
 	title Downloading "!Drv!" package ...
