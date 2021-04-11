@@ -24,7 +24,8 @@ set "ESC="
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
 set "WGETLoc=%~dp0\Files\DownloaderFiles\wget"
 set "SzLoc=%~dp0\Files\DownloaderFiles\7za"
-set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/trunk"
+::set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/trunk"
+set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/v2103.32"
 set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/main/definitions"
 
 :ChooseDev
