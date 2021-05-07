@@ -394,7 +394,7 @@ if %Storage% EQU 16 (
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
 if %Storage% EQU 32 (
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %Logger%
+	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	if %errorlevel% NEQ 0 (
 		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
 		chkdsk /f %MainOS%\Data %Logger%
@@ -416,7 +416,7 @@ if %Storage% EQU 8 (
 	) else (
 		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\ /Compact %SevLogger%
 	)
-	copy nul %MainOS%\Windows\UUID.txt
+	copy nul %MainOS%\Windows\UUID.txt %Logger%
 )
 if %Storage% EQU 16 (
 	if %WinBuild% LSS 10240 (
@@ -424,16 +424,16 @@ if %Storage% EQU 16 (
 	) else (
 		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
 	)
-	echo %WUuid%> N:\Windows\UUID.txt
+	echo>N:\Windows\UUID.txt %WUuid%
 )
 if %Storage% EQU 32 (
 	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ %SevLogger%
-	echo %WUuid%> N:\Windows\UUID.txt
+	echo>N:\Windows\UUID.txt %WUuid%
 )
 if %Storage% EQU 32A (
 	md %MainOS%\Data\Windows10Arm
 	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ %SevLogger%
-	copy nul %MainOS%\Windows\UUID.txt
+	copy nul %MainOS%\Windows\UUID.txt %Logger%
 )
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
@@ -456,18 +456,19 @@ if /i %Model% EQU G Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driv
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 if %Storage% EQU 8 (
-	echo sel dis %DiskNumber%>>Temp\diskpart1.txt
-	echo sel par %PartitionNumberEFIESP%>>Temp\diskpart1.txt
-	echo assign mount=%MainOS%\EFIESP>>Temp\diskpart1.txt
+	echo>Temp\diskpart1.txt sel dis %DiskNumber%
+	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
+	echo>>Temp\diskpart1.txt assign mount=%MainOS%\EFIESP
 	md %MainOS%\EFIESP
 	diskpart /s Temp\diskpart1.txt %Logger%
+	rd Temp\Diskpart1.txt
 )
 echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
 
 echo %ESC%[96m[INFO] Adding BCD Entry ...
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-set "bcdLoc=%MainOS%\EFIESP\efi\Microsoft\Boot\BCD"
+set "bcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>%LogName% 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 Files\bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
@@ -485,23 +486,22 @@ if %Storage% EQU 8 (
 		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
 		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
 		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+		
+		Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
+		Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
 	)
+	Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
 )
 
-if %Storage% EQU 32A (
-	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
-) else (
+if %Storage% NEQ 32A (
 	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
+	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
 )
 Files\bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "testsigning" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
-if %Storage% EQU 32A (
-	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
-) else (
-	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
-)
-Files\bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Standard" %Logger%
+
+Files\bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Legacy" %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "detecthal" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
 Files\bcdedit /store %bcdLoc% /set %id% "ems" No %Logger%
@@ -510,7 +510,6 @@ Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" Yes %Logger%
 Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5 %Logger%
 Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
