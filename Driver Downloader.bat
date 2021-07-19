@@ -22,10 +22,9 @@ set "ESC="
 
 :: Constants
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
-set "WGETLoc=%~dp0\Files\DownloaderFiles\wget"
-set "SzLoc=%~dp0\Files\DownloaderFiles\7za"
+set "cURLLoc=%~dp0\Files\DownloaderFiles\curl"
 
-set "Tag=v2103.32"
+set "Tag=v2107.12"
 ::set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/trunk"
 set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
 set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
@@ -36,7 +35,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.2%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.3%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -64,7 +63,7 @@ color 0b
 setlocal EnableDelayedExpansion
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md "%WGETLoc%" https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md --no-check-certificate -OReadme.md >nul 2>&1
+if not exist README.md "%cURLLoc%" -s -S -k https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md
 
 ::------------------------------------------------------------------
 
@@ -135,20 +134,23 @@ if /I "%Model%" EQU "E" (
 )
 
 ::------------------------------------------------------------------
-
+set "Errors=1"
 if exist !DrvDir!\ (
 	echo Removing old drivers ...
 	rd /s /q !DrvDir!\
 )
 md !DrvDir!
 echo Downloading definition file ...
-"%WGETLoc%" %DefLink% --no-check-certificate -O!DrvDir!\!Def! >nul 2>&1
+"%cURLLoc%" -s -S -k --create-dirs -o "!DrvDir!\!Def!" %DefLink%
 for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 	set Drv=%%A
 	set DrvLink=!Drv:\=/!
 	title Downloading "!Drv!" package ...
 	echo Downloading "!Drv!" package ...
 	"%SVNLoc%" export "%RepoSvnLink%!DrvLink!" "!DrvDir!\!Drv!">nul
+	if %ErrorLevel% NEQ 0 (
+		set /a "Errors+=1"
+	)
 )
 
 set "DrvDir="
@@ -157,6 +159,6 @@ set "Def="
 
 echo.
 color 0a
-echo Downloading Drivers Done^^!
+echo Download completed with %Errors% error(s).
 pause
 goto ChooseDev

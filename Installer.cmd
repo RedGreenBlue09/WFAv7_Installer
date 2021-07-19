@@ -248,7 +248,7 @@ for /l %%i in (1,1,48) do (
 	set /a "Skip+=128"
 )
 for /l %%i in (1,1,48) do (
-	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
+	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S\x00" Temp\GPT%%i >nul
 	if !Errorlevel! EQU 0 set MOSGPT=%%i& goto PartitionNumber
 )
 goto MOSAutoDetectFail
@@ -270,6 +270,7 @@ del Temp\GPT*
 set "Skip="
 echo %ESC%[96mDetected MainOS at %DriveLetter%:%ESC%[0m
 goto CheckReqFiles
+
 :MOSPath
 set "MainOS="
 echo.
@@ -296,6 +297,7 @@ for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"'
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
 set "Temp="
 ::---------------------------------------------------------------
+
 :CheckReqFiles
 if %Model% EQU 1 (if not exist Drivers\Lumia930 goto MissingDrivers)
 if %Model% EQU 2 (if not exist Drivers\LumiaIcon goto MissingDrivers)
@@ -319,6 +321,7 @@ if not exist "%~dp0\install.wim" (
 	goto ChooseDev
 )
 Goto LogNameInit
+
 :MissingDrivers
 echo ----------------------------------------------------------------
 echo  %ESC%[91mDrivers not found.
@@ -326,6 +329,7 @@ echo  Download drivers for your device using Driver Downloader.%ESC%[0m
 pause
 goto ChooseDev
 ::---------------------------------------------------------------
+
 :LogNameInit
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ md Logs
@@ -334,6 +338,7 @@ for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy"') do set "Date1=%%d"
 if not exist %Date1%.log set LogName=Logs\%Date1%.log & goto LoggerInit
 if not exist %Date1%-1.log set LogName=Logs\%Date1%-1.log & goto LoggerInit
 set "LogNum=1"
+
 :LogName
 if exist %Date1%-*.log (
     if exist %Date1%-%LogNum%.log (
@@ -343,6 +348,7 @@ if exist %Date1%-*.log (
         set "LogName=Logs\%Date1%-%LogNum%.log"
     )
 )
+
 :LoggerInit
 cd ..
 set "ErrNum=0"
@@ -353,6 +359,7 @@ set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)
+
 set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
  (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
@@ -360,6 +367,7 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
+
 :ToBeContinued2
 set "StartTime=%Time%"
 echo.
@@ -370,11 +378,13 @@ echo ## Device is %Model%  ## >>%LogName%
 echo ## MainOS is %MainOS% ## >>%LogName%
 echo. >>%LogName%
 if not exist Temp\ md Temp\
+
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
+
 if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
 if %Storage% EQU 8 (
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
@@ -385,7 +395,7 @@ if %Storage% EQU 8 (
 if %Storage% EQU 16 (
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %Logger%
 	if %errorlevel% NEQ 0 (
-		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
+		echo %ESC%[96m[INFO] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
 		chkdsk /f %MainOS%\Data %Logger%
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
 	)
@@ -394,9 +404,9 @@ if %Storage% EQU 16 (
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
 if %Storage% EQU 32 (
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %Logger%
 	if %errorlevel% NEQ 0 (
-		echo %ESC%[96m[WARN] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
+		echo %ESC%[96m[INFO] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
 		chkdsk /f %MainOS%\Data %Logger%
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 	)
@@ -456,6 +466,7 @@ if /i %Model% EQU G Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driv
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 if %Storage% EQU 8 (
+	echo %ESC%[96m[INFO] Mounting EFIESP ...%ESC%[91m
 	echo>Temp\diskpart1.txt sel dis %DiskNumber%
 	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
 	echo>>Temp\diskpart1.txt assign mount=%MainOS%\EFIESP
@@ -473,43 +484,45 @@ echo ## BCD Path is %bcdLoc% ## >>%LogName%
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 Files\bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
 if %Storage% EQU 8 (
-	Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%" %SevLogger%
-	Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
-	Files\bcdedit /store %bcdLoc% /set "{default}" description "Ignore This" %Logger%
-	Files\bcdedit /store %bcdLoc% /default %id% %Logger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%MainOS%" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Ignore This" %Logger%
+	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
+	Files\bcdedit /store "%bcdLoc%" /displayorder %id%
 ) else (
 	if %Storage% NEQ 32A (
-		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=N:" %SevLogger%
-		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=N:" %SevLogger%
-		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=N:" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=N:" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Windows Phone" %Logger%
 	) else (
-		Files\bcdedit /store %bcdLoc% /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
-		Files\bcdedit /store %bcdLoc% /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
-		Files\bcdedit /store %bcdLoc% /set "{default}" description "Windows Phone" %Logger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Windows Phone" %Logger%
 		
-		Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
-		Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
 	)
-	Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "custom:54000001" %id% %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /deletevalue "{bootmgr}" "customactions" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /displayorder {default} %id%
 )
 
 if %Storage% NEQ 32A (
-	Files\bcdedit /store %bcdLoc% /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
-	Files\bcdedit /store %bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%"bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
 )
-Files\bcdedit /store %bcdLoc% /set %id% "locale" "en-US" %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "testsigning" Yes %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "inherit" "{bootloadersettings}" %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "inherit" "{bootloadersettings}" %Logger%
 
-Files\bcdedit /store %bcdLoc% /set %id% "bootmenupolicy" "Legacy" %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "detecthal" Yes %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "winpe" No %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "ems" No %Logger%
-Files\bcdedit /store %bcdLoc% /set %id% "bootdebug" No %Logger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "testsigning" Yes %Logger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "timeout" 5 %Logger%
-Files\bcdedit /store %bcdLoc% /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "bootmenupolicy" "Legacy" %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "winpe" No %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
+Files\bcdedit /store "%bcdLoc%"%bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "testsigning" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "timeout" 5 %Logger%
+Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
@@ -524,6 +537,7 @@ rd /s /q Temp\
 echo %Storage%>%MainOS%\Windows\WFAv7Storage.txt
 goto MissionCompleted
 ::---------------------------------------------------------------
+
 :SevErrFound
 echo ========================================================= >>%LogName%
 echo.
@@ -556,8 +570,11 @@ echo  //////////////////////////////////////////////////////////////////////////
 echo.
 echo  %ESC%[92mWindows 10 for ARMv7 has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
-echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7.
-echo  - Boot and setup Windows 10 for the first time. Then reboot the phone to Mass Storage Mode.
+echo  - At the boot menu, use vol up and vol down to move your selection.
+echo  - Use Camera button to select Windows 10 for ARMv7 entry.
+echo  - Boot and setup Windows 10 (may reboot several times.).
+echo  - Use WPInternals to interrupt boot process.
+echo  - Reboot the phone to Mass Storage Mode.
 echo  - Run PostInstall.bat.%ESC%[0m
 pause
 exit /b

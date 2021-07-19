@@ -89,8 +89,8 @@ CHANGELOGS:
    + Improved startup time.
    + Installer no longer require Hyper-V and Windows Pro Edition.
   *KNOWN ISSUES:
-   - Installation for Spec A devices not working.
-   - PostInstall is not working for Windows 8.
+   - Installation for Spec A devices isn't working.
+   - PostInstall isn't working for Windows 8.1.
    - Installer & Driver Downloader crashes when user enter quotes.
    - Weird color issue in "Done" messages. (WFAv7 Tools)
    - Try and tell me :)

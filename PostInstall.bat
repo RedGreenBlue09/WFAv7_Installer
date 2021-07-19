@@ -67,6 +67,7 @@ for /l %%i in (1,1,48) do (
 	if !Errorlevel! EQU 0 set MOSGPT=%%i& goto PartitionNumber
 )
 goto MOSAutoDetectFail
+
 :PartitionNumber
 Files\dd if=Temp\GPT%MOSGPT% of=Temp\GPT%MOSGPT%-UUID bs=1 skip=16 count=16 2>nul
 for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT%MOSGPT%-UUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
@@ -121,10 +122,10 @@ if not exist %MainOS%\Windows\WFAv7Storage.txt (
 )
 for /f %%i in (%MainOS%\Windows\WFAv7Storage.txt) do (set Storage=%%i)
 echo.
-if %Storage% EQU 8 (set WFAv7Dir=%MainOS%& goto ToBeContinued)
+if %Storage% EQU 8 (set WFAv7Dir=%MainOS%& goto DualBoot)
 if %Storage% EQU 16 (goto WinPath)
 if %Storage% EQU 32 (goto WinPath)
-if %Storage% EQU 32A (set WFAv7Dir=%MainOS%\Data\Windows10Arm& goto ToBeContinued)
+if %Storage% EQU 32A (set WFAv7Dir=%MainOS%\Data\Windows10Arm& goto DualBoot)
 
 :WinPath
 set /p WFAv7Dir=%ESC%[92mEnter Windows 10 for ARMv7 Path: %ESC%[0m
@@ -132,24 +133,19 @@ if not exist "%WFAv7Dir%\Windows" (
 	ECHO  %ESC%[91mNot a valid Windows partition!
 	GOTO WinPath
 )
+
+::DualBoot
 echo.
 md Temp\
 echo>>Temp\diskpart1.txt sel dis %DiskNumber%
 echo>>Temp\diskpart1.txt sel par %PartitionNumber%
 echo>>Temp\diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 if not exist %WFAv7Dir%\EFIESP md %WFAv7Dir%\EFIESP & echo>>Temp\diskpart1.txt assign mount=%WFAv7Dir%\EFIESP
-echo.
-echo %ESC%[96mEnabling Dual Boot ...%ESC%[0m
 diskpart /s Temp\diskpart1.txt
+
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
 rd /s /q Temp\
 echo.
-echo %ESC%[92m=====================================================================================
-echo  - Done. Now, you have Windows 10 for ARMv7 Dualboot with Windows Phone.
-echo  - After the boot menu appears, press power up to boot Windows 10 for ARMv7,
-echo    Do nothing to boot Windows 10 Mobile or Windows Phone 8.x
-echo  - Don't use Vol Down button at the boot menu because it will boot Reset My Phone.
-echo    And an exclamation mark will apears. This will not cause damage to your phone.
-echo =====================================================================================%ESC%[0m
+echo %ESC%[92m - Done.
 pause
 exit /b
