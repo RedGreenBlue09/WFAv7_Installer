@@ -503,7 +503,7 @@ if %Storage% EQU 8 (
 		Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
 	)
 	Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" custom:0x54000001 %id% %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder {default} %id%
+	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default}
 )
 
 if %Storage% NEQ 32A (
@@ -570,9 +570,9 @@ echo  //////////////////////////////////////////////////////////////////////////
 echo.
 echo  %ESC%[92mWindows 10 for ARMv7 has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
-echo  - At the boot menu, use vol up and vol down to move your selection.
-echo  - Use Camera button to select Windows 10 for ARMv7 entry.
+echo  - At the boot menu, press volume up to boot Windows 10 for ARMv7.
 echo  - Boot and setup Windows 10 (may reboot several times.).
+echo    If you cannot boot Windows 10 after 2nd boot, use "BootFix".
 echo  - Use WPInternals to interrupt boot process.
 echo  - Reboot the phone to Mass Storage Mode.
 echo  - Run PostInstall.bat.%ESC%[0m
