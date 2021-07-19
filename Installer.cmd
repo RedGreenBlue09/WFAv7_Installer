@@ -502,7 +502,7 @@ if %Storage% EQU 8 (
 		Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
 		Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
 	)
-	Files\bcdedit /store "%bcdLoc%" /deletevalue "{bootmgr}" "customactions" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" custom:0x54000001 %id% %SevLogger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder {default} %id%
 )
 
@@ -519,7 +519,7 @@ Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "winpe" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
-Files\bcdedit /store "%bcdLoc%"%bcdLoc% /set "{bootmgr}" "nointegritychecks" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "testsigning" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "timeout" 5 %Logger%
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%

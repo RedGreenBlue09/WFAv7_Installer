@@ -146,6 +146,6 @@ diskpart /s Temp\diskpart1.txt
 bcdedit /store "%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
 rd /s /q Temp\
 echo.
-echo %ESC%[92m - Done.
+echo %ESC%[92m - Done!
 pause
 exit /b
