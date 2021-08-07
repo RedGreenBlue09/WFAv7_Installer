@@ -508,7 +508,7 @@ if %Storage% EQU 8 (
 
 if %Storage% NEQ 32A (
 	Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
-	Files\bcdedit /store "%bcdLoc%"bcdLoc% /set %id% "systemroot" "\Windows" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
 )
 Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %Logger%
