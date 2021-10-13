@@ -24,7 +24,7 @@ set "ESC="
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
 set "cURLLoc=%~dp0\Files\DownloaderFiles\curl"
 
-set "Tag=v2107.12"
+set "Tag=v2110.1"
 ::set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/trunk"
 set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
 set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
@@ -142,6 +142,7 @@ if exist !DrvDir!\ (
 md !DrvDir!
 echo Downloading definition file ...
 "%cURLLoc%" -s -S -k --create-dirs -o "!DrvDir!\!Def!" %DefLink%
+
 for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 	set Drv=%%A
 	set DrvLink=!Drv:\=/!
