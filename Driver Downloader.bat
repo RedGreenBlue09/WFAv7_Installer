@@ -63,7 +63,7 @@ color 0b
 setlocal EnableDelayedExpansion
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md "%cURLLoc%" -s -S -k https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md
+::if not exist README.md "%cURLLoc%" -s -S -k https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md
 
 ::------------------------------------------------------------------
 
@@ -132,9 +132,8 @@ if /I "%Model%" EQU "E" (
 	set "DefLink=%DefDirLink%/Desktop/ARM32/Internal/950xl.txt"
 	set "Def=950xl.txt"
 )
-
 ::------------------------------------------------------------------
-set "Errors=1"
+set "Errors=0"
 if exist !DrvDir!\ (
 	echo Removing old drivers ...
 	rd /s /q !DrvDir!\
