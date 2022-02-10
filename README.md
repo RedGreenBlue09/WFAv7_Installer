@@ -14,11 +14,6 @@
   - Nokia Lumia 735 Global
   - Microsoft Lumia 640 XL LTE (Global, AT&T)
   - Microsoft Lumia 950 & XL
-  - Nokia Lumia 1020 (Global, AT&T) [NOT WORKING]
-  - Nokia Lumia 920 [NOT WORKING]
-  - Notes:
-    * For 8 GB devices, i only recommend to use it to test only. If you want Windows 10 for ARMv7,
-      use FadilFads's installer is better than dual booting on a 8 GB storage.
 ### Requirements
   - Clean Windows 8.1+
   - Windows Powershell Enabled.
@@ -51,7 +46,8 @@
   - Drivers: Run Driver Downloader to feltch drivers for your device automatically
     . Thanks to @Gus33000
   - WFAv7 Installer: [GitHub Releases](https://github.com/RedGreenBlue09/WFAv7_Installer/releases)
-  * Don't download using Download ZIP selection.
+  * For the latest 2.0 version, download with the green Download button, Download ZIP.
+  * For 1.0, go to releases selection.
 ### Credits
   - fadilfadz01 (Fadil Fadz)     : Helping me write the script
   - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
