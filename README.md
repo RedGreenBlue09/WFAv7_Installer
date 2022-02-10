@@ -46,7 +46,7 @@
   - Drivers: Run Driver Downloader to feltch drivers for your device automatically
     . Thanks to @Gus33000
   - WFAv7 Installer: [GitHub Releases](https://github.com/RedGreenBlue09/WFAv7_Installer/releases)
-  * For the latest 2.0 version, download with the green Download button, Download ZIP.
+  * For the latest 2.0 version, download with the green Download (Code) button, Download ZIP.
   * For 1.0, go to releases selection.
 ### Credits
   - fadilfadz01 (Fadil Fadz)     : Helping me write the script
