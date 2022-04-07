@@ -15,14 +15,14 @@
   - Microsoft Lumia 640 XL LTE (Global, AT&T)
   - Microsoft Lumia 950 & XL
 ### Requirements
-  - Clean Windows 8.1+
+  - Official Windows 8.1+
   - Windows Powershell Enabled.
   - 3 GB of empty computer storage.
   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia.
   - 8 GB of empty phone storage for 16 GB Spec B Lumias.
   - 16 GB of empty phone storage for 32 GB Spec B Lumias.
   - 8 GB of empty phone storage for 920 and 1020.
-  - A few brain cells (VERY IMPORTANT)
+  - A few brain cells (VERY IMPORTANT).
   * More information in the Installer.
 ### Instruction
   1. Download Windows 10 for ARMv7 build 15035 to your computer.
