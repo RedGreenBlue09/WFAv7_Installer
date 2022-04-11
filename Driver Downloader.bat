@@ -78,11 +78,9 @@ cls
 color 0b
 echo Getting release tags...
 
-"%SVNLoc%" ls "https://github.com/WOA-Project/Lumia-Drivers/tags/" > tags.txt
-for /f %%A in (tags.txt) do (
+for /f "usebackq" %%A in (`"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/`) do (
 	set "Tag=%%A"
 )
-del tags.txt
 set "Tag=%Tag:~0,-1%"
 :: Remove / at the end
 
@@ -160,9 +158,10 @@ if /I "%Model%" EQU "E" (
 ::------------------------------------------------------------------
 :: Download
 
+setlocal EnableDelayedExpansion
+
 :: README
 
-setlocal EnableDelayedExpansion
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
 if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
