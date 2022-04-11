@@ -16,24 +16,9 @@ if %WinBuild% LSS 10586 (
 	if %PROCESSOR_ARCHITECTURE% EQU x86 Files\ansicon32 -p
 	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
-title WFAv7 Driver Downloader 3.4
+title WFAv7 Driver Downloader 3.5
 ::Files\cmdresize 96 24 96 2000
 set "ESC="
-
-:: Constants
-set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
-set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
-
-echo Getting release tags...
-"%SVNLoc%" ls "https://github.com/WOA-Project/Lumia-Drivers/tags/" > tags.txt
-for /f %%A in (tags.txt) do (
-	set "Tag=%%A"
-)
-del tags.txt
-set "Tag=%Tag:~0,-1%"
-
-set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
-set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
 
 :ChooseDev
 cd /D "%~dp0"
@@ -41,7 +26,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.4%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.5%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -59,19 +44,52 @@ echo  %ESC%[36mB)%ESC%[97m Lumia 1020
 echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
 echo  %ESC%[36mD)%ESC%[97m Lumia 950
 echo  %ESC%[36mE)%ESC%[97m Lumia 950 XL
+
 set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
-if "%Model%" EQU "" goto ChooseDev
+
+if "%Model%" EQU "1" (goto DoDownload)
+if "%Model%" EQU "2" (goto DoDownload)
+if "%Model%" EQU "3" (goto DoDownload)
+if "%Model%" EQU "4" (goto DoDownload)
+if "%Model%" EQU "5" (goto DoDownload)
+if "%Model%" EQU "6" (goto DoDownload)
+if "%Model%" EQU "7" (goto DoDownload)
+if "%Model%" EQU "8" (goto DoDownload)
+if /I "%Model%" EQU "A" (goto DoDownload)
+if /I "%Model%" EQU "B" (goto DoDownload)
+if /I "%Model%" EQU "C" (goto DoDownload)
+if /I "%Model%" EQU "D" (goto DoDownload)
+if /I "%Model%" EQU "E" (goto DoDownload)
+goto ChooseDev
 
 ::------------------------------------------------------------------
+:: Constants
+
+:DoDownload
+
+:: Exe
+
+set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
+set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
+
+:: Get latest release
 
 cls
 color 0b
-setlocal EnableDelayedExpansion
-if not exist Drivers\ mkdir Drivers
-cd Drivers\
-if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
+echo Getting release tags...
 
-::------------------------------------------------------------------
+"%SVNLoc%" ls "https://github.com/WOA-Project/Lumia-Drivers/tags/" > tags.txt
+for /f %%A in (tags.txt) do (
+	set "Tag=%%A"
+)
+del tags.txt
+set "Tag=%Tag:~0,-1%"
+:: Remove / at the end
+
+:: Models
+
+set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
+set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
 
 if "%Model%" EQU "1" (
 	set "DrvDir=Lumia930"
@@ -140,11 +158,25 @@ if /I "%Model%" EQU "E" (
 )
 
 ::------------------------------------------------------------------
+:: Download
+
+:: README
+
+setlocal EnableDelayedExpansion
+if not exist Drivers\ mkdir Drivers
+cd Drivers\
+if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
+
+:: Delete old drivers
+
 set "Errors=0"
 if exist !DrvDir!\ (
 	echo Removing old drivers ...
 	rd /s /q !DrvDir!\
 )
+
+:: Download drivers
+
 md !DrvDir!
 echo Downloading definition file ...
 "%Aria2cLoc%" -q -d "!DrvDir!" "%DefLink%"
@@ -159,6 +191,8 @@ for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 		set /a "Errors+=1"
 	)
 )
+
+:: Reset
 
 set "DrvDir="
 set "DefLink="
