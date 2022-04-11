@@ -11,21 +11,27 @@ if %WinBuild% LSS 9600 (
 	pause
 	exit
 )
-echo Installer is loading ... [100%%]
+
 if %WinBuild% LSS 10586 (
 	if %PROCESSOR_ARCHITECTURE% EQU x86 Files\ansicon32 -p
 	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
-title WFAv7 Driver Downloader 2.4
-Files\cmdresize 96 24 96 2000
+title WFAv7 Driver Downloader 3.4
+::Files\cmdresize 96 24 96 2000
 set "ESC="
 
 :: Constants
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
-set "cURLLoc=%~dp0\Files\DownloaderFiles\curl"
+set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
 
-set "Tag=v2110.1"
-::set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/trunk"
+echo Getting release tags...
+"%SVNLoc%" ls "https://github.com/WOA-Project/Lumia-Drivers/tags/" > tags.txt
+for /f %%A in (tags.txt) do (
+	set "Tag=%%A"
+)
+del tags.txt
+set "Tag=%Tag:~0,-1%"
+
 set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
 set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
 
@@ -35,7 +41,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.3%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.4%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -63,7 +69,7 @@ color 0b
 setlocal EnableDelayedExpansion
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-::if not exist README.md "%cURLLoc%" -s -S -k https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md
+if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
 
 ::------------------------------------------------------------------
 
@@ -132,6 +138,7 @@ if /I "%Model%" EQU "E" (
 	set "DefLink=%DefDirLink%/Desktop/ARM32/Internal/950xl.txt"
 	set "Def=950xl.txt"
 )
+
 ::------------------------------------------------------------------
 set "Errors=0"
 if exist !DrvDir!\ (
@@ -140,7 +147,7 @@ if exist !DrvDir!\ (
 )
 md !DrvDir!
 echo Downloading definition file ...
-"%cURLLoc%" -s -S -k --create-dirs -o "!DrvDir!\!Def!" %DefLink%
+"%Aria2cLoc%" -q -d "!DrvDir!" "%DefLink%"
 
 for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 	set Drv=%%A
