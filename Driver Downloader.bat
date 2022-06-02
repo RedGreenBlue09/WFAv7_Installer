@@ -70,7 +70,6 @@ goto ChooseDev
 :: Exe
 
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
-set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
 
 :: Get latest release
 
@@ -164,7 +163,7 @@ setlocal EnableDelayedExpansion
 
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
+if not exist README.md curl -s -O "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
 
 :: Delete old drivers
 
@@ -178,7 +177,7 @@ if exist !DrvDir!\ (
 
 md !DrvDir!
 echo Downloading definition file ...
-"%Aria2cLoc%" -q -d "!DrvDir!" "%DefLink%"
+curl -s --create-dirs -O --output-dir "!DrvDir!" "%DefLink%"
 
 for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 	set Drv=%%A
