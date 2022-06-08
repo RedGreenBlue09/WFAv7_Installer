@@ -70,6 +70,7 @@ goto ChooseDev
 :: Exe
 
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
+set "CurlLoc=%~dp0\Files\DownloaderFiles\curl"
 
 :: Get latest release
 
@@ -163,7 +164,7 @@ setlocal EnableDelayedExpansion
 
 if not exist Drivers\ mkdir Drivers
 cd Drivers\
-if not exist README.md curl -s -O "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
+if not exist README.md "%CurlLoc%" -s -O "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
 
 :: Delete old drivers
 
@@ -177,7 +178,7 @@ if exist !DrvDir!\ (
 
 md !DrvDir!
 echo Downloading definition file ...
-curl -s --create-dirs -O --output-dir "!DrvDir!" "%DefLink%"
+"%CurlLoc%" -s --create-dirs -O --output-dir "!DrvDir!" "%DefLink%"
 
 for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
 	set Drv=%%A
