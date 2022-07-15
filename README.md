@@ -49,11 +49,11 @@
   * For the latest 2.0 version, download with the green Download (Code) button, Download ZIP.
   * For 1.0, go to releases selection.
 ### Credits
-  - fadilfadz01 (Fadil Fadz)     : Helping me write the script
-  - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
+  - fadilfadz01 (Fadil Fadz)     : Helps me write the script
+  - Gus33000 (Gustave Monce)     : Makes Drivers & Lot more
   - Heathcliff74 (Rene Lergner)  : WPinternals
   - driver1998                   : Windows 10 For ARMv7 Image
-  - Windows ARM32 Telegram group : Testing my script
+  - Windows ARM32 Telegram group : Test my script
   - Microsoft                    : Command Prompt, Windows, Dism, Bcdedit, PowerShell, ...
   - TortoiseSVN                  : SVN
   - Igor Pavlov                  : 7-Zip

@@ -62,8 +62,8 @@ DOWNLOADS:
       Thanks to @Gus33000
 
 THANKS TO:
-    - fadilfadz01 (Fadil Fadz)     : Helping me write the script
-    - Gus33000 (Gustave Monce)     : Making Drivers & explain me Drivers
+    - fadilfadz01 (Fadil Fadz)     : Helps me write the script
+    - Gus33000 (Gustave Monce)     : Makes drivers & lot more.
     - Heathcliff74 (Rene Lergner)  : WPinternals
     - driver1998                   : Windows 10 For ARMv7 Image
     - Windows ARM32 Telegram group : Testing my script
@@ -71,7 +71,7 @@ THANKS TO:
     - TortoiseSVN                  : SVN
     - Igor Pavlov                  : 7-Zip
     - GNU                          : WGET, GREP
-    - RedGreenBlue123 (Me)         : Writing the script
+    - RedGreenBlue123 (Me)         : Write the script
     - Adoxa                        : Ansicon
     - Wimlib                       : Wimlib-ImageX
     - Jnewbigin                    : RawWrite dd for Windows
