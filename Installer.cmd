@@ -385,7 +385,6 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 
-if %Storage% NEQ 32A echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
 if %Storage% EQU 8 (
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
@@ -393,23 +392,23 @@ if %Storage% EQU 8 (
 	rd %MainOS%\Data
 )
 if %Storage% EQU 16 (
+	echo %ESC%[96m[INFO] Checking Data Partition ...%ESC%[91m
+	chkdsk /f %MainOS%\Data %Logger%
+	
+	echo %ESC%[96m[INFO] Resizing Data Partition ...%ESC%[91m
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %Logger%
-	if %errorlevel% NEQ 0 (
-		echo %ESC%[96m[INFO] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
-		chkdsk /f %MainOS%\Data %Logger%
-		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
-	)
+	
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
 )
 if %Storage% EQU 32 (
+	echo %ESC%[96m[INFO] Checking Data Partition ...%ESC%[91m
+	chkdsk /f %MainOS%\Data %Logger%
+	
+	echo %ESC%[96m[INFO] Resizing Data Partition ...%ESC%[91m
 	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %Logger%
-	if %errorlevel% NEQ 0 (
-		echo %ESC%[96m[INFO] Shrink partition error occurred. Trying to solve the problem ...%ESC%[91m
-		chkdsk /f %MainOS%\Data %Logger%
-		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
-	)
+	
 	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
 	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
 	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
@@ -488,7 +487,7 @@ if %Storage% EQU 8 (
 	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
 	Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Ignore This" %Logger%
 	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder %id%
+	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
 ) else (
 	if %Storage% NEQ 32A (
 		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=N:" %SevLogger%
@@ -503,7 +502,7 @@ if %Storage% EQU 8 (
 		Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
 	)
 	Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" custom:0x54000001 %id% %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default}
+	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
 )
 
 if %Storage% NEQ 32A (
