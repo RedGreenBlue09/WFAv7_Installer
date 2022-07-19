@@ -26,7 +26,7 @@
   1. Download Windows 10 for ARMv7 build 15035 to your computer.
   2. Extract Win10.7z\sources\install.wim to Installer folder.
   3. Run Driver Downloader and download drivers for your device.
-  4. Unlock bootloader and boot into Mass Storage Mode [WPInternals](https://github.com/ReneLergner/WPinternals)
+  4. Unlock bootloader and boot into Mass Storage Mode. See [WPInternals](https://github.com/ReneLergner/WPinternals)
   5. Run Installer and follow the Instruction in the installer.
   6. After installation finished, boot and setup Windows 10.
      Don't connect to Wi-Fi on setup. It will make the setup stuck.
