@@ -72,10 +72,13 @@ goto ChooseDev
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
 set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
 
-:: Get latest release
-
 cls
 color 0b
+
+:: Get latest release
+set "Tag=v2111.1"
+goto Models
+
 echo Getting release tags...
 
 for /f "usebackq" %%A in (`"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/`) do (
@@ -84,7 +87,7 @@ for /f "usebackq" %%A in (`"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Dr
 set "Tag=%Tag:~0,-1%"
 :: Remove / at the end
 
-:: Models
+: Models
 
 set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
 set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
