@@ -214,11 +214,12 @@ echo   - Make sure no drives mounted with letter N.
 echo   - Closed all programs during installation.
 echo   * Highly recommend you to flash the original FFU of your phone.
 echo     before installing Windows 10 ARMv7.
-if %Dualboot% EQU 8 (
+if /i "%Dualboot%" EQU "N" (
 	echo   * This will permanently remove Windows Phone.%ESC%[0m
 ) else (
-	if %Storage% EQU 16 echo   * ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
-	if %Storage% EQU 32 echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
+	if "%Storage%" EQU "16" echo   * ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
+	if "%Storage%" EQU "32" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
+	if "%Storage%" EQU "32A" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
 )
 
 echo.
@@ -399,17 +400,32 @@ echo %ESC%[96m[INFO] Checking Data partition ...%ESC%[91m
 chkdsk /f %MainOS%\Data %Logger%
 
 if /i "%Dualboot" EQU "Y" (
-
+			
 	:: A bit dangerous
 	if exist %MainOS%\Windows10\ rd /s /q %MainOS%\Windows10\ %Logger%
 	md %MainOS%\Windows10\ %Logger%
+	
+	if "%Storage%" EQU "32A" (
+		
+		:: Unfortunately New-VHD requires Hyper-V to be enabled
+		echo>Temp\diskpart.txt create vdisk file=%MainOS%\Data\Windows10.vhdx maximum=16384 type=fixed
+		echo>>Temp\diskpart.txt attach vdisk
+		echo>>Temp\diskpart.txt convert gpt
+		echo>>Temp\diskpart.txt create par pri
+		echo>>Temp\diskpart.txt format quick fs=ntfs
+		echo>>Temp\diskpart.txt assign mount=%MainOS%\Windows10\
+		diskpart /s Temp\diskpart.txt %SevLogger%
+		rm Temp/diskpart.txt
 
-
-	echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
-	if %Storage% EQU 16 Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
-	if %Storage% EQU 32 Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
-
-	powershell -C "New-Partition -DiskNumber 2 -UseMaximumSize | Add-PartitionAccessPath -AccessPath "%MainOS%\Windows10\"; exit $Error.count" %SevLogger%
+	) else (
+		
+		echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
+		if "%Storage%" EQU "16" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
+		if "%Storage%" EQU "32" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+		
+		powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize | Add-PartitionAccessPath -AccessPath "%MainOS%\Windows10\"; exit $Error.count" %SevLogger%
+		
+	)
 	set "Win10Drive=%MainOS%\Windows10"
 	
 ) else (
@@ -474,8 +490,19 @@ set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 
 Files\bcdedit /store "%bcdLoc%" /create %id% /d "Windows 10 ARM" /application "osloader" %SevLogger%
 
-Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=!Win10Drive!" %SevLogger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=!Win10Drive!" %SevLogger%
+if "%Storage%" EQU "32A" (
+	if /i "%Dualboot%" EQU "Y" (
+		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
+	) else (
+		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=!Win10Drive!" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=!Win10Drive!" %SevLogger%
+	)
+) else (
+	Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=!Win10Drive!" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=!Win10Drive!" %SevLogger%
+)
+
 Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
@@ -488,7 +515,7 @@ Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
 
 :: Boot entry display
-if "%Dualboot%" EQU "N" (
+if /i "%Dualboot%" EQU "N" (
 	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
 ) else (
@@ -508,11 +535,22 @@ echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 
-set "DLMOS=%MainOS:~0,-1%"
 echo>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
 echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
+rm Temp/diskpart.txt
+
+if "%Storage%" EQU "32A" (
+	if /i "%Dualboot%" EQU "Y" (
+		echo %ESC%[96m[INFO] Unmounting VHDX ...%ESC%[91m
+		echo>Temp\diskpart.txt sel vdisk file=%MainOS%\Data\Windows10.vhdx
+		echo>Temp\diskpart.txt detach vdisk
+		diskpart /s Temp\diskpart.txt %Logger%
+		rm Temp/diskpart.txt
+	)
+)
+
 
 rd /s /q Temp\
 goto MissionCompleted
