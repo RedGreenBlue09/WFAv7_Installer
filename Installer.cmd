@@ -61,18 +61,17 @@ if %PLV% NEQ 0 (
 	exit /B
 )
 
-echo  - Getting CmdLets ...
-Powershell -C "(Get-Command).name" >> Temp\Commands.txt
-echo  - Checking Get-Date ...
+echo  - Checking Cmdlets ...
+Powershell -C "(Get-Command).name" > Temp\Commands.txt
 findstr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
-echo  - Checking New-Partition ...
-findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
-echo  - Checking Get-Partition ...
 findstr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
-echo  - Checking Get-WmiObject ...
+findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Resize-Partition" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Remove-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
-echo  - Checking Get-PartitionSupportedSize ...
 findstr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Add-PartitionAccessPath" Temp\Commands.txt >nul || goto MissingCommand
+
 del Temp\Commands.txt
 goto ToBeContinued0
 :MissingCommand
@@ -80,7 +79,7 @@ del Temp\Commands.txt
 title ERROR!
 color 0C
 echo ----------------------------------------------------------------
-echo  You used Windows 7 / Customized Windows.
+echo  Required powershell cmdlets are not found.
 echo  Please use Official Windows 8.1 or Windows 10.
 pause
 exit /B
@@ -387,8 +386,10 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber"') do set "PartitionNumberDPP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
+echo ## DPP PN is %PartitionNumberDPP% ## >>%LogName%
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 
@@ -463,15 +464,16 @@ if /i %Model% EQU E Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\
 
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
-if /i "%Dualboot%" EQU "N" (
-	echo %ESC%[96m[INFO] Mounting EFIESP ...%ESC%[91m
-	echo>Temp\diskpart1.txt sel dis %DiskNumber%
-	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
-	echo>>Temp\diskpart1.txt assign mount=%MainOS%\EFIESP
-	md %MainOS%\EFIESP
-	diskpart /s Temp\diskpart1.txt %Logger%
-	rd Temp\Diskpart1.txt
-)
+echo %ESC%[96m[INFO] Mounting EFIESP and DPP ...%ESC%[91m
+md !Win10Drive!\EFIESP
+md !Win10Drive!\DPP
+echo>Temp\diskpart1.txt sel dis %DiskNumber%
+echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
+echo>>Temp\diskpart1.txt assign mount=!Win10Drive!\EFIESP
+echo>>Temp\diskpart1.txt sel par %PartitionNumberDPP%
+echo>>Temp\diskpart1.txt assign mount=!Win10Drive!\DPP
+diskpart /s Temp\diskpart1.txt %Logger%
+rd Temp\diskpart1.txt
 
 echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
@@ -535,6 +537,9 @@ echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
 rm Temp/diskpart.txt
 
+if /i "%Dualboot%" EQU "Y" copy Files\PostInstall\Dualboot.cmd !Win10Drive!\Dualboot.cmd %Logger%
+
+:: Unmount VHDX
 if "%Storage%" EQU "32A" (
 	if /i "%Dualboot%" EQU "Y" (
 		echo %ESC%[96m[INFO] Unmounting VHDX ...%ESC%[91m
@@ -544,7 +549,6 @@ if "%Storage%" EQU "32A" (
 		rm Temp/diskpart.txt
 	)
 )
-
 
 rd /s /q Temp\
 goto MissionCompleted
@@ -585,8 +589,7 @@ echo  %ESC%[97m- Now, reboot your phone.
 echo  - At the boot menu, press volume up to boot Windows 10 ARM.
 echo  - Boot and setup Windows 10 (may reboot several times.).
 echo    If you cannot boot Windows 10 after 2nd boot, use "BootFix".
-echo  - Use WPInternals to interrupt boot process.
-echo  - Reboot the phone to Mass Storage Mode.
-echo  - Run PostInstall.bat.%ESC%[0m
+if /i "%Dualboot%" EQU "Y" echo  - After you got to the desktop, run "Dualboot"
+if /i "%Dualboot%" EQU "Y" echo    in Windows 10 ARM drive to finish installation.%ESC%[0m
 pause
 exit /b
