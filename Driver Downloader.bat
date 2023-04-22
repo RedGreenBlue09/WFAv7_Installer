@@ -26,7 +26,7 @@ set Model=
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.5%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.6%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.

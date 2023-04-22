@@ -227,12 +227,14 @@ echo   * You can partially pause the installation by clicking any where on the c
 echo.
 pause
 goto MOSAutoDetect
+
 :MOSAutoDetectFail
-echo %ESC%[93mFailed to auto detect MainOS.%ESC%[0m
+echo %ESC%[93mUnable to auto detect MainOS.%ESC%[0m
 if exist Temp\GPT del Temp\GPT
 if exist Temp\GPT* del Temp\GPT*
 set "Skip="
 goto MOSPath
+
 :MOSAutoDetect
 setlocal EnableDelayedExpansion
 cls
