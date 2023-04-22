@@ -19,7 +19,6 @@
   - Official Windows 8.1+
   - Windows Powershell enabled.
   - 3 GB of empty computer storage.
-  - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed in your Lumia.
   * More information in the Installer.
 ### Instruction
   1. Download Windows 10 for ARMv7 build 15035 to your computer.
@@ -27,9 +26,9 @@
   3. Run Driver Downloader and download drivers for your device.
   4. Unlock bootloader and boot into Mass Storage Mode. See [WPinternals](https://github.com/ReneLergner/WPinternals)
   5. Run Installer and follow the instruction in the Installer.
-  6. After installation finished, boot and setup Windows 10. Don't connect to Wi-Fi on setup. It will make the setup stuck.
-  7. When setup completes (Desktop appears), run Dualboot.bat.
-  8. Now, you can dualboot Windows Phone and Windows 10.
+  6. After installation finished, boot and setup Windows 10. Don't connect to Wi-Fi on setup, it will make the setup stuck.
+  7. For dualboot: When setup completes (desktop appears), run Dualboot.bat as administrator.
+  8. Done!
 ### Notes
   * This is not a software, this is a set of programs that combined to make the installation easier.
   * Editing the files or folders may cause damage to the intaller.
