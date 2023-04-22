@@ -1,37 +1,23 @@
 @echo off
-setlocal EnableExtensions
-setlocal
+setlocal EnableDelayedExpansion
+cd %~dp0
 if not "%~1" EQU "" call :%~1
 if %Errorlevel% NEQ 0 goto :EOF
-:Check1
-cd ..
 ::---------------------------------------------------------------
 :GetAdministrator
-    if "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
-    if "%PROCESSOR_ARCHITECTURE%" EQU "ARM64" ( >nul 2>&1 "%SYSTEMROOT%\SysArm32\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
-    if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
-	"%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" >nul 2>&1
-) else ("%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system" >nul 2>&1)
-
+icacls "%SYSTEMROOT%\System32\config\SYSTEM" >nul 2>&1
 if %errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
-	goto UserAccountControl
-) else (goto GotAdministrator)
-
-:UserAccountControl
-	echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-	set params= %*
-	echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-	"%temp%\getadmin.vbs"
-	del "%temp%\getadmin.vbs"
+	Files\elevate "Installer.cmd"
 	exit /B
+)
 
-:GotAdministrator
-	pushd "%cd%"
-	cd /D "%~dp0"
-	if exist "%~dp0Temp\" rd /s /q "%~dp0Temp\"
-	if not exist "%~dp0Temp\" md "%~dp0Temp"
+::GotAdministrator
+
 ::---------------------------------------------------------------
+if exist "Temp\" rd /s /q "Temp\"
+if not exist "Temp\" md "Temp"
+
 :Check2
 title Checking compatibility ...
 echo  - Checking Windows Build ...
@@ -86,15 +72,15 @@ exit /B
 
 :ToBeContinued0
 cls
-echo Installer is loading ... [100%%]
+echo Installer is loading ...
 :Start
 if %WinBuild% LSS 10586 (
 	if /i %PROCESSOR_ARCHITECTURE% EQU X86 Files\ansicon32 -p
 	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 set "ESC="
+
 ::---------------------------------------------------------------
-cls
 :Disclaimer
 cls
 title Windows 10 for ARMv7 Installer 3.0
@@ -133,6 +119,7 @@ if /i "%Disclaimer%" EQU "N" (
 	exit /b
 )
 if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
+
 ::---------------------------------------------------------------
 :ChooseDev
 set "Model="
@@ -189,7 +176,7 @@ echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m 
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
-set /p DualBoot=" %ESC%[97mUse dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set /p DualBoot="%ESC%[97m Use dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%DualBoot%" NEQ "Y" if /i "%DualBoot%" NEQ "N" goto Dualboot
 
 ::---------------------------------------------------------------
@@ -203,23 +190,21 @@ echo  //////////////////////////////////////////////////////////////////////////
 echo.
 echo %ESC%[92m PREPARATION:
 echo   - Read README.TXT and instruction before using this Installer.
-echo   - Make sure your phone is fully charged and it's battery is not wear too much.
-echo   - Make sure no drives mounted with letter N.
-echo   - Closed all programs during installation.
-echo   * Highly recommend you to flash the original FFU of your phone.
-echo     before installing Windows 10 ARMv7.
+echo   - Close all programs during installation.
+echo   - Make sure your phone have enough battery for this installation.
+echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
+echo   * Highly recommend you to flash the original FFU.
 if /i "%Dualboot%" EQU "N" (
 	echo   * This will permanently remove Windows Phone.%ESC%[0m
 ) else (
-	if "%Storage%" EQU "16" echo   * ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
-	if "%Storage%" EQU "32" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
-	if "%Storage%" EQU "32A" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
+	if "%Storage%" EQU "16" echo   * ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "32" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "32A" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
 )
-
-echo.
+echo %ESC%[0m
 echo %ESC%[95m WARNING:
 echo   * After pressing any key, the Installation will begin. As a batch script,
-echo     Installation cannot be cancelled correctly without any damage to your device.
+echo     Installation cannot be cancelled properly without any damage to your device.
 echo   * If you want to cancel the installation, close this console RIGHT NOW.
 echo   * You can partially pause the installation by clicking any where on the console.%ESC%[0m
 echo.
@@ -234,7 +219,6 @@ set "Skip="
 goto MOSPath
 
 :MOSAutoDetect
-setlocal EnableDelayedExpansion
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
