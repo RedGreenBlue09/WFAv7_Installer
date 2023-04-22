@@ -156,11 +156,9 @@ echo  %ESC%[36m7) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m8) %ESC%[97mLumia 735 Global
 echo  %ESC%[36mA) %ESC%[97mLumia 640 XL LTE Global
 echo  %ESC%[36mB) %ESC%[97mLumia 640 XL LTE AT^&T
-echo  %ESC%[36mC) %ESC%[97mLumia 950
-echo  %ESC%[36mD) %ESC%[97mLumia 950 XL
-echo  %ESC%[36mE) %ESC%[97mLumia 1020 [BLUE SCREEN]
-echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
-echo  %ESC%[36mG) %ESC%[97mLumia 920
+echo  %ESC%[36mC) %ESC%[97mLumia 1020 [BLUE SCREEN]
+echo  %ESC%[36mD) %ESC%[97mLumia 1020 AT^&T
+echo  %ESC%[36mE) %ESC%[97mLumia 920
 
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
 
@@ -175,11 +173,9 @@ if "%Model%" EQU "7" set "Storage=16" & goto DualBoot
 if "%Model%" EQU "8" set "Storage=8" & goto DualBoot
 if /i "%Model%" EQU "A" set "Storage=8" & goto DualBoot
 if /i "%Model%" EQU "B" set "Storage=8" & goto DualBoot
-if /i "%Model%" EQU "C" set "Storage=32" & goto DualBoot
-if /i "%Model%" EQU "D" set "Storage=32" & goto DualBoot
+if /i "%Model%" EQU "C" set "Storage=32A" & goto DualBoot
+if /i "%Model%" EQU "D" set "Storage=32A" & goto DualBoot
 if /i "%Model%" EQU "E" set "Storage=32A" & goto DualBoot
-if /i "%Model%" EQU "F" set "Storage=32A" & goto DualBoot
-if /i "%Model%" EQU "G" set "Storage=32A" & goto DualBoot
 goto ChooseDev
 
 ::---------------------------------------------------------------
@@ -320,11 +316,9 @@ if %Model% EQU 7 (if not exist Drivers\Lumia830 goto MissingDrivers)
 if %Model% EQU 8 (if not exist Drivers\Lumia735 goto MissingDrivers)
 if /I %Model% EQU A (if not exist Drivers\Lumia640XL goto MissingDrivers)
 if /I %Model% EQU B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if /I %Model% EQU C (if not exist Drivers\Lumia950 goto MissingDrivers)
-if /I %Model% EQU D (if not exist Drivers\Lumia950XL goto MissingDrivers)
-if /I %Model% EQU E (if not exist Drivers\Lumia1020 goto MissingDrivers)
-if /I %Model% EQU F (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
-if /I %Model% EQU G (if not exist Drivers\Lumia920 goto MissingDrivers)
+if /I %Model% EQU C (if not exist Drivers\Lumia1020 goto MissingDrivers)
+if /I %Model% EQU D (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
+if /I %Model% EQU E (if not exist Drivers\Lumia920 goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	echo ----------------------------------------------------------------
 	echo  %ESC%[91mPlace install.wim in the Installer folder and try again.%ESC%[0m
@@ -461,11 +455,9 @@ if %Model% EQU 7 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Dri
 if %Model% EQU 8 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
 if /i %Model% EQU A Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
 if /i %Model% EQU B Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /i %Model% EQU C Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if /i %Model% EQU D Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
-if /i %Model% EQU E Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i %Model% EQU F Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
-if /i %Model% EQU G Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if /i %Model% EQU C Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i %Model% EQU D Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if /i %Model% EQU E Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%

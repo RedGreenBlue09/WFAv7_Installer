@@ -42,8 +42,6 @@ echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE AT^&T
 echo  %ESC%[36mA)%ESC%[97m Lumia 920
 echo  %ESC%[36mB)%ESC%[97m Lumia 1020
 echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
-echo  %ESC%[36mD)%ESC%[97m Lumia 950
-echo  %ESC%[36mE)%ESC%[97m Lumia 950 XL
 
 set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
 
@@ -58,8 +56,6 @@ if "%Model%" EQU "8" (goto DoDownload)
 if /I "%Model%" EQU "A" (goto DoDownload)
 if /I "%Model%" EQU "B" (goto DoDownload)
 if /I "%Model%" EQU "C" (goto DoDownload)
-if /I "%Model%" EQU "D" (goto DoDownload)
-if /I "%Model%" EQU "E" (goto DoDownload)
 goto ChooseDev
 
 ::------------------------------------------------------------------
@@ -76,8 +72,8 @@ cls
 color 0b
 
 :: Get latest release
-set "Tag=v2111.1"
-goto Models
+::set "Tag=v2111.1"
+::goto Models
 
 echo Getting release tags...
 
@@ -146,16 +142,6 @@ if /I "%Model%" EQU "C" (
 	set "DrvDir=Lumia1020-AT&T"
 	set "DefLink=%DefDirLink%/1020att.txt"
 	set "Def=1020att.txt"
-)
-if /I "%Model%" EQU "D" (
-	set "DrvDir=Lumia950"
-	set "DefLink=%DefDirLink%/Desktop/ARM32/Internal/950.txt"
-	set "Def=950.txt"
-)
-if /I "%Model%" EQU "E" (
-	set "DrvDir=Lumia950XL"
-	set "DefLink=%DefDirLink%/Desktop/ARM32/Internal/950xl.txt"
-	set "Def=950xl.txt"
 )
 
 ::------------------------------------------------------------------
