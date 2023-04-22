@@ -5,16 +5,6 @@ if not "%~1" EQU "" call :%~1
 if %Errorlevel% NEQ 0 goto :EOF
 :Check1
 cd ..
-echo Checking compatibility ...
-echo  - Checking Drive [N:] ...
-if EXIST N:\ (
-	title ERROR!
-	color 0C
-	echo ----------------------------------------------------------------
-	echo   Please Unmount Drive [N:]
-	pause
-	exit /B
-)
 ::---------------------------------------------------------------
 :GetAdministrator
     if "%PROCESSOR_ARCHITECTURE%" EQU "AMD64" ( >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system" )
@@ -109,7 +99,7 @@ cls
 Files\cmdresize 96 2000 96 24
 :Disclaimer
 cls
-title Windows 10 for ARMv7 Installer 2.0
+title Windows 10 for ARMv7 Installer 3.0
 echo.
 echo.
 echo                            %ESC%[97m%ESC%[1mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
@@ -150,7 +140,7 @@ if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
 set "Model="
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -171,31 +161,48 @@ echo  %ESC%[36mD) %ESC%[97mLumia 950 XL
 echo  %ESC%[36mE) %ESC%[97mLumia 1020 [BLUE SCREEN]
 echo  %ESC%[36mF) %ESC%[97mLumia 1020 AT^&T
 echo  %ESC%[36mG) %ESC%[97mLumia 920
-echo  %ESC%[36mH) %ESC%[97mBSP Method (More devices) [COMMING SOON]%ESC%[0m
+
 set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
+
 if "%Model%" EQU "" goto ChooseDev
-if "%Model%" EQU "1" set "Storage=32" & goto ToBeContinued1
-if "%Model%" EQU "2" set "Storage=32" & goto ToBeContinued1
-if "%Model%" EQU "3" set "Storage=32" & goto ToBeContinued1
-if "%Model%" EQU "4" set "Storage=16" & goto ToBeContinued1
-if "%Model%" EQU "5" set "Storage=32" & goto ToBeContinued1
-if "%Model%" EQU "6" set "Storage=16" & goto ToBeContinued1
-if "%Model%" EQU "7" set "Storage=16" & goto ToBeContinued1
-if "%Model%" EQU "8" set "Storage=8" & goto ToBeContinued1
-if /i "%Model%" EQU "A" set "Storage=8" & goto ToBeContinued1
-if /i "%Model%" EQU "B" set "Storage=8" & goto ToBeContinued1
-if /i "%Model%" EQU "C" set "Storage=32" & goto ToBeContinued1
-if /i "%Model%" EQU "D" set "Storage=32" & goto ToBeContinued1
-if /i "%Model%" EQU "E" set "Storage=32A" & goto ToBeContinued1
-if /i "%Model%" EQU "F" set "Storage=32A" & goto ToBeContinued1
-if /i "%Model%" EQU "G" set "Storage=32A" & goto ToBeContinued1
-:: if /i "%Model%" EQU "H" goto BSP
+if "%Model%" EQU "1" set "Storage=32" & goto DualBoot
+if "%Model%" EQU "2" set "Storage=32" & goto DualBoot
+if "%Model%" EQU "3" set "Storage=32" & goto DualBoot
+if "%Model%" EQU "4" set "Storage=16" & goto DualBoot
+if "%Model%" EQU "5" set "Storage=32" & goto DualBoot
+if "%Model%" EQU "6" set "Storage=16" & goto DualBoot
+if "%Model%" EQU "7" set "Storage=16" & goto DualBoot
+if "%Model%" EQU "8" set "Storage=8" & goto DualBoot
+if /i "%Model%" EQU "A" set "Storage=8" & goto DualBoot
+if /i "%Model%" EQU "B" set "Storage=8" & goto DualBoot
+if /i "%Model%" EQU "C" set "Storage=32" & goto DualBoot
+if /i "%Model%" EQU "D" set "Storage=32" & goto DualBoot
+if /i "%Model%" EQU "E" set "Storage=32A" & goto DualBoot
+if /i "%Model%" EQU "F" set "Storage=32A" & goto DualBoot
+if /i "%Model%" EQU "G" set "Storage=32A" & goto DualBoot
 goto ChooseDev
+
+::---------------------------------------------------------------
+:DualBoot
+if %Storage% EQU 8 (
+	set "Dualboot=N"
+	goto ToBeContinued1
+)
+cls
+echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
+echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
+echo.
+set /p DualBoot=" %ESC%[97mUse dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+if /i "%DualBoot%" NEQ "Y" if /i "%DualBoot%" NEQ "N" goto Dualboot
+
 ::---------------------------------------------------------------
 :ToBeContinued1
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -207,10 +214,13 @@ echo   - Make sure no drives mounted with letter N.
 echo   - Closed all programs during installation.
 echo   * Highly recommend you to flash the original FFU of your phone.
 echo     before installing Windows 10 ARMv7.
-if %Storage% EQU 8 echo   * This will remove Windows Phone to get more space for WFAv7.%ESC%[0m
-if %Storage% EQU 16 echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
-if %Storage% EQU 32 echo   * You need at least ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
-if %Storage% EQU 32A echo   * You need at least ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage to continue.%ESC%[0m
+if %Dualboot% EQU 8 (
+	echo   * This will permanently remove Windows Phone.%ESC%[0m
+) else (
+	if %Storage% EQU 16 echo   * ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
+	if %Storage% EQU 32 echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.%ESC%[0m
+)
+
 echo.
 echo %ESC%[95m WARNING:
 echo   * After pressing any key, the Installation will begin. As a batch script,
@@ -230,7 +240,7 @@ goto MOSPath
 setlocal EnableDelayedExpansion
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -385,86 +395,65 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 
-if %Storage% EQU 8 (
+echo %ESC%[96m[INFO] Checking Data partition ...%ESC%[91m
+chkdsk /f %MainOS%\Data %Logger%
+
+if /i "%Dualboot" EQU "Y" (
+
+	:: A bit dangerous
+	if exist %MainOS%\Windows10\ rd /s /q %MainOS%\Windows10\ %Logger%
+	md %MainOS%\Windows10\ %Logger%
+
+
+	echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
+	if %Storage% EQU 16 Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
+	if %Storage% EQU 32 Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+
+	powershell -C "New-Partition -DiskNumber 2 -UseMaximumSize | Add-PartitionAccessPath -AccessPath "%MainOS%\Windows10\"; exit $Error.count" %SevLogger%
+	set "Win10Drive=%MainOS%\Windows10"
+	
+) else (
+
+	echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
-	echo %ESC%[96m[INFO] Formatting MainOS for Windows 10 for ARMv7 ...%ESC%[91m
-	rd %MainOS%\Data
+	set "Win10Drive=%MainOS%"
+
 )
-if %Storage% EQU 16 (
-	echo %ESC%[96m[INFO] Checking Data Partition ...%ESC%[91m
-	chkdsk /f %MainOS%\Data %Logger%
-	
-	echo %ESC%[96m[INFO] Resizing Data Partition ...%ESC%[91m
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %Logger%
-	
-	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
-	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
-	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
-)
-if %Storage% EQU 32 (
-	echo %ESC%[96m[INFO] Checking Data Partition ...%ESC%[91m
-	chkdsk /f %MainOS%\Data %Logger%
-	
-	echo %ESC%[96m[INFO] Resizing Data Partition ...%ESC%[91m
-	Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %Logger%
-	
-	echo %ESC%[96m[INFO] Creating Windows 10 for ARMv7 Partition ...%ESC%[91m
-	Powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize -DriveLetter N; exit $Error.count" %SevLogger%
-	for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter N).Guid"') do set "WUuid=%%i"
-)
-if %Storage% EQU 8 (format %MainOS% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%)
-if %Storage% EQU 16 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
-if %Storage% EQU 32 (format N: /FS:NTFS /V:Windows10 /Q /Y %SevLogger%)
+echo %ESC%[96m[INFO] Formatting Windows 10 ARM partition ...%ESC%[91m
+format !Win10Drive! /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
+
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
-echo %ESC%[96m[INFO] Installing Windows 10 for ARMv7 ...%ESC%[91m
-if %Storage% EQU 8 (
-	if %WinBuild% LSS 10240 (
-		Files\wimlib apply install.wim 1 %MainOS%\ --compact=lzx %SevLogger%
-	) else (
-		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\ /Compact %SevLogger%
-	)
-	copy nul %MainOS%\Windows\UUID.txt %Logger%
+echo %ESC%[96m[INFO] Installing Windows 10 ARM ...%ESC%[91m
+if %WinBuild% LSS 10240 (
+	Files\wimlib apply install.wim 1 !Win10Drive!\ --compact=lzx %SevLogger%
+) else (
+	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:!Win10Drive!\ /Compact %SevLogger%
 )
-if %Storage% EQU 16 (
-	if %WinBuild% LSS 10240 (
-		Files\wimlib apply install.wim 1 N:\ --compact=lzx %SevLogger%
-	) else (
-		Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ /Compact %SevLogger%
-	)
-	echo>N:\Windows\UUID.txt %WUuid%
-)
-if %Storage% EQU 32 (
-	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:N:\ %SevLogger%
-	echo>N:\Windows\UUID.txt %WUuid%
-)
-if %Storage% EQU 32A (
-	md %MainOS%\Data\Windows10Arm
-	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%MainOS%\Data\Windows10Arm\ %SevLogger%
-	copy nul %MainOS%\Windows\UUID.txt %Logger%
-)
+
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-if %Model% EQU 1 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
-if %Model% EQU 2 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
-if %Model% EQU 3 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %Model% EQU 4 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if %Model% EQU 5 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %Model% EQU 6 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if %Model% EQU 7 Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if %Model% EQU 8 Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if /i %Model% EQU A Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if /i %Model% EQU B Files\DISM\dism /Image:%MainOS%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /i %Model% EQU C Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
-if /i %Model% EQU D Files\DISM\dism /Image:N:\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
-if /i %Model% EQU E Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i %Model% EQU F Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
-if /i %Model% EQU G Files\DISM\dism /Image:%MainOS%\Data\Windows10Arm\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if %Model% EQU 1 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
+if %Model% EQU 2 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
+if %Model% EQU 3 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model% EQU 4 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if %Model% EQU 5 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model% EQU 6 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if %Model% EQU 7 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
+if %Model% EQU 8 Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
+if /i %Model% EQU A Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
+if /i %Model% EQU B Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
+if /i %Model% EQU C Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia950" /Recurse %Logger%
+if /i %Model% EQU D Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia950XL" /Recurse %Logger%
+if /i %Model% EQU E Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i %Model% EQU F Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if /i %Model% EQU G Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
-if %Storage% EQU 8 (
+if /i "%Dualboot%" EQU "N" (
 	echo %ESC%[96m[INFO] Mounting EFIESP ...%ESC%[91m
 	echo>Temp\diskpart1.txt sel dis %DiskNumber%
 	echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
@@ -473,6 +462,7 @@ if %Storage% EQU 8 (
 	diskpart /s Temp\diskpart1.txt %Logger%
 	rd Temp\Diskpart1.txt
 )
+
 echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
 
@@ -481,59 +471,50 @@ echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 set "bcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>%LogName% 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
-Files\bcdedit /store %bcdLoc% /create %id% /d "Windows 10 for ARMv7" /application "osloader" %SevLogger%
-if %Storage% EQU 8 (
-	Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%MainOS%" %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%MainOS%" %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Ignore This" %Logger%
-	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
-) else (
-	if %Storage% NEQ 32A (
-		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=N:" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=N:" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Windows Phone" %Logger%
-	) else (
-		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%MainOS%\Data" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%MainOS%\Data" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Windows Phone" %Logger%
-		
-		Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows10Arm\Windows\System32\winload.efi" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows10Arm\Windows" %SevLogger%
-	)
-	Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" custom:0x54000001 %id% %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
-)
 
-if %Storage% NEQ 32A (
-	Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
-)
+Files\bcdedit /store "%bcdLoc%" /create %id% /d "Windows 10 ARM" /application "osloader" %SevLogger%
+
+Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=!Win10Drive!" %SevLogger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=!Win10Drive!" %SevLogger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %SevLogger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "inherit" "{bootloadersettings}" %Logger%
-
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootmenupolicy" "Legacy" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "winpe" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
+
+:: Boot entry display
+if "%Dualboot%" EQU "N" (
+	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
+	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
+) else (
+	Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Windows Phone" %Logger%
+	Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" custom:0x54000001 %id% %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
+)
+
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "testsigning" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "timeout" 5 %Logger%
 Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%
+
 ::---------------------------------------------------------------
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
+
 set "DLMOS=%MainOS:~0,-1%"
 echo>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
 echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
+
 rd /s /q Temp\
-echo %Storage%>%MainOS%\Windows\WFAv7Storage.txt
 goto MissionCompleted
 ::---------------------------------------------------------------
 
@@ -562,14 +543,14 @@ echo.
 pause
 cls
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
 echo.
-echo  %ESC%[92mWindows 10 for ARMv7 has been installed on your phone.
+echo  %ESC%[92mWindows 10 ARM has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
-echo  - At the boot menu, press volume up to boot Windows 10 for ARMv7.
+echo  - At the boot menu, press volume up to boot Windows 10 ARM.
 echo  - Boot and setup Windows 10 (may reboot several times.).
 echo    If you cannot boot Windows 10 after 2nd boot, use "BootFix".
 echo  - Use WPInternals to interrupt boot process.
