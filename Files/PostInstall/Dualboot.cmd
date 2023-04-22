@@ -8,10 +8,6 @@ if not defined MainOS (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
 )
-if %errorlevel% NEQ 0 (
-	echo  %ESC%[91mNot a valid MainOS partition.
-	goto MOSPath
-)
 if not exist "%MainOS%\EFIESP" (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
