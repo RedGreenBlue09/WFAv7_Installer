@@ -197,17 +197,16 @@ echo   * Highly recommend you to flash the original FFU.
 if /i "%Dualboot%" EQU "N" (
 	echo   * This will permanently remove Windows Phone.%ESC%[0m
 ) else (
-	if "%Storage%" EQU "16" echo   * ^> %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
-	if "%Storage%" EQU "32" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
-	if "%Storage%" EQU "32A" echo   * ^> %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "16" echo   * %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "32" echo   * %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "32A" echo   * %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
 )
 echo %ESC%[0m
 echo %ESC%[95m WARNING:
-echo   * After pressing any key, the Installation will begin. As a batch script,
-echo     Installation cannot be cancelled properly without any damage to your device.
+echo   * After pressing any key, the installation process will begin.
+echo     This cannot be cancelled properly which may cause damage to your device.
 echo   * If you want to cancel the installation, close this console RIGHT NOW.
-echo   * You can partially pause the installation by clicking any where on the console.%ESC%[0m
-echo.
+echo %ESC%[0m
 pause
 goto MOSAutoDetect
 
@@ -379,7 +378,7 @@ echo ## Data PN is %PartitionNumberData% ## >>%LogName%
 echo %ESC%[96m[INFO] Checking Data partition ...%ESC%[91m
 chkdsk /f %MainOS%\Data %Logger%
 
-if /i "%Dualboot" EQU "Y" (
+if /i "%Dualboot%" EQU "Y" (
 			
 	:: A bit dangerous
 	if exist %MainOS%\Windows10\ rd /s /q %MainOS%\Windows10\ %Logger%
@@ -520,7 +519,7 @@ echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 diskpart /s Temp\diskpart.txt %Logger%
 rm Temp/diskpart.txt
 
-if /i "%Dualboot%" EQU "Y" copy Files\PostInstall\Dualboot.cmd !Win10Drive!\Dualboot.cmd %Logger%
+if /i "%Dualboot%" EQU "Y" copy "Files\PostInstall\Dualboot.cmd" "!Win10Drive!\Dualboot.cmd" %Logger%
 
 :: Unmount VHDX
 if "%Storage%" EQU "32A" (
