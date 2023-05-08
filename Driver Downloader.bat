@@ -75,7 +75,7 @@ color 0b
 ::set "Tag=v2111.1"
 ::goto Models
 
-echo Getting release tags...
+echo Getting release tags ...
 
 for /f "usebackq" %%A in (`"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/`) do (
 	set "Tag=%%A"

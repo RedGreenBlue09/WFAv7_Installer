@@ -8,8 +8,8 @@ if %Errorlevel% NEQ 0 goto :EOF
 icacls "%SYSTEMROOT%\System32\config\SYSTEM" >nul 2>&1
 if %errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
-	Files\elevate "Installer.cmd"
-	exit /B
+	Files\elevate_%PROCESSOR_ARCHITECTURE% "Installer.cmd"
+	exit
 )
 
 ::GotAdministrator
