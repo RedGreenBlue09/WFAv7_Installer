@@ -388,7 +388,7 @@ if /i "%Dualboot%" EQU "Y" (
 		
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM VHDX ...%ESC%[91m
 		:: Unfortunately New-VHD requires Hyper-V to be enabled
-		echo>Temp\diskpart.txt create vdisk file=%MainOS%\Data\Windows10.vhdx maximum=16384 type=fixed
+		echo>Temp\diskpart.txt create vdisk file=%MainOS%\Data\Windows10.vhdx maximum=6144 type=fixed
 		echo>>Temp\diskpart.txt attach vdisk
 		echo>>Temp\diskpart.txt convert gpt
 		echo>>Temp\diskpart.txt create par pri
@@ -401,11 +401,11 @@ if /i "%Dualboot%" EQU "Y" (
 		
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
 		
-		echo Resize-Partition >>%LogName%
+		echo ## Resize-Partition ## >>%LogName%
 		if "%Storage%" EQU "16" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
 		if "%Storage%" EQU "32" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 		
-		echo New-Partition >>%LogName%
+		echo ## New-Partition ## >>%LogName%
 		powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize | Add-PartitionAccessPath -AccessPath '%MainOS%\Windows10\'; exit $Error.count" %SevLogger%
 		
 	)
@@ -414,9 +414,9 @@ if /i "%Dualboot%" EQU "Y" (
 ) else (
 
 	echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
-	echo Remove-Partition >>%LogName%
+	echo ## Remove-Partition ## >>%LogName%
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
-	echo Resize-Partition >>%LogName%
+	echo ## Resize-Partition ## >>%LogName%
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
 	set "Win10Drive=%MainOS%"
 
@@ -562,7 +562,7 @@ if %ErrNum% GTR 0 (
 	pause
 )
 if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>%LogName%
-if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation completed successfully!
+if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation completed successfully!%ESC%[0m
 echo.
 pause
 cls
@@ -579,5 +579,6 @@ echo  - Boot and setup Windows 10 (may reboot several times).
 echo    If you are unable to boot Windows 10 after 2nd boot, use "BootFix".
 if /i "%Dualboot%" EQU "Y" echo  - After getting to the desktop, run "Dualboot" in Windows 10 ARM drive
 if /i "%Dualboot%" EQU "Y" echo    as administrator to finish installation.%ESC%[0m
+echo.
 pause
 exit /b
