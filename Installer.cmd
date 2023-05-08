@@ -9,7 +9,7 @@ icacls "%SYSTEMROOT%\System32\config\SYSTEM" >nul 2>&1
 if %errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
 	Files\elevate_%PROCESSOR_ARCHITECTURE% "Installer.cmd"
-	exit
+	exit /B
 )
 
 ::GotAdministrator
@@ -342,7 +342,7 @@ cd ..
 set "ErrNum=0"
 set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "Err=^!Errorlevel^!" ^&^
- (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
+ (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [ERR ] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
@@ -350,7 +350,7 @@ set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
 
 set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
- (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [EROR] %%a) ^>^> Temp\ErrorConsole.log ^&^
+ (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [ERR ] %%a) ^>^> Temp\ErrorConsole.log ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
@@ -386,6 +386,7 @@ if /i "%Dualboot%" EQU "Y" (
 	
 	if "%Storage%" EQU "32A" (
 		
+		echo %ESC%[96m[INFO] Creating Windows 10 ARM VHDX ...%ESC%[91m
 		:: Unfortunately New-VHD requires Hyper-V to be enabled
 		echo>Temp\diskpart.txt create vdisk file=%MainOS%\Data\Windows10.vhdx maximum=16384 type=fixed
 		echo>>Temp\diskpart.txt attach vdisk
@@ -394,15 +395,18 @@ if /i "%Dualboot%" EQU "Y" (
 		echo>>Temp\diskpart.txt format quick fs=ntfs
 		echo>>Temp\diskpart.txt assign mount=%MainOS%\Windows10\
 		diskpart /s Temp\diskpart.txt %SevLogger%
-		rm Temp/diskpart.txt
+		del Temp\diskpart.txt
 
 	) else (
 		
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
+		
+		echo Resize-Partition >>%LogName%
 		if "%Storage%" EQU "16" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
 		if "%Storage%" EQU "32" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
 		
-		powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize | Add-PartitionAccessPath -AccessPath "%MainOS%\Windows10\"; exit $Error.count" %SevLogger%
+		echo New-Partition >>%LogName%
+		powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize | Add-PartitionAccessPath -AccessPath '%MainOS%\Windows10\'; exit $Error.count" %SevLogger%
 		
 	)
 	set "Win10Drive=%MainOS%\Windows10"
@@ -410,7 +414,9 @@ if /i "%Dualboot%" EQU "Y" (
 ) else (
 
 	echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
+	echo Remove-Partition >>%LogName%
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
+	echo Resize-Partition >>%LogName%
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
 	set "Win10Drive=%MainOS%"
 
@@ -455,7 +461,7 @@ echo>>Temp\diskpart1.txt assign mount=!Win10Drive!\EFIESP
 echo>>Temp\diskpart1.txt sel par %PartitionNumberDPP%
 echo>>Temp\diskpart1.txt assign mount=!Win10Drive!\DPP
 diskpart /s Temp\diskpart1.txt %Logger%
-rd Temp\diskpart1.txt
+del Temp\diskpart1.txt
 
 echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
@@ -515,9 +521,9 @@ Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger
 
 echo>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
-echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b override
 diskpart /s Temp\diskpart.txt %Logger%
-rm Temp/diskpart.txt
+del Temp\diskpart.txt
 
 if /i "%Dualboot%" EQU "Y" copy "Files\PostInstall\Dualboot.cmd" "!Win10Drive!\Dualboot.cmd" %Logger%
 
@@ -526,9 +532,9 @@ if "%Storage%" EQU "32A" (
 	if /i "%Dualboot%" EQU "Y" (
 		echo %ESC%[96m[INFO] Unmounting VHDX ...%ESC%[91m
 		echo>Temp\diskpart.txt sel vdisk file=%MainOS%\Data\Windows10.vhdx
-		echo>Temp\diskpart.txt detach vdisk
+		echo>>Temp\diskpart.txt detach vdisk
 		diskpart /s Temp\diskpart.txt %Logger%
-		rm Temp/diskpart.txt
+		del Temp\diskpart.txt
 	)
 )
 
