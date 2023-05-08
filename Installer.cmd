@@ -16,7 +16,7 @@ if %errorlevel% NEQ 0 (
 
 ::---------------------------------------------------------------
 if exist "Temp\" rd /s /q "Temp\"
-if not exist "Temp\" md "Temp"
+md "Temp"
 
 :Check2
 title Checking compatibility ...
