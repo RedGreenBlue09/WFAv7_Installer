@@ -565,7 +565,6 @@ echo  %ESC%[92mWindows 10 ARM has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
 echo  - At the boot menu, press volume up to boot Windows 10 ARM.
 echo  - Boot and setup Windows 10 (may reboot several times).
-echo    If you are unable to boot Windows 10 after 2nd boot, use "BootFix".
 if /i "%Dualboot%" EQU "Y" echo  - After getting to the desktop, run "Dualboot" in Windows 10 ARM drive
 if /i "%Dualboot%" EQU "Y" echo    as administrator to finish installation.%ESC%[0m
 echo.
