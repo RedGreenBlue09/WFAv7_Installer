@@ -18,9 +18,10 @@ if not exist "%MainOS%\Data" (
 )
 
 ::DualBoot
+mountvol X: /S
 
 md Temp\
-echo>Temp\diskpart1.txt sel vol=%MainOS%\EFIESP
+echo>Temp\diskpart1.txt sel vol=X:
 echo>>Temp\diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 diskpart /s Temp\diskpart1.txt
 rd /s /q Temp\
