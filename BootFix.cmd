@@ -1,5 +1,5 @@
 @echo off
-
+setlocal EnableDelayedExpansion
 :: GetAdministrator
 :---------------------------------------------------------------
 :GetAdministrator
@@ -43,48 +43,49 @@ pause
 echo.
 
 goto MOSAutoDetect
+
 :MOSAutoDetectFail
-echo %ESC%[93mFailed to auto detect MainOS.%ESC%[0m
-if exist Temp\GPT del Temp\GPT
-if exist Temp\GPT* del Temp\GPT*
-set "Skip="
+del Temp\GPT*
+echo %ESC%[93mUnable to auto detect MainOS.%ESC%[0m
 goto MOSPath
 
 :MOSAutoDetect
-setlocal EnableDelayedExpansion
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
 for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
 if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
-if not exist Temp\ md Temp
-Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
-set "Skip=512"
-for /l %%i in (1,1,48) do (
-	Files\dsfo Temp\GPT !Skip! 128 Temp\GPT%%i >nul
-	set /a "Skip+=128"
-)
-for /l %%i in (1,1,48) do (
-	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S" Temp\GPT%%i >nul
-	if !Errorlevel! EQU 0 set MOSGPT=%%i& goto PartitionNumber
+
+Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
+
+for /l %%i in (0,1,47) do (
+	set /a "Offset=128*%%i"
+
+	Files\dsfo Temp\GPT !Offset! 128 Temp\GPT-PartEntry >nul
+	Files\dsfo Temp\GPT-PartEntry 56 72 Temp\GPT-PartName >nul
+	
+	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S\x00" Temp\GPT-PartName >nul
+	if !Errorlevel! EQU 0 goto PartitionNumber
+	
+	del Temp\GPT-PartName
+	del Temp\GPT-PartEntry
 )
 goto MOSAutoDetectFail
 
 :PartitionNumber
-Files\dd if=Temp\GPT%MOSGPT% of=Temp\GPT%MOSGPT%-UUID bs=1 skip=16 count=16 2>nul
-for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT%MOSGPT%-UUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
+Files\dsfo Temp\GPT-PartEntry 16 16 Temp\GPT-PartUUID >nul
+for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
 	set "Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p"
 )
+for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"') do set "PartitionNumber=%%p"
 for /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter"') do set "DriveLetter=%%d"
 if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
 if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
+del Temp\GPT*
 set "DLMOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
-del Temp\GPT
-del Temp\GPT*
-set "Skip="
-echo %ESC%[96mDetected MainOS at %DriveLetter%%ESC%[0m
+echo %ESC%[96mDetected MainOS at %DriveLetter%:%ESC%[0m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumber=%%i"
 goto ToBeContinued
 
