@@ -51,7 +51,6 @@
   - Aria2 project                : aria2
   - Adoxa                        : ansicon
   - Wimlib                       : wimlib-imagex
-  - Jnewbigin                    : rawwrite dd for Windows
   - Dariusz Stanislawek          : dsfo
   - Systola                      : VhdxTool
   - RedGreenBlue123 (Me)         : Author of this script
