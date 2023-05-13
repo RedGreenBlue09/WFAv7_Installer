@@ -197,9 +197,9 @@ echo   * Highly recommend you to flash the original FFU.
 if /i "%Dualboot%" EQU "N" (
 	echo   * This will permanently remove Windows Phone.%ESC%[0m
 ) else (
-	if "%Storage%" EQU "16" echo   * %ESC%[4m8.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
-	if "%Storage%" EQU "32" echo   * %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
-	if "%Storage%" EQU "32A" echo   * %ESC%[4m16.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "16" echo   * %ESC%[4m6.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "32" echo   * %ESC%[4m12.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+	if "%Storage%" EQU "32A" echo   * %ESC%[4m12.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
 )
 echo %ESC%[0m
 echo %ESC%[95m WARNING:
@@ -404,8 +404,8 @@ if /i "%Dualboot%" EQU "Y" (
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
 		
 		echo ## Resize-Partition ## >>%LogName%
-		if "%Storage%" EQU "16" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6144MB; exit $Error.count" %SevLogger%
-		if "%Storage%" EQU "32" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 16384MB; exit $Error.count" %SevLogger%
+		if "%Storage%" EQU "16" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 6GB; exit $Error.count" %SevLogger%
+		if "%Storage%" EQU "32" Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size 12GB; exit $Error.count" %SevLogger%
 		
 		echo ## New-Partition ## >>%LogName%
 		powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize | Add-PartitionAccessPath -AccessPath '%MainOS%\Windows10\'; exit $Error.count" %SevLogger%
