@@ -47,11 +47,11 @@
   - Microsoft                    : Windows and other tools
   - TortoiseSVN                  : SVN
   - Igor Pavlov                  : 7-Zip
-  - GNU                          : wget
+  - cURL project                 : cURL
   - Aria2 project                : aria2
   - Adoxa                        : ansicon
   - Wimlib                       : wimlib-imagex
-  - Jnewbigin                    : dd (dd for Windows)
+  - Jnewbigin                    : rawwrite dd for Windows
   - Dariusz Stanislawek          : dsfo
   - Systola                      : VhdxTool
   - RedGreenBlue123 (Me)         : Author of this script
