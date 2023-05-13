@@ -59,7 +59,7 @@ findstr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto Missin
 findstr /X /C:"Add-PartitionAccessPath" Temp\Commands.txt >nul || goto MissingCommand
 
 del Temp\Commands.txt
-goto ToBeContinued0
+goto SkipMissingCommand
 :MissingCommand
 del Temp\Commands.txt
 title ERROR!
@@ -70,7 +70,7 @@ echo  Please use Official Windows 8.1 or Windows 10.
 pause
 exit /B
 
-:ToBeContinued0
+:SkipMissingCommand
 cls
 echo Installer is loading ...
 :Start
@@ -79,6 +79,17 @@ if %WinBuild% LSS 10586 (
 	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 set "ESC="
+goto Disclaimer
+
+::---------------------------------------------------------------
+:PrintLabel
+echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
+echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
+echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
+echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
+echo.
+goto :EOF
 
 ::---------------------------------------------------------------
 :Disclaimer
@@ -107,12 +118,7 @@ echo.
 set /p Disclaimer="%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%Disclaimer%" EQU "N" (
 	cls
-	echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-	echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 2.0%ESC%[93m                             //
-	echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-	echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-	echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
-	echo.
+	call :PrintLabel
 	echo  %ESC%[91mYou MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
 	echo.
 	pause
@@ -124,12 +130,7 @@ if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
 :ChooseDev
 set "Model="
 cls
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
-echo.
+call :PrintLabel
 echo %ESC%[92mChoose your device model below:
 echo  %ESC%[36m1) %ESC%[97mLumia 930
 echo  %ESC%[36m2) %ESC%[97mLumia 929 (Icon)
@@ -167,27 +168,17 @@ goto ChooseDev
 :DualBoot
 if %Storage% EQU 8 (
 	set "Dualboot=N"
-	goto ToBeContinued1
+	goto Preparation
 )
 cls
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
-echo.
+call :PrintLabel
 set /p DualBoot="%ESC%[97m Use dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%DualBoot%" NEQ "Y" if /i "%DualBoot%" NEQ "N" goto Dualboot
 
 ::---------------------------------------------------------------
-:ToBeContinued1
+:Preparation
 cls
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
-echo.
+call :PrintLabel
 echo %ESC%[92m PREPARATION:
 echo   - Read README.TXT and instruction before using this Installer.
 echo   - Close all programs during installation.
@@ -208,7 +199,42 @@ echo     This cannot be cancelled properly which may cause damage to your device
 echo   * If you want to cancel the installation, close this console RIGHT NOW.
 echo %ESC%[0m
 pause
+
+::---------------------------------------------------------------
+:CheckReqFiles
+cls
+if %Model% EQU 1 (if not exist Drivers\Lumia930 goto MissingDrivers)
+if %Model% EQU 2 (if not exist Drivers\LumiaIcon goto MissingDrivers)
+if %Model% EQU 3 (if not exist Drivers\Lumia1520 goto MissingDrivers)
+if %Model% EQU 4 (if not exist Drivers\Lumia1520 goto MissingDrivers)
+if %Model% EQU 5 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
+if %Model% EQU 6 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
+if %Model% EQU 7 (if not exist Drivers\Lumia830 goto MissingDrivers)
+if %Model% EQU 8 (if not exist Drivers\Lumia735 goto MissingDrivers)
+if /I %Model% EQU A (if not exist Drivers\Lumia640XL goto MissingDrivers)
+if /I %Model% EQU B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
+if /I %Model% EQU C (if not exist Drivers\Lumia1020 goto MissingDrivers)
+if /I %Model% EQU D (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
+if /I %Model% EQU E (if not exist Drivers\Lumia920 goto MissingDrivers)
+if not exist "%~dp0\install.wim" (
+	cls
+	call :PrintLabel
+	echo  %ESC%[91mPlace install.wim in the Installer folder then try again.%ESC%[0m
+	echo.
+	pause
+	goto ChooseDev
+)
 goto MOSAutoDetect
+
+:MissingDrivers
+cls
+call :PrintLabel
+echo  %ESC%[91mDrivers not found.
+echo  Please download drivers for your device using Driver Downloader then try again.%ESC%[0m
+echo.
+pause
+goto ChooseDev
+::---------------------------------------------------------------
 
 :MOSAutoDetectFail
 echo %ESC%[93mUnable to auto detect MainOS.%ESC%[0m
@@ -219,19 +245,12 @@ goto MOSPath
 
 :MOSAutoDetect
 cls
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
-echo.
+call :PrintLabel
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
 for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
 if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
-if not exist Temp\ md Temp
-Files\dd if=\\?\Device\Harddisk%DiskNumber%\Partition0 of=Temp\GPT bs=512 skip=1 count=32 2>nul
 set "Skip=512"
 for /l %%i in (1,1,48) do (
 	Files\dsfo Temp\GPT !Skip! 128 Temp\GPT%%i >nul
@@ -259,7 +278,7 @@ del Temp\GPT
 del Temp\GPT*
 set "Skip="
 echo %ESC%[96mDetected MainOS at %DriveLetter%:%ESC%[0m
-goto CheckReqFiles
+goto LogNameInit
 
 :MOSPath
 set "MainOS="
@@ -286,36 +305,6 @@ set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
 set "Temp="
-::---------------------------------------------------------------
-
-:CheckReqFiles
-if %Model% EQU 1 (if not exist Drivers\Lumia930 goto MissingDrivers)
-if %Model% EQU 2 (if not exist Drivers\LumiaIcon goto MissingDrivers)
-if %Model% EQU 3 (if not exist Drivers\Lumia1520 goto MissingDrivers)
-if %Model% EQU 4 (if not exist Drivers\Lumia1520 goto MissingDrivers)
-if %Model% EQU 5 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
-if %Model% EQU 6 (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
-if %Model% EQU 7 (if not exist Drivers\Lumia830 goto MissingDrivers)
-if %Model% EQU 8 (if not exist Drivers\Lumia735 goto MissingDrivers)
-if /I %Model% EQU A (if not exist Drivers\Lumia640XL goto MissingDrivers)
-if /I %Model% EQU B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if /I %Model% EQU C (if not exist Drivers\Lumia1020 goto MissingDrivers)
-if /I %Model% EQU D (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
-if /I %Model% EQU E (if not exist Drivers\Lumia920 goto MissingDrivers)
-if not exist "%~dp0\install.wim" (
-	echo ----------------------------------------------------------------
-	echo  %ESC%[91mPlace install.wim in the Installer folder and try again.%ESC%[0m
-	pause
-	goto ChooseDev
-)
-Goto LogNameInit
-
-:MissingDrivers
-echo ----------------------------------------------------------------
-echo  %ESC%[91mDrivers not found.
-echo  Download drivers for your device using Driver Downloader.%ESC%[0m
-pause
-goto ChooseDev
 ::---------------------------------------------------------------
 
 :LogNameInit
@@ -356,7 +345,8 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
 
-:ToBeContinued2
+::---------------------------------------------------------------
+
 set "StartTime=%Time%"
 echo.
 echo %ESC%[96m[INFO] Installation was started at %StartTime%
@@ -568,12 +558,7 @@ if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation completed successful
 echo.
 pause
 cls
-echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
-echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
-echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
-echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
-echo.
+call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
 echo  - At the boot menu, press volume up to boot Windows 10 ARM.
