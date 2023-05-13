@@ -387,8 +387,10 @@ if /i "%Dualboot%" EQU "Y" (
 	if "%Storage%" EQU "32A" (
 		
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM VHDX ...%ESC%[91m
+		Files\vhdxtool create -f "%MainOS%\Data\Windows10.vhdx" -s 12GB
+
 		:: Unfortunately New-VHD requires Hyper-V to be enabled
-		echo>Temp\diskpart.txt create vdisk file=%MainOS%\Data\Windows10.vhdx maximum=6144 type=fixed
+		echo>Temp\diskpart.txt sel vdisk file=%MainOS%\Data\Windows10.vhdx
 		echo>>Temp\diskpart.txt attach vdisk
 		echo>>Temp\diskpart.txt convert gpt
 		echo>>Temp\diskpart.txt create par pri
@@ -428,7 +430,7 @@ format !Win10Drive! /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
 echo ========================================================= >>%LogName%
 echo %ESC%[96m[INFO] Installing Windows 10 ARM ...%ESC%[91m
 if %WinBuild% LSS 10240 (
-	Files\wimlib apply install.wim 1 !Win10Drive!\ --compact=lzx %SevLogger%
+	Files\wimlib-imagex apply install.wim 1 !Win10Drive!\ --compact=lzx %SevLogger%
 ) else (
 	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:!Win10Drive!\ /Compact %SevLogger%
 )
