@@ -19,9 +19,10 @@
   - Nokia Lumia 920
   - Nokia Lumia 1020 (Global, AT&T)
 ## Requirements
-  - Official Windows 8.1+
+  - Official Windows 8.1 or newer
+  - Microsoft Visual C++ Redistributable 2022 (x86) - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+  - Microsoft .NET Framework 4.5 or newer - [Download](https://dotnet.microsoft.com/en-us/download/dotnet-framework)
   - Windows Powershell enabled.
-  - 3 GB of empty computer storage.
   - More requirements in the Installer.
 ## Instruction
   1. Download Windows 10 for ARMv7 build 15035 to your computer.
@@ -52,6 +53,7 @@
   - Wimlib                       : wimlib-imagex
   - Jnewbigin                    : dd (dd for Windows)
   - Dariusz Stanislawek          : dsfo
+  - Systola                      : VhdxTool
   - RedGreenBlue123 (Me)         : Author of this script
 ## Screenshots
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.BMP "WFAv7-S1")
