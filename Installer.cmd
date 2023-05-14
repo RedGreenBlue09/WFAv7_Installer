@@ -378,7 +378,7 @@ if /i "%Dualboot%" EQU "Y" (
 	if "%Storage%" EQU "32A" (
 		
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM VHDX ...%ESC%[91m
-		Files\vhdxtool create -f "%MainOS%\Data\Windows10.vhdx" -s 12GB
+		Files\vhdxtool create -f "%MainOS%\Data\Windows10.vhdx" -s 12GB -v %SevLogger%
 
 		:: Unfortunately New-VHD requires Hyper-V to be enabled
 		echo>Temp\diskpart.txt sel vdisk file=%MainOS%\Data\Windows10.vhdx
@@ -563,7 +563,7 @@ cls
 call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.
 echo  %ESC%[97m- Now, reboot your phone.
-echo  - At the boot menu, press volume up to boot Windows 10 ARM.
+if /i "%Dualboot%" EQU "Y" echo  - At the boot menu, press volume up to boot Windows 10 ARM.
 echo  - Boot and setup Windows 10 (may reboot several times).
 if /i "%Dualboot%" EQU "Y" echo  - After getting to the desktop, run "Dualboot" in Windows 10 ARM drive
 if /i "%Dualboot%" EQU "Y" echo    as administrator to finish installation.%ESC%[0m
