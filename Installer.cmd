@@ -242,8 +242,8 @@ cls
 call :PrintLabel
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
-for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"') do set "DiskNumber=%%i"
-if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"') do set "DiskNumber=%%i")
+for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
+if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 
 Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
@@ -268,8 +268,8 @@ for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllByte
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
 	set "Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p"
 )
-for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"') do set "PartitionNumber=%%p"
-for /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter"') do set "DriveLetter=%%d"
+for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber 2>$null"') do set "PartitionNumber=%%p"
+for /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter 2>$null"') do set "DriveLetter=%%d"
 if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
 if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
 del Temp\GPT*
@@ -300,8 +300,8 @@ if not exist "%MainOS%\Data" (
 	goto MOSPath
 )
 set "DLMOS=%MainOS:~0,-1%"
-for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber"') do set "DiskNumber=%%i"
-for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber"') do set "PartitionNumber=%%i"
+for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber 2>$null"') do set "DiskNumber=%%i"
+for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber 2>$null"') do set "PartitionNumber=%%i"
 set "Temp="
 ::---------------------------------------------------------------
 
@@ -309,7 +309,7 @@ set "Temp="
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ md Logs
 cd Logs
-for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy"') do set "Date1=%%d"
+for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy 2>$null"') do set "Date1=%%d"
 if not exist %Date1%.log set LogName=Logs\%Date1%.log & goto LoggerInit
 if not exist %Date1%-1.log set LogName=Logs\%Date1%-1.log & goto LoggerInit
 set "LogNum=1"
@@ -356,9 +356,12 @@ echo. >>%LogName%
 if not exist Temp\ md Temp\
 
 echo %ESC%[96m[INFO] Getting Partition Infos ...%ESC%[91m
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber"') do set "PartitionNumberDPP=%%i"
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"') do set "PartitionNumberEFIESP=%%i"
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"') do set "PartitionNumberData=%%i"
+echo ## Get-Partition PartitioNumberDPP ## >>%LogName%
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber 2>>%LogName%"') do set "PartitionNumberDPP=%%i"
+echo ## Get-Partition PartitioNumberEFIESP ## >>%LogName%
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber 2>>%LogName%"') do set "PartitionNumberEFIESP=%%i"
+echo ## Get-Partition PartitioNumberData ## >>%LogName%
+for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>>%LogName%"') do set "PartitionNumberData=%%i"
 echo ## DPP PN is %PartitionNumberDPP% ## >>%LogName%
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
 echo ## Data PN is %PartitionNumberData% ## >>%LogName%
@@ -411,6 +414,7 @@ if /i "%Dualboot%" EQU "Y" (
 	set "Win10Drive=%MainOS%"
 
 )
+echo ## Windows 10 drive is !Win10Drive! ## >>%LogName%
 echo %ESC%[96m[INFO] Formatting Windows 10 ARM partition ...%ESC%[91m
 format !Win10Drive! /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
 
@@ -535,7 +539,7 @@ goto MissionCompleted
 :SevErrFound
 echo ========================================================= >>%LogName%
 echo.
-echo #### INSTALLATION CANCELED ####>>%LogName%
+echo #### INSTALLATION FAILED ####>>%LogName%
 rd /s /q Temp\
 echo %ESC%[96m[INFO] Installation is cancelled because a%ESC%[91m severe error %ESC%[96moccurred.
 echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m

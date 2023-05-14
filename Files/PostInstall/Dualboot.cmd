@@ -23,8 +23,8 @@ for /f "delims=" %%a in ('fsutil reparsepoint query %SYSTEMDRIVE%\EFIESP') do (
 	if "!Errorlevel!" EQU "0" (
 		for /f "tokens=2 delims=:" %%b in ("%%a") do (
 			set "VolumeName=%%b"
-			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).DiskNumber"') do set "DiskNumber=%%p"
-			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).PartitionNumber"') do set "PartitionNumber=%%p"
+			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).DiskNumber 2>$null"') do set "DiskNumber=%%p"
+			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).PartitionNumber 2>$null"') do set "PartitionNumber=%%p"
 			set "Uuid="
 		)
 	)
