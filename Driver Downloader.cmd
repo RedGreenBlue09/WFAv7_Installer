@@ -16,8 +16,7 @@ if %WinBuild% LSS 10586 (
 	if %PROCESSOR_ARCHITECTURE% EQU x86 Files\ansicon32 -p
 	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
-title WFAv7 Driver Downloader 3.5
-::Files\cmdresize 96 24 96 2000
+title WFAv7 Driver Downloader 3.6
 set "ESC="
 
 :ChooseDev
@@ -43,7 +42,7 @@ echo  %ESC%[36mA)%ESC%[97m Lumia 920
 echo  %ESC%[36mB)%ESC%[97m Lumia 1020
 echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
 
-set /p Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m
+set /p "Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m"
 
 if "%Model%" EQU "1" (goto DoDownload)
 if "%Model%" EQU "2" (goto DoDownload)

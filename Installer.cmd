@@ -277,6 +277,7 @@ set "DLMOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
 echo %ESC%[96mDetected MainOS at %DriveLetter%:%ESC%[0m
 goto LogNameInit
+::---------------------------------------------------------------
 
 :MOSPath
 set "MainOS="
