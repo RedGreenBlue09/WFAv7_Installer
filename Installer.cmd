@@ -6,7 +6,7 @@ cd %~dp0
 net session >nul 2>&1
 if %Errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
-	Files\elevate_%PROCESSOR_ARCHITECTURE% "Installer.cmd"
+	Files\elevate_%PROCESSOR_ARCHITECTURE% %0
 	if "!Errorlevel!" NEQ "0" (
 		echo Unable to grant administrative privileges. Please run the file as administrator.
 		echo.
