@@ -1,20 +1,24 @@
 @echo off
 setlocal EnableDelayedExpansion
 cd %~dp0
-if not "%~1" EQU "" call :%~1
-if %Errorlevel% NEQ 0 goto :EOF
 ::---------------------------------------------------------------
 :GetAdministrator
-icacls "%SYSTEMROOT%\System32\config\SYSTEM" >nul 2>&1
-if %errorlevel% NEQ 0 (
+net session >nul 2>&1
+if %Errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
 	Files\elevate_%PROCESSOR_ARCHITECTURE% "Installer.cmd"
+	if "!Errorlevel!" NEQ "0" (
+		echo Unable to grant administrative privileges. Please run the file as administrator.
+		echo.
+		pause
+	)
 	exit /B
 )
 
 ::GotAdministrator
 
 ::---------------------------------------------------------------
+
 if exist "Temp\" rd /s /q "Temp\"
 md "Temp"
 
@@ -23,12 +27,10 @@ title Checking compatibility ...
 echo  - Checking Windows Build ...
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set WinBuild=%%a
 if %WinBuild% LSS 9600 (
-	title ERROR!
-	color 0C
-	echo ----------------------------------------------------------------
-	echo   This Windows version is not supported by WFAv7 Installer.
-	echo   Please use Windows 8.1+ ^(Build 9600+^) 
-	echo   Current OS build: %WinBuild%
+	rd /s /q Temp\
+	echo This Windows version is not supported by WFAv7 Installer.
+	echo Please use Windows 8.1+ ^(Build 9600+^) 
+	echo Current OS build: %WinBuild%
 	pause
 	exit /B
 )
@@ -37,12 +39,9 @@ echo  - Checking Windows Powershell ...
 Powershell /? >nul 2>&1
 set "PLV=%errorlevel%"
 if %PLV% NEQ 0 (
-	title ERROR!
-	color 0C
-	echo ----------------------------------------------------------------
-	echo   Powershell wasn't found or it have problem.
-	echo   Please enable Powershell and continue.
-	echo   Error code: %PLV%
+	rd /s /q Temp\
+	echo Powershell cannot be found. Please enable Powershell and try again.
+	echo Error code: %PLV%
 	pause
 	exit /B
 )
@@ -60,25 +59,21 @@ findstr /X /C:"Add-PartitionAccessPath" Temp\Commands.txt >nul || goto MissingCo
 
 del Temp\Commands.txt
 goto SkipMissingCommand
+
 :MissingCommand
-del Temp\Commands.txt
-title ERROR!
-color 0C
-echo ----------------------------------------------------------------
-echo  Required powershell cmdlets are not found.
-echo  Please use Official Windows 8.1 or Windows 10.
+rd /s /q Temp\
+echo Required powershell cmdlets are not found.
+echo Please use Official Windows 8.1 or Windows 10.
 pause
 exit /B
 
 :SkipMissingCommand
-cls
-echo Installer is loading ...
-:Start
 if %WinBuild% LSS 10586 (
 	if /i %PROCESSOR_ARCHITECTURE% EQU X86 Files\ansicon32 -p
 	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
 )
 set "ESC="
+
 goto Disclaimer
 
 ::---------------------------------------------------------------
@@ -117,6 +112,7 @@ echo    +-----------------------------------------------------------------------
 echo.
 set /p Disclaimer="%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%Disclaimer%" EQU "N" (
+	rd /s /q Temp\
 	cls
 	call :PrintLabel
 	echo  %ESC%[91mYou MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
@@ -184,7 +180,7 @@ echo   - Read README.TXT and instruction before using this Installer.
 echo   - Close all programs during installation.
 echo   - Make sure your phone have enough battery for this installation.
 echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
-echo   * Highly recommend you to flash the original FFU.
+echo   * Highly recommend you to flash the original FFU before installation.
 if /i "%Dualboot%" EQU "N" (
 	echo   * This will permanently remove Windows Phone.%ESC%[0m
 ) else (
@@ -214,7 +210,7 @@ if %Model% EQU 8 (if not exist Drivers\Lumia735 goto MissingDrivers)
 if /I %Model% EQU A (if not exist Drivers\Lumia640XL goto MissingDrivers)
 if /I %Model% EQU B (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
 if /I %Model% EQU C (if not exist Drivers\Lumia1020 goto MissingDrivers)
-if /I %Model% EQU D (if not exist Drivers\Lumia1020_AT^&T goto MissingDrivers)
+if /I %Model% EQU D (if not exist Drivers\Lumia1020-AT^&T goto MissingDrivers)
 if /I %Model% EQU E (if not exist Drivers\Lumia920 goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	cls

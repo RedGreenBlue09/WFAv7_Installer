@@ -1,6 +1,21 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+:GetAdministrator
+net session >nul 2>&1
+if %Errorlevel% NEQ 0 (
+	echo Requesting administrative privileges...
+	Powershell -C "Start-Process -FilePath '%0' -Verb RunAs; exit $Error.count"
+	if "!Errorlevel!" NEQ "0" (
+		echo Unable to grant administrative privileges. Please run the file as administrator.
+		echo.
+		pause
+	)
+	exit /B
+)
+
+::GotAdministrator
+
 :: Get EFIESP infos
 
 for /f "delims=" %%a in ('fsutil reparsepoint query %SYSTEMDRIVE%\EFIESP') do (
@@ -8,10 +23,8 @@ for /f "delims=" %%a in ('fsutil reparsepoint query %SYSTEMDRIVE%\EFIESP') do (
 	if "!Errorlevel!" EQU "0" (
 		for /f "tokens=2 delims=:" %%b in ("%%a") do (
 			set "VolumeName=%%b"
-			set "Uuid=!VolumeName:*Volume=!"
-			set "Uuid=!Uuid:~0,-1!"
-			for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '!Uuid!'}).DiskNumber"') do set "DiskNumber=%%p"
-			for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '!Uuid!'}).PartitionNumber"') do set "PartitionNumber=%%p"
+			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).DiskNumber"') do set "DiskNumber=%%p"
+			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).PartitionNumber"') do set "PartitionNumber=%%p"
 			set "Uuid="
 		)
 	)
