@@ -111,6 +111,7 @@ echo    ^|                                                                      
 echo    +----------------------------------------------------------------------------------------+%ESC%[0m
 echo.
 set /p "Disclaimer=%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set "Disclaimer=%Disclaimer:"=%"
 if /i "%Disclaimer%" EQU "N" (
 	rd /s /q Temp\
 	cls
@@ -143,6 +144,7 @@ echo  %ESC%[36mD) %ESC%[97mLumia 1020 AT^&T
 echo  %ESC%[36mE) %ESC%[97mLumia 920
 
 set /p "Model=%ESC%[92mDevice%ESC%[32m:%ESC%[0m "
+set "Model=%Model:"=%"
 
 if "%Model%" EQU "" goto ChooseDev
 if "%Model%" EQU "1" set "Storage=32" & goto DualBoot
@@ -169,6 +171,7 @@ if %Storage% EQU 8 (
 cls
 call :PrintLabel
 set /p "DualBoot=%ESC%[97m Use dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set "DualBoot=%DualBoot:"=%"
 if /i "%DualBoot%" NEQ "Y" if /i "%DualBoot%" NEQ "N" goto Dualboot
 
 ::---------------------------------------------------------------
@@ -283,6 +286,7 @@ goto LogNameInit
 set "MainOS="
 echo.
 set /p "MainOS=%ESC%[92mEnter MainOS Path: %ESC%[93m"
+set "MainOS=%MainOS:"=%"
 if not defined MainOS (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
