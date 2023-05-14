@@ -53,7 +53,7 @@ findstr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Resize-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Remove-Partition" Temp\Commands.txt >nul || goto MissingCommand
-findstr /X /C:"Get-PnpDevice" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Add-PartitionAccessPath" Temp\Commands.txt >nul || goto MissingCommand
 
@@ -242,8 +242,8 @@ cls
 call :PrintLabel
 echo %ESC%[97mTrying to detect MainOS ...%ESC%[0m
 :: DiskNumber
-for /f %%i in ('Powershell -C "(Get-PnpDevice -Class 'DiskDrive' | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
-if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-PnpDevice -Class 'DiskDrive' | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
+for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
+if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 
 Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
