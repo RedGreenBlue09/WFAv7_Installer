@@ -110,7 +110,7 @@ echo    ^|%ESC%[95m  * Your warranty will be void if you tamper with any part of
 echo    ^|                                                                                        ^|
 echo    +----------------------------------------------------------------------------------------+%ESC%[0m
 echo.
-set /p Disclaimer="%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set /p "Disclaimer=%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%Disclaimer%" EQU "N" (
 	rd /s /q Temp\
 	cls
@@ -142,7 +142,7 @@ echo  %ESC%[36mC) %ESC%[97mLumia 1020 [BLUE SCREEN]
 echo  %ESC%[36mD) %ESC%[97mLumia 1020 AT^&T
 echo  %ESC%[36mE) %ESC%[97mLumia 920
 
-set /p Model=%ESC%[92mDevice%ESC%[32m: %ESC%[0m
+set /p "Model=%ESC%[92mDevice%ESC%[32m:%ESC%[0m "
 
 if "%Model%" EQU "" goto ChooseDev
 if "%Model%" EQU "1" set "Storage=32" & goto DualBoot
@@ -168,7 +168,7 @@ if %Storage% EQU 8 (
 )
 cls
 call :PrintLabel
-set /p DualBoot="%ESC%[97m Use dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set /p "DualBoot=%ESC%[97m Use dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if /i "%DualBoot%" NEQ "Y" if /i "%DualBoot%" NEQ "N" goto Dualboot
 
 ::---------------------------------------------------------------
@@ -282,7 +282,7 @@ goto LogNameInit
 :MOSPath
 set "MainOS="
 echo.
-set /p MainOS=%ESC%[92mEnter MainOS Path: %ESC%[93m
+set /p "MainOS=%ESC%[92mEnter MainOS Path: %ESC%[93m"
 if not defined MainOS (
 	echo  %ESC%[91mNot a valid MainOS partition.
 	goto MOSPath
