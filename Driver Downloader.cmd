@@ -43,6 +43,7 @@ echo  %ESC%[36mB)%ESC%[97m Lumia 1020
 echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
 
 set /p "Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m"
+if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
 if "%Model%" EQU "1" (goto DoDownload)
