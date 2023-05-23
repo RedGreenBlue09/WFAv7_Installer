@@ -1,4 +1,4 @@
-# Windows 10 for ARMv7 Installer 2.0
+# Windows 10 for ARMv7 Installer 3.0
 ![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.BMP "WFAv7 Installer")
 ## Disclaimer
 

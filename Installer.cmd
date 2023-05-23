@@ -6,8 +6,7 @@ cd %~dp0
 net session >nul 2>&1
 if %Errorlevel% NEQ 0 (
 	echo Requesting administrative privileges...
-	Files\elevate_%PROCESSOR_ARCHITECTURE% %0
-	if "!Errorlevel!" NEQ "0" (
+	Files\elevate_%PROCESSOR_ARCHITECTURE% %0 || (
 		echo Unable to grant administrative privileges. Please run the file as administrator.
 		echo.
 		pause
@@ -49,11 +48,12 @@ if %PLV% NEQ 0 (
 echo  - Checking Cmdlets ...
 Powershell -C "(Get-Command).name" > Temp\Commands.txt
 findstr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-Volume" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Resize-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Remove-Partition" Temp\Commands.txt >nul || goto MissingCommand
-findstr /X /C:"Get-WmiObject" Temp\Commands.txt >nul || goto MissingCommand
+findstr /X /C:"Get-CimInstance" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-PartitionSupportedSize" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Add-PartitionAccessPath" Temp\Commands.txt >nul || goto MissingCommand
 
@@ -89,6 +89,7 @@ goto :EOF
 ::---------------------------------------------------------------
 :Disclaimer
 cls
+color 07
 title Windows 10 for ARMv7 Installer 3.0
 echo.
 echo.
@@ -152,8 +153,8 @@ if "%Model%" EQU "3" set "DevSpec=B" & goto Dualboot
 if "%Model%" EQU "4" set "DevSpec=B" & goto Dualboot
 if "%Model%" EQU "5" set "DevSpec=B" & goto Dualboot
 if "%Model%" EQU "6" set "DevSpec=B" & goto Dualboot8
-if /i "%Model%" EQU "7" set "DevSpec=B" & goto Dualboot8
-if /i "%Model%" EQU "8" set "DevSpec=B" & goto Dualboot8
+if "%Model%" EQU "7" set "DevSpec=B" & goto Dualboot8
+if "%Model%" EQU "8" set "DevSpec=B" & goto Dualboot8
 if /i "%Model%" EQU "A" set "DevSpec=A" & goto Dualboot
 if /i "%Model%" EQU "B" set "DevSpec=A" & goto Dualboot
 if /i "%Model%" EQU "C" set "DevSpec=A" & goto Dualboot
@@ -201,11 +202,11 @@ if "%Model%" EQU "3" (if not exist Drivers\Lumia1520 goto MissingDrivers)
 if "%Model%" EQU "4" (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
 if "%Model%" EQU "5" (if not exist Drivers\Lumia830 goto MissingDrivers)
 if "%Model%" EQU "6" (if not exist Drivers\Lumia735 goto MissingDrivers)
-if /I "%Model%" EQU "7" (if not exist Drivers\Lumia640XL goto MissingDrivers)
-if /I "%Model%" EQU "8" (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if /I "%Model%" EQU "A" (if not exist Drivers\Lumia920 goto MissingDrivers)
-if /I "%Model%" EQU "B" (if not exist Drivers\Lumia1020 goto MissingDrivers)
-if /I "%Model%" EQU "C" (if not exist Drivers\Lumia1020-AT^&T goto MissingDrivers)
+if "%Model%" EQU "7" (if not exist Drivers\Lumia640XL goto MissingDrivers)
+if "%Model%" EQU "8" (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
+if /i "%Model%" EQU "A" (if not exist Drivers\Lumia920 goto MissingDrivers)
+if /i "%Model%" EQU "B" (if not exist Drivers\Lumia1020 goto MissingDrivers)
+if /i "%Model%" EQU "C" (if not exist Drivers\Lumia1020-AT^&T goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	cls
 	call :PrintLabel
@@ -236,8 +237,8 @@ cls
 call :PrintLabel
 echo %ESC%[96m Trying to detect MainOS ...%ESC%[91m
 :: DiskNumber
-for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
-if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-WmiObject Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
+for /f %%i in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
+if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 
 Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
@@ -366,7 +367,7 @@ set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
- (if ^^!Err^^! NEQ 0 set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)
+ (if ^^!Err^^! NEQ 0 (set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m))
 
 set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  set "SevErr=^!Errorlevel^!" ^&^
@@ -374,24 +375,24 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
  type Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
- (if ^^!SevErr^^! NEQ 0 set /a "ErrNum+=1" ^>nul ^& goto SevErrFound)
+ (if ^^!SevErr^^! NEQ 0 (set /a "ErrNum+=1" ^>nul ^& goto SevErrFound))
 
 ::---------------------------------------------------------------
 
 set "StartTime=%Time%"
 echo.
 echo %ESC%[96m[INFO] Installation was started at %StartTime%
-echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>%LogName%
-echo ========================================================= >>%LogName%
-echo ## Device is %Model%  ## >>%LogName%
-echo ## MainOS is %MainOS% ## >>%LogName%
-echo. >>%LogName%
+echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
+echo ========================================================= >>"%LogName%"
+echo ## Device is %Model%  ## >>"%LogName%"
+echo ## MainOS is %MainOS% ## >>"%LogName%"
+echo. >>"%LogName%"
 if not exist Temp\ md Temp\
 
-echo ## MainOS DriveLetter is %MainOS% ## >>%LogName%
-echo ## DPP PN is %PartitionNumberDPP% ## >>%LogName%
-echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>%LogName%
-echo ## Data PN is %PartitionNumberData% ## >>%LogName%
+echo ## MainOS DriveLetter is %MainOS% ## >>"%LogName%"
+echo ## DPP PN is %PartitionNumberDPP% ## >>"%LogName%"
+echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>"%LogName%"
+echo ## Data PN is %PartitionNumberData% ## >>"%LogName%"
 
 echo %ESC%[96m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f %MainOS%\Data %Logger%
@@ -422,12 +423,12 @@ if /i "%Dualboot%" EQU "Y" (
 		
 		echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
 		
-		for /f %%i in ('Powershell -C "[Math]::Floor((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB% 2>%LogName%"') do set "DataPartSizeMB=%%i"
+		for /f %%i in ('Powershell -C "[Math]::Floor((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB% 2>>'%LogName%'"') do set "DataPartSizeMB=%%i"
 
-		echo ## Resize-Partition ## >>%LogName%
+		echo ## Resize-Partition ## >>"%LogName%"
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size !DataPartSizeMB!MB; exit $Error.count" %SevLogger%
 		
-		echo ## New-Partition ## >>%LogName%
+		echo ## New-Partition ## >>"%LogName%"
 		powershell -C "New-Partition -DiskNumber %DiskNumber% -UseMaximumSize | Add-PartitionAccessPath -AccessPath '%MainOS%\Windows10\'; exit $Error.count" %SevLogger%
 		
 	)
@@ -436,51 +437,51 @@ if /i "%Dualboot%" EQU "Y" (
 ) else (
 
 	echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
-	echo ## Remove-Partition ## >>%LogName%
+	echo ## Remove-Partition ## >>"%LogName%"
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
-	echo ## Resize-Partition ## >>%LogName%
+	echo ## Resize-Partition ## >>"%LogName%"
 	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
 	set "Win10Drive=%MainOS%"
 
 )
-echo ## Windows 10 drive is !Win10Drive! ## >>%LogName%
+echo ## Windows 10 drive is %Win10Drive% ## >>"%LogName%"
 echo %ESC%[96m[INFO] Formatting Windows 10 ARM partition ...%ESC%[91m
-format !Win10Drive! /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
+format %Win10Drive% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
 
 ::---------------------------------------------------------------
-echo ========================================================= >>%LogName%
+echo ========================================================= >>"%LogName%"
 echo %ESC%[96m[INFO] Installing Windows 10 ARM ...%ESC%[91m
 if %WinBuild% LSS 10240 (
-	Files\wimlib-imagex apply install.wim 1 !Win10Drive!\ --compact=lzx %SevLogger%
+	Files\wimlib-imagex apply install.wim 1 %Win10Drive%\ --compact=lzx %SevLogger%
 ) else (
-	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:!Win10Drive!\ /Compact %SevLogger%
+	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%Win10Drive%\ /Compact %SevLogger%
 )
 
 ::---------------------------------------------------------------
 echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-if "%Model%" EQU "1" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
-if "%Model%" EQU "2" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
-if "%Model%" EQU "3" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if "%Model%" EQU "4" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
-if "%Model%" EQU "5" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if "%Model%" EQU "6" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if /i "%Model%" EQU "7" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if /i "%Model%" EQU "8" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /i "%Model%" EQU "A" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
-if /i "%Model%" EQU "B" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i "%Model%" EQU "C" Files\DISM\dism /Image:!Win10Drive!\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if "%Model%" EQU "1" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
+if "%Model%" EQU "2" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
+if "%Model%" EQU "3" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
+if "%Model%" EQU "4" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if "%Model%" EQU "5" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
+if "%Model%" EQU "6" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
+if "%Model%" EQU "7" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
+if "%Model%" EQU "8" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
+if /i "%Model%" EQU "A" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if /i "%Model%" EQU "B" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
 
 ::---------------------------------------------------------------
-echo ========================================================= >>%LogName%
+echo ========================================================= >>"%LogName%"
 echo %ESC%[96m[INFO] Mounting EFIESP and DPP ...%ESC%[91m
-md !Win10Drive!\EFIESP
-md !Win10Drive!\DPP
+md %Win10Drive%\EFIESP
+md %Win10Drive%\DPP
 echo>Temp\diskpart1.txt sel dis %DiskNumber%
 echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
-echo>>Temp\diskpart1.txt assign mount=!Win10Drive!\EFIESP
+echo>>Temp\diskpart1.txt assign mount=%Win10Drive%\EFIESP
 echo>>Temp\diskpart1.txt sel par %PartitionNumberDPP%
-echo>>Temp\diskpart1.txt assign mount=!Win10Drive!\DPP
+echo>>Temp\diskpart1.txt assign mount=%Win10Drive%\DPP
 diskpart /s Temp\diskpart1.txt %Logger%
 del Temp\diskpart1.txt
 
@@ -490,7 +491,7 @@ xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %
 echo %ESC%[96m[INFO] Adding BCD Entry ...
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 set "bcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
-echo ## BCD Path is %bcdLoc% ## >>%LogName% 
+echo ## BCD Path is %bcdLoc% ## >>"%LogName%" 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 
 Files\bcdedit /store "%bcdLoc%" /create %id% /d "Windows 10 ARM" /application "osloader" %SevLogger%
@@ -500,12 +501,12 @@ if "%DevSpec%" EQU "A" (
 		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
 		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
 	) else (
-		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=!Win10Drive!" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=!Win10Drive!" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%Win10Drive%" %SevLogger%
+		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%Win10Drive%" %SevLogger%
 	)
 ) else (
-	Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=!Win10Drive!" %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=!Win10Drive!" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%Win10Drive%" %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%Win10Drive%" %SevLogger%
 )
 
 Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
@@ -525,18 +526,18 @@ if /i "%Dualboot%" EQU "N" (
 	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
 ) else (
-	Files\bcdedit /store "%bcdLoc%" /set "{default}" description "Windows Phone" %Logger%
-	Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" custom:0x54000001 %id% %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /set {default} description "Windows Phone" %Logger%
+	Files\bcdedit /store "%bcdLoc%" /set {bootmgr} custom:0x54000001 %id% %SevLogger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
 )
 
-Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "nointegritychecks" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "testsigning" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "timeout" 5 %Logger%
-Files\bcdedit /store "%bcdLoc%" /set "{bootmgr}" "displaybootmenu" Yes %SevLogger%
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "displaybootmenu" Yes %SevLogger%
 
 ::---------------------------------------------------------------
-echo ========================================================= >>%LogName%
+echo ========================================================= >>"%LogName%"
 echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
@@ -547,7 +548,7 @@ echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b override
 diskpart /s Temp\diskpart.txt %Logger%
 del Temp\diskpart.txt
 
-if /i "%Dualboot%" EQU "Y" copy "Files\PostInstall\Dualboot.cmd" "!Win10Drive!\Dualboot.cmd" %Logger%
+if /i "%Dualboot%" EQU "Y" copy "Files\PostInstall\Dualboot.cmd" "%Win10Drive%\Dualboot.cmd" %Logger%
 
 :: Unmount VHDX
 if "%DevSpec%" EQU "A" (
@@ -565,9 +566,9 @@ goto MissionCompleted
 ::---------------------------------------------------------------
 
 :SevErrFound
-echo ========================================================= >>%LogName%
+echo ========================================================= >>"%LogName%"
 echo.
-echo #### INSTALLATION FAILED ####>>%LogName%
+echo #### INSTALLATION FAILED ####>>"%LogName%"
 rd /s /q Temp\
 echo %ESC%[96m[INFO] Installation is cancelled because a%ESC%[91m severe error %ESC%[96moccurred.
 echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
@@ -577,13 +578,13 @@ exit /B
 
 :MissionCompleted
 if %ErrNum% GTR 0 (
-	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>%LogName%
+	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>"%LogName%"
 	echo %ESC%[96m[INFO] Installation has completed with%ESC%[91m %ErrNum% error^(s^)%ESC%[96m!
 	echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 	echo.
 	pause
 )
-if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>%LogName%
+if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>"%LogName%"
 if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation has completed successfully!%ESC%[0m
 echo.
 pause
