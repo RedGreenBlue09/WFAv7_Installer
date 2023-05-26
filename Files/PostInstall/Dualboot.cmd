@@ -2,8 +2,7 @@
 setlocal EnableDelayedExpansion
 
 :GetAdministrator
-net session >nul 2>&1
-if %Errorlevel% NEQ 0 (
+net session >nul 2>&1 || (
 	echo Requesting administrative privileges...
 	Powershell -C "Start-Process -FilePath '%0' -Verb RunAs; exit $Error.count" || (
 		echo Unable to grant administrative privileges. Please run the file as administrator.
@@ -12,8 +11,6 @@ if %Errorlevel% NEQ 0 (
 	)
 	exit /B
 )
-
-:: GotAdministrator
 
 :: Get EFIESP infos
 

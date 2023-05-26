@@ -3,8 +3,7 @@ setlocal EnableDelayedExpansion
 cd %~dp0
 ::---------------------------------------------------------------
 :GetAdministrator
-net session >nul 2>&1
-if %Errorlevel% NEQ 0 (
+net session >nul 2>&1 || (
 	echo Requesting administrative privileges...
 	Files\elevate_%PROCESSOR_ARCHITECTURE% %0 || (
 		echo Unable to grant administrative privileges. Please run the file as administrator.
@@ -13,9 +12,6 @@ if %Errorlevel% NEQ 0 (
 	)
 	exit /B
 )
-
-::GotAdministrator
-
 ::---------------------------------------------------------------
 
 if exist "Temp\" rd /s /q "Temp\"
@@ -68,10 +64,8 @@ pause
 exit /B
 
 :SkipMissingCommand
-if %WinBuild% LSS 10586 (
-	if /i %PROCESSOR_ARCHITECTURE% EQU X86 Files\ansicon32 -p
-	if /i %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
-)
+:: Enable ansicon
+if %WinBuild% LSS 10586 Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 set "ESC="
 
 goto Disclaimer
