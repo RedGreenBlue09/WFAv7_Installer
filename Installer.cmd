@@ -274,7 +274,7 @@ set /p "MainOS=%ESC%[92m Enter MainOS Path: %ESC%[0m"
 if not defined MainOS goto MOSPath
 set "MainOS=%MainOS:"=%"
 
-echo %MainOS%| findstr /I "^[A-Z][:]$" >nul
+echo "%MainOS%"| findstr /I "^\"[A-Z][:]\"$" >nul
 if %errorlevel% NEQ 0 (
 	echo %ESC%[91m Not a valid MainOS partition. Example: H: %ESC%[0m
 	goto MOSPath
@@ -311,7 +311,7 @@ set /p "Win10SizeMB=%ESC%[92m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
 if not defined Win10SizeMB goto StorageSpace
 set "Win10SizeMB=%Win10SizeMB:"=%"
 
-echo %Win10SizeMB%| findstr "^[1-9][0-9]*$ ^0$" >nul
+echo "%Win10SizeMB%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" >nul
 if %Errorlevel% NEQ 0 (
 	echo  %ESC%[91mPlease enter a natural number.%ESC%[0m
 	goto StorageSpace
