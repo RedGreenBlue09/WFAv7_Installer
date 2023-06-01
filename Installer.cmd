@@ -133,9 +133,10 @@ echo  %ESC%[36m5) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m6) %ESC%[97mLumia 735 Global
 echo  %ESC%[36m7) %ESC%[97mLumia 640 XL LTE Global
 echo  %ESC%[36m8) %ESC%[97mLumia 640 XL LTE AT^&T
-echo  %ESC%[36mA) %ESC%[97mLumia 920
-echo  %ESC%[36mB) %ESC%[97mLumia 1020
-echo  %ESC%[36mC) %ESC%[97mLumia 1020 AT^&T
+echo  %ESC%[36mA) %ESC%[97mLumia 520
+echo  %ESC%[36mB) %ESC%[97mLumia 920
+echo  %ESC%[36mC) %ESC%[97mLumia 1020
+echo  %ESC%[36mD) %ESC%[97mLumia 1020 AT^&T
 
 set /p "Model=%ESC%[92mDevice%ESC%[32m:%ESC%[0m "
 if not defined Model goto ChooseDev
@@ -149,9 +150,10 @@ if "%Model%" EQU "5" set "DevSpec=B" & goto Dualboot
 if "%Model%" EQU "6" set "DevSpec=B" & goto Dualboot8
 if "%Model%" EQU "7" set "DevSpec=B" & goto Dualboot8
 if "%Model%" EQU "8" set "DevSpec=B" & goto Dualboot8
-if /i "%Model%" EQU "A" set "DevSpec=A" & goto Dualboot
+if /i "%Model%" EQU "A" set "DevSpec=A" & goto Dualboot8
 if /i "%Model%" EQU "B" set "DevSpec=A" & goto Dualboot
 if /i "%Model%" EQU "C" set "DevSpec=A" & goto Dualboot
+if /i "%Model%" EQU "D" set "DevSpec=A" & goto Dualboot
 goto ChooseDev
 
 ::---------------------------------------------------------------
@@ -190,17 +192,18 @@ pause
 ::---------------------------------------------------------------
 :CheckReqFiles
 cls
-if "%Model%" EQU "1" (if not exist Drivers\Lumia930 goto MissingDrivers)
-if "%Model%" EQU "2" (if not exist Drivers\LumiaIcon goto MissingDrivers)
-if "%Model%" EQU "3" (if not exist Drivers\Lumia1520 goto MissingDrivers)
-if "%Model%" EQU "4" (if not exist Drivers\Lumia1520-AT^&T goto MissingDrivers)
-if "%Model%" EQU "5" (if not exist Drivers\Lumia830 goto MissingDrivers)
-if "%Model%" EQU "6" (if not exist Drivers\Lumia735 goto MissingDrivers)
-if "%Model%" EQU "7" (if not exist Drivers\Lumia640XL goto MissingDrivers)
-if "%Model%" EQU "8" (if not exist Drivers\Lumia640XL-AT^&T goto MissingDrivers)
-if /i "%Model%" EQU "A" (if not exist Drivers\Lumia920 goto MissingDrivers)
-if /i "%Model%" EQU "B" (if not exist Drivers\Lumia1020 goto MissingDrivers)
-if /i "%Model%" EQU "C" (if not exist Drivers\Lumia1020-AT^&T goto MissingDrivers)
+if "%Model%" EQU "1" (if not exist "Drivers\Lumia930" goto MissingDrivers)
+if "%Model%" EQU "2" (if not exist "Drivers\LumiaIcon" goto MissingDrivers)
+if "%Model%" EQU "3" (if not exist "Drivers\Lumia1520" goto MissingDrivers)
+if "%Model%" EQU "4" (if not exist "Drivers\Lumia1520-AT&T" goto MissingDrivers)
+if "%Model%" EQU "5" (if not exist "Drivers\Lumia830" goto MissingDrivers)
+if "%Model%" EQU "6" (if not exist "Drivers\Lumia735" goto MissingDrivers)
+if "%Model%" EQU "7" (if not exist "Drivers\Lumia640XL" goto MissingDrivers)
+if "%Model%" EQU "8" (if not exist "Drivers\Lumia640XL-AT&T" goto MissingDrivers)
+if /i "%Model%" EQU "A" (if not exist "Drivers\Lumia520" goto MissingDrivers)
+if /i "%Model%" EQU "B" (if not exist "Drivers\Lumia920" goto MissingDrivers)
+if /i "%Model%" EQU "C" (if not exist "Drivers\Lumia1020" goto MissingDrivers)
+if /i "%Model%" EQU "D" (if not exist "Drivers\Lumia1020-AT&T" goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	cls
 	call :PrintLabel
@@ -322,6 +325,9 @@ if %Win10SizeMB% LSS 6144 (
 	goto StorageSpace
 )
 
+:: For spec A, use Get-PartitionSupportedSize
+:: For spec B, use Get-Volume
+
 if "%DevSpec%" EQU "A" for /f %%i in ('Powershell -C "[Math]::Floor(((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% | Get-Volume).SizeRemaining) / 1MB) 2>$null"') do set "FreeSpace=%%i"
 if "%DevSpec%" EQU "B" for /f %%i in ('Powershell -C "$Partition = Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%; [Math]::Floor((($Partition | Get-Volume).Size - ($Partition | Get-PartitionSupportedSize).SizeMin) / 1MB) 2>$null"') do set "FreeSpace=%%i"
 if %Win10SizeMB% GTR %FreeSpace% (
@@ -387,6 +393,8 @@ echo ## MainOS DriveLetter is %MainOS% ## >>"%LogName%"
 echo ## DPP PN is %PartitionNumberDPP% ## >>"%LogName%"
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>"%LogName%"
 echo ## Data PN is %PartitionNumberData% ## >>"%LogName%"
+echo ## Dualboot is %Dualboot% ## >>"%LogName%"
+if /i "%Dualboot%" EQU "Y" echo ## Win10SizeMB is %Win10SizeMB% ## >>"%LogName%"
 
 echo %ESC%[96m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f %MainOS%\Data %Logger%
@@ -457,14 +465,15 @@ echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 if "%Model%" EQU "1" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
 if "%Model%" EQU "2" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
 if "%Model%" EQU "3" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if "%Model%" EQU "4" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT^&T" /Recurse %Logger%
+if "%Model%" EQU "4" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT&T" /Recurse %Logger%
 if "%Model%" EQU "5" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
 if "%Model%" EQU "6" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
 if "%Model%" EQU "7" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL" /Recurse %Logger%
-if "%Model%" EQU "8" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT^&T" /Recurse %Logger%
-if /i "%Model%" EQU "A" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
-if /i "%Model%" EQU "B" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT^&T" /Recurse %Logger%
+if "%Model%" EQU "8" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT&T" /Recurse %Logger%
+if /i "%Model%" EQU "A" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia520" /Recurse %Logger%
+if /i "%Model%" EQU "B" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
+if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
+if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT&T" /Recurse %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"

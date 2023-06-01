@@ -38,9 +38,10 @@ echo  %ESC%[36m5)%ESC%[97m Lumia 830 Global
 echo  %ESC%[36m6)%ESC%[97m Lumia 735 Global
 echo  %ESC%[36m7)%ESC%[97m Lumia 640 XL LTE Global
 echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[36mA)%ESC%[97m Lumia 920
-echo  %ESC%[36mB)%ESC%[97m Lumia 1020
-echo  %ESC%[36mC)%ESC%[97m Lumia 1020 AT^&T
+echo  %ESC%[36mA)%ESC%[97m Lumia 520
+echo  %ESC%[36mB)%ESC%[97m Lumia 920
+echo  %ESC%[36mC)%ESC%[97m Lumia 1020
+echo  %ESC%[36mD)%ESC%[97m Lumia 1020 AT^&T
 
 set /p "Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m"
 if not defined Model goto ChooseDev
@@ -130,16 +131,21 @@ if "%Model%" EQU "8" (
 	set "Def=640xlatt.txt"
 )
 if /I "%Model%" EQU "A" (
+	set "DrvDir=Lumia520"
+	set "DefLink=%DefDirLink%/520.txt"
+	set "Def=520.txt"
+)
+if /I "%Model%" EQU "B" (
 	set "DrvDir=Lumia920"
 	set "DefLink=%DefDirLink%/920.txt"
 	set "Def=920.txt"
 )
-if /I "%Model%" EQU "B" (
+if /I "%Model%" EQU "C" (
 	set "DrvDir=Lumia1020"
 	set "DefLink=%DefDirLink%/1020.txt"
 	set "Def=1020.txt"
 )
-if /I "%Model%" EQU "C" (
+if /I "%Model%" EQU "D" (
 	set "DrvDir=Lumia1020-AT&T"
 	set "DefLink=%DefDirLink%/1020att.txt"
 	set "Def=1020att.txt"
