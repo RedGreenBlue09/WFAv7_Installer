@@ -13,8 +13,7 @@ if %WinBuild% LSS 9600 (
 )
 
 if %WinBuild% LSS 10586 (
-	if %PROCESSOR_ARCHITECTURE% EQU x86 Files\ansicon32 -p
-	if %PROCESSOR_ARCHITECTURE% EQU AMD64 Files\ansicon64 -p
+	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
 title WFAv7 Driver Downloader 3.6
 set "ESC="

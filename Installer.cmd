@@ -516,7 +516,7 @@ Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi"
 Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %SevLogger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "nointegritychecks" Yes %Logger%
+::Files\bcdedit /store "%bcdLoc%" /set %id% "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "inherit" "{bootloadersettings}" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootmenupolicy" "Legacy" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
