@@ -1,5 +1,6 @@
 # Windows 10 for ARMv7 Installer 3.0
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.BMP "WFAv7 Installer")
+![1](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c22aa1d2-8790-4142-a018-c3eee25076d2 "Disclaimer screen")
+
 ## Disclaimer
 
 	* I'm not responsible for bricked devices, dead SD cards,
@@ -70,7 +71,7 @@ See GitHub commits.
 
 ## Screenshots
 
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-1.BMP "WFAv7-S1")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-2.BMP "WFAv7-S2")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-3.BMP "WFAv7-DD")
-![alt text](https://github.com/RedGreenBlue09/Assets/raw/master/WFAv7-4.BMP "WFAv7-TL")
+![1](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c22aa1d2-8790-4142-a018-c3eee25076d2 "Disclaimer screen")
+![2](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c3280398-2fb1-4e76-a9f4-ff955f3888ea "Device selection screen")
+![3](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/d291ffc3-2e5a-4bf7-a6c2-1915c63a3941 "Driver Downloader")
+
