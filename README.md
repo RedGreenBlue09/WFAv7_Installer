@@ -19,8 +19,9 @@
 - Nokia Lumia 830 Global
 - Nokia Lumia 735 Global
 - Microsoft Lumia 640 XL LTE (Global, AT&T)
-- Nokia Lumia 920
 - Nokia Lumia 1020 (Global, AT&T)
+- Nokia Lumia 920
+- Nokia Lumia 520
 
 ## Requirements
 
@@ -56,7 +57,6 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 	Microsoft                    : Windows and other tools
 	TortoiseSVN                  : SVN
 	Igor Pavlov                  : 7-Zip
-	cURL project                 : cURL
 	Aria2 project                : aria2
 	Adoxa                        : ansicon
 	Wimlib                       : wimlib-imagex
