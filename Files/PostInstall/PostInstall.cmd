@@ -38,6 +38,7 @@ rd /s /q Temp\
 bcdedit /store "%SYSTEMDRIVE%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
 
 echo.
-echo Done!
+echo More functionalities has been enabled.
+echo Reboot your device for it to take effect.
 pause
 exit /b

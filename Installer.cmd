@@ -267,7 +267,7 @@ if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
 del Temp\GPT*
 set "DLMOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
-echo %ESC%[96mDetected MainOS at %DriveLetter%:%ESC%[0m
+echo %ESC%[96m Detected MainOS at %DriveLetter%:%ESC%[0m
 goto PartitionInfo
 ::---------------------------------------------------------------
 
@@ -530,14 +530,15 @@ if /i "%Dualboot%" EQU "N" (
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
 ) else (
 	Files\bcdedit /store "%bcdLoc%" /set {default} description "Windows Phone" %Logger%
-	Files\bcdedit /store "%bcdLoc%" /set {bootmgr} custom:0x54000001 %id% %SevLogger%
+	Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
+	Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
+	Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "displaybootmenu" Yes %SevLogger%
 )
 
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "displaybootmenu" Yes %SevLogger%
+
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
@@ -551,7 +552,7 @@ echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b override
 diskpart /s Temp\diskpart.txt %Logger%
 del Temp\diskpart.txt
 
-if /i "%Dualboot%" EQU "Y" copy "Files\PostInstall\Dualboot.cmd" "%Win10Drive%\Dualboot.cmd" %Logger%
+copy "Files\PostInstall\PostInstall.cmd" "%Win10Drive%\PostInstall.cmd" %Logger%
 
 :: Unmount VHDX
 if "%DevSpec%" EQU "A" (
@@ -595,10 +596,11 @@ cls
 call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
 echo  %ESC%[97m- Now, reboot your phone.%ESC%[0m
-if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m- At the boot menu, press volume up to boot Windows 10 ARM.%ESC%[0m
+if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m- At the boot menu, press volume up %ESC%[0m
+if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m  then press the camera key to boot Windows 10 ARM.%ESC%[0m
 echo  %ESC%[97m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
-if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m- After getting to the desktop, run "Dualboot" in Windows 10 ARM drive%ESC%[0m
-if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
+echo  %ESC%[97m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
+echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
 echo.
 pause
 exit /b
