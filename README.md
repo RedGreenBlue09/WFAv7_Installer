@@ -39,10 +39,11 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 ## Instruction
 
 1. Download Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq)
-2. Extract `\sources\install.wim` to Installer folder.
-3. Run Driver Downloader and download drivers for your device.
-4. Unlock bootloader and boot into Mass Storage Mode. See [WPinternals](https://github.com/ReneLergner/WPinternals)
-5. Run Installer and follow the instruction in the Installer.
+2. Extract `sources\install.wim` to the same folder as Installer.cmd.  
+   Note: Just extract the file, not it's content.
+4. Run Driver Downloader and download drivers for your device.
+5. Unlock bootloader and boot into Mass Storage Mode. See [WPinternals](https://github.com/ReneLergner/WPinternals)
+6. Run Installer and follow the instruction in the Installer.
 
 ## Notes
 
