@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableDelayedExpansion
-cd %~dp0
+cd /D "%~dp0"
 ::---------------------------------------------------------------
 :GetAdministrator
 net session >nul 2>&1 || (
