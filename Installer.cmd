@@ -516,13 +516,17 @@ Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi"
 Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %SevLogger%
-::Files\bcdedit /store "%bcdLoc%" /set %id% "nointegritychecks" Yes %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "inherit" "{bootloadersettings}" %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "bootmenupolicy" "Legacy" %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "bootmenupolicy" "Standard" %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "winpe" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
+Files\bcdedit /store "%bcdLoc%" /set %id% "debug" Yes %Logger%
+
+Files\bcdedit /store "%bcdLoc%" /set {dbgsettings} "debugtype" USB %Logger%
+Files\bcdedit /store "%bcdLoc%" /set {dbgsettings} "targetname" "WOATARGET" %Logger%
 
 :: Boot entry display
 if /i "%Dualboot%" EQU "N" (
@@ -538,7 +542,7 @@ if /i "%Dualboot%" EQU "N" (
 
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
-
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "booterrorux" Standard %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"

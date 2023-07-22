@@ -22,14 +22,17 @@
 - Microsoft Lumia 640 XL LTE (Global, AT&T)
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
-- Nokia Lumia 520
+- Nokia Lumia 520  
 
-## Requirements
+- Windows 10 Mobile: Builds newer than 14393 are not supported.
+
+## Prerequisite (on your PC)
 
 - Official Windows 8.1 or newer   
-- Microsoft Visual C++ Redistributable 2022 (x86) - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 - Windows Powershell enabled
-- More requirements in the Installer
+- WPinternals 2.9 or newer - [Download](https://github.com/ReneLergner/WPinternals/releases/latest)
+- Microsoft Visual C++ Redistributable 2022 (x86) - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+- Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq)
 
 ## Download
 
@@ -38,12 +41,13 @@ For latest development version, use the green `Code` button, `Download ZIP`.
  
 ## Instruction
 
-1. Download Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq)
-2. Extract `sources\install.wim` to the same folder as Installer.cmd.  
+1. From the **Windows 10 ARM** 7z file:
+   Extract `sources\install.wim` to the same folder as Installer.cmd.  
    Note: Just extract the file, not it's content.
-4. Run Driver Downloader and download drivers for your device.
-5. Unlock bootloader and boot into Mass Storage Mode. See [WPinternals](https://github.com/ReneLergner/WPinternals)
-6. Run Installer and follow the instruction in the Installer.
+4. Download drivers for your device with **Driver Downloader**.
+5. Unlock bootloader and boot into Mass Storage Mode with **WPinternals**.
+6. Install **Visual C++ Redistributable 2022 (x86)**.
+7. Run Installer and follow the instruction in the Installer.
 
 ## Notes
 
