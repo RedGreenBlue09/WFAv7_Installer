@@ -22,15 +22,16 @@
 - Microsoft Lumia 640 XL LTE (Global, AT&T)
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
-- Nokia Lumia 520  
-
-- Windows 10 Mobile: Builds newer than 14393 are not supported.
+- Nokia Lumia 520
+<br><br>
+- **Windows 10 Mobile**: Builds newer than `14393.x` are not supported.
 
 ## Prerequisite (on your PC)
 
 - Official Windows 8.1 or newer   
 - Windows Powershell enabled
 - WPinternals 2.9 or newer - [Download](https://github.com/ReneLergner/WPinternals/releases/latest)
+- Win32 Disk Imager - [Download](https://sourceforge.net/projects/win32diskimager/)
 - Microsoft Visual C++ Redistributable 2022 (x86) - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 - Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq)
 
@@ -44,15 +45,23 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 1. From the **Windows 10 ARM** 7z file:
    Extract `sources\install.wim` to the same folder as Installer.cmd.  
    Note: Just extract the file, not it's content.
-4. Download drivers for your device with **Driver Downloader**.
-5. Unlock bootloader and boot into Mass Storage Mode with **WPinternals**.
-6. Install **Visual C++ Redistributable 2022 (x86)**.
-7. Run Installer and follow the instruction in the Installer.
+2. Download drivers for your device with **Driver Downloader**.
+3. Unlock bootloader and boot into Mass Storage Mode with **WPinternals**.
+4. Backup the phone with **Win32 Disk Imager**.
+5. Install **Visual C++ Redistributable 2022 (x86)**.
+6. Run Installer and follow the instruction in the Installer.
+7. Visit the [Wiki](https://github.com/RedGreenBlue09/WFAv7_Installer/wiki/Apps-on-Windows-10-ARM) for usage tips.
 
 ## Notes
 
 - On Spec A devices, using Reset My Phone will remove Windows 10 ARM.
 - **Updating Windows Phone with unlocked bootloader will break your installation.**
+- Join the [Telegram group](https://t.me/lumiaarch32) for help.
+
+## Reporting issues
+
+Go to [Issues page](https://github.com/RedGreenBlue09/WFAv7_Installer/issues), check if your issue is already reported.  
+If not, open an issue ticket providing detailed information and logs.
 
 ## Credits
 
@@ -62,7 +71,6 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 	Windows ARM32 Telegram group : Testing my script
 	Microsoft                    : Windows and other tools
 	TortoiseSVN                  : SVN
-	Igor Pavlov                  : 7-Zip
 	Aria2 project                : aria2
 	Adoxa                        : ansicon
 	Wimlib                       : wimlib-imagex
@@ -70,13 +78,8 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 	Systola                      : VhdxTool
 	RedGreenBlue123 (Me)         : Author of this script
 
-## Changelogs
-
-See GitHub commits.
-
 ## Screenshots
 
 ![1](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c22aa1d2-8790-4142-a018-c3eee25076d2 "Disclaimer screen")
 ![2](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c3280398-2fb1-4e76-a9f4-ff955f3888ea "Device selection screen")
 ![3](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/d291ffc3-2e5a-4bf7-a6c2-1915c63a3941 "Driver Downloader")
-
