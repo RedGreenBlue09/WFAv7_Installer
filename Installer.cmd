@@ -105,7 +105,7 @@ echo    ^|%ESC%[95m  * Your warranty will be void if you tamper with any part of
 echo    ^|                                                                                        ^|
 echo    +----------------------------------------------------------------------------------------+%ESC%[0m
 echo.
-set /p "Disclaimer=%ESC%[97m   Are you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set /p "Disclaimer=%ESC%[97m   Do you agree with the DISCLAIMER? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
 if not defined Disclaimer goto Disclaimer
 set "Disclaimer=%Disclaimer:"=%"
 if /i "%Disclaimer%" EQU "N" (
