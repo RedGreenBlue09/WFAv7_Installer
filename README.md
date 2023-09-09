@@ -47,7 +47,7 @@ For latest development version, use the green `Code` button, `Download ZIP`.
    Note: Just extract the file, not it's content.
 2. Download drivers for your device with **Driver Downloader**.
 3. Unlock bootloader and boot into Mass Storage Mode with **WPinternals**.
-4. Backup the phone with **Win32 Disk Imager**.
+4. Backup the phone with **Win32 Disk Imager** (Only if not already did).
 5. Install **Visual C++ Redistributable 2022 (x86)**.
 6. Run Installer and follow the instruction in the Installer.
 7. Visit the [Wiki](https://github.com/RedGreenBlue09/WFAv7_Installer/wiki/Apps-on-Windows-10-ARM) for usage tips.

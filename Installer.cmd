@@ -536,13 +536,13 @@ if /i "%Dualboot%" EQU "N" (
 	Files\bcdedit /store "%bcdLoc%" /set {default} description "Windows Phone" %Logger%
 	Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
-	Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
-	Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "displaybootmenu" Yes %SevLogger%
 )
 
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "booterrorux" Standard %Logger%
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "displaybootmenu" Yes %SevLogger%
+Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
