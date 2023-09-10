@@ -32,7 +32,7 @@
 - Windows Powershell enabled
 - WPinternals 2.9 or newer - [Download](https://github.com/ReneLergner/WPinternals/releases/latest)
 - Win32 Disk Imager - [Download](https://sourceforge.net/projects/win32diskimager/)
-- Microsoft Visual C++ Redistributable 2022 (x86) - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+- Microsoft Visual C++ Redistributable 2022 (x86) installed - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 - Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq)
 
 ## Download
@@ -48,15 +48,14 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 2. Download drivers for your device with **Driver Downloader**.
 3. Unlock bootloader and boot into Mass Storage Mode with **WPinternals**.
 4. Backup the phone with **Win32 Disk Imager** (Only if not already did).
-5. Install **Visual C++ Redistributable 2022 (x86)**.
-6. Run Installer and follow the instruction in the Installer.
-7. Visit the [Wiki](https://github.com/RedGreenBlue09/WFAv7_Installer/wiki/Apps-on-Windows-10-ARM) for usage tips.
+5. Run Installer and follow the instruction in the Installer.
+6. Visit the [Wiki](https://github.com/RedGreenBlue09/WFAv7_Installer/wiki/Apps-on-Windows-10-ARM) for usage tips.
 
 ## Notes
 
 - On Spec A devices, using Reset My Phone will remove Windows 10 ARM.
 - **Updating Windows Phone with unlocked bootloader will break your installation.**
-- Join the [Telegram group](https://t.me/lumiaarch32) for help.
+- Join the [Telegram group](https://t.me/lumiaarch32) for more support.
 
 ## Reporting issues
 
