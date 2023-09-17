@@ -35,8 +35,9 @@ echo  %ESC%[36m3)%ESC%[97m Lumia 1520
 echo  %ESC%[36m4)%ESC%[97m Lumia 1520 AT^&T
 echo  %ESC%[36m5)%ESC%[97m Lumia 830 Global
 echo  %ESC%[36m6)%ESC%[97m Lumia 735 Global
-echo  %ESC%[36m7)%ESC%[97m Lumia 640 XL LTE Global
-echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE AT^&T
+echo  %ESC%[36m7)%ESC%[97m Lumia 650
+echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE Global
+echo  %ESC%[36m9)%ESC%[97m Lumia 640 XL LTE AT^&T
 echo  %ESC%[36mA)%ESC%[97m Lumia 520
 echo  %ESC%[36mB)%ESC%[97m Lumia 920
 echo  %ESC%[36mC)%ESC%[97m Lumia 1020
@@ -54,6 +55,7 @@ if "%Model%" EQU "5" (goto DoDownload)
 if "%Model%" EQU "6" (goto DoDownload)
 if "%Model%" EQU "7" (goto DoDownload)
 if "%Model%" EQU "8" (goto DoDownload)
+if "%Model%" EQU "9" (goto DoDownload)
 if /I "%Model%" EQU "A" (goto DoDownload)
 if /I "%Model%" EQU "B" (goto DoDownload)
 if /I "%Model%" EQU "C" (goto DoDownload)
@@ -120,11 +122,16 @@ if "%Model%" EQU "6" (
 	set "Def=735.txt"
 )
 if "%Model%" EQU "7" (
+	set "DrvDir=Lumia650"
+	set "DefLink=%DefDirLink%/650.txt"
+	set "Def=650.txt"
+)
+if "%Model%" EQU "8" (
 	set "DrvDir=Lumia640XL"
 	set "DefLink=%DefDirLink%/640xl.txt"
 	set "Def=640xl.txt"
 )
-if "%Model%" EQU "8" (
+if "%Model%" EQU "9" (
 	set "DrvDir=Lumia640XL-AT&T"
 	set "DefLink=%DefDirLink%/640xlatt.txt"
 	set "Def=640xlatt.txt"
