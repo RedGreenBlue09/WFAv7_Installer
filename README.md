@@ -19,6 +19,7 @@
 - Nokia Lumia 1520 (Global, AT&T)
 - Nokia Lumia 830 Global
 - Nokia Lumia 735 Global
+- Microsoft Lumia 650
 - Microsoft Lumia 640 XL LTE (Global, AT&T)
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
