@@ -1,6 +1,6 @@
 @echo off
 cd /D "%~dp0"
-for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set WinBuild=%%a
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set "WinBuild=%%a"
 if %WinBuild% LSS 9600 (
 	title ERROR!
 	color 0c
@@ -20,7 +20,7 @@ set "ESC="
 
 :ChooseDev
 cd /D "%~dp0"
-set Model=
+set "Model="
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,24 +164,23 @@ if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-P
 :: Delete old drivers
 
 set "Errors=0"
-if exist !DrvDir!\ (
+if exist "%DrvDir%\" (
 	echo Removing old drivers ...
-	rd /s /q !DrvDir!\
+	rd /s /q "%DrvDir%\"
 )
 
 :: Download drivers
 
-md !DrvDir!
+md "%DrvDir%"
 echo Downloading definition file ...
-"%Aria2cLoc%" -q -d "!DrvDir!" "%DefLink%"
+"%Aria2cLoc%" -q -d "%DrvDir%" "%DefLink%"
 
-for /f "tokens=*" %%A in (!DrvDir!\!Def!) do (
-	set Drv=%%A
-	set DrvLink=!Drv:\=/!
-	title Downloading "!Drv!" package ...
-	echo Downloading "!Drv!" package ...
-	"%SVNLoc%" export "%RepoSvnLink%!DrvLink!" "!DrvDir!\!Drv!">nul
-	if %ErrorLevel% NEQ 0 (
+for /f "tokens=*" %%A in (%DrvDir%\%Def%) do (
+	set "Drv=%%A"
+	set "DrvLink=!Drv:\=/!"
+	title Downloading "%%A" package ...
+	echo Downloading "%%A" package ...
+	"%SVNLoc%" export "%RepoSvnLink%!DrvLink!" "%DrvDir%\%%A" >nul || (
 		set /a "Errors+=1"
 	)
 )

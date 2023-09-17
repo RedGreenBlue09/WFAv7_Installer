@@ -20,7 +20,7 @@ md "Temp"
 :Check2
 title Checking compatibility ...
 echo  - Checking Windows Build ...
-for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set WinBuild=%%a
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set "WinBuild=%%a"
 if %WinBuild% LSS 9600 (
 	rd /s /q Temp\
 	echo This Windows version is not supported by WFAv7 Installer.
