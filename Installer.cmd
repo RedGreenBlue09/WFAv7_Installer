@@ -400,8 +400,8 @@ echo ## Dualboot is %Dualboot% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "Y" echo ## Win10SizeMB is %Win10SizeMB% ## >>"%LogName%"
 
 echo %ESC%[96m[INFO] Checking partition for errors ...%ESC%[91m
-chkdsk /f %MainOS%\Data %Logger%
-chkdsk /f %MainOS% %Logger%
+chkdsk /f /x %MainOS%\Data %Logger%
+chkdsk /f /x %MainOS% %Logger%
 
 if /i "%Dualboot%" EQU "Y" (
 			
