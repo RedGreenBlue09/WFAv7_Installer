@@ -182,7 +182,7 @@ md "%DrvDir%"
 echo Downloading definition file ...
 "%Aria2cLoc%" -q -d "%DrvDir%" "%DefLink%"
 
-for /f "tokens=*" %%A in (%DrvDir%\%Def%) do (
+for /f "tokens=* usebackq" %%A in ("%DrvDir%\%Def%") do (
 	set "Drv=%%A"
 	set "DrvLink=!Drv:\=/!"
 	title Downloading "%%A" package ...
