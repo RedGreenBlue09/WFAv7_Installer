@@ -143,19 +143,19 @@ set /p "Model=%ESC%[92mDevice%ESC%[32m:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
-if "%Model%" EQU "1" set "DevSpec=B" & goto Dualboot
-if "%Model%" EQU "2" set "DevSpec=B" & goto Dualboot
-if "%Model%" EQU "3" set "DevSpec=B" & goto Dualboot
-if "%Model%" EQU "4" set "DevSpec=B" & goto Dualboot
-if "%Model%" EQU "5" set "DevSpec=B" & goto Dualboot
-if "%Model%" EQU "6" set "DevSpec=B" & goto Dualboot8
-if "%Model%" EQU "7" set "DevSpec=B" & goto Dualboot
-if "%Model%" EQU "8" set "DevSpec=B" & goto Dualboot8
-if "%Model%" EQU "9" set "DevSpec=B" & goto Dualboot8
-if /i "%Model%" EQU "A" set "DevSpec=A" & goto Dualboot8
-if /i "%Model%" EQU "B" set "DevSpec=A" & goto Dualboot
-if /i "%Model%" EQU "C" set "DevSpec=A" & goto Dualboot
-if /i "%Model%" EQU "D" set "DevSpec=A" & goto Dualboot
+if "%Model%" EQU "1" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
+if "%Model%" EQU "2" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
+if "%Model%" EQU "3" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
+if "%Model%" EQU "4" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
+if "%Model%" EQU "5" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
+if "%Model%" EQU "6" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot8
+if "%Model%" EQU "7" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot
+if "%Model%" EQU "8" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot8
+if "%Model%" EQU "9" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot8
+if /i "%Model%" EQU "A" set "DevSpec=A" & set "HasCameraBtn=0" & goto Dualboot8
+if /i "%Model%" EQU "B" set "DevSpec=A" & set "HasCameraBtn=1" & goto Dualboot
+if /i "%Model%" EQU "C" set "DevSpec=A" & set "HasCameraBtn=1" & goto Dualboot
+if /i "%Model%" EQU "D" set "DevSpec=A" & set "HasCameraBtn=1" & goto Dualboot
 goto ChooseDev
 
 ::---------------------------------------------------------------
@@ -538,8 +538,14 @@ if /i "%Dualboot%" EQU "N" (
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
 ) else (
 	Files\bcdedit /store "%bcdLoc%" /set {default} description "Windows Phone" %Logger%
-	Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
+
+	if "%HasCameraBtn%" EQU "1" (
+		Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
+	) else (
+		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} customactions 0x1000048000001 0x54000001 0x1000050000001 0x54000002
+		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} custom:0x54000001 {703c511b-98f3-4630-b752-6d177cbfb89c}
+	)
 )
 
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
@@ -604,8 +610,16 @@ cls
 call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
 echo  %ESC%[97m- Now, reboot your phone.%ESC%[0m
-if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m- At the boot menu, press volume up %ESC%[0m
-if /i "%Dualboot%" EQU "Y" echo  %ESC%[97m  then press the camera key to boot Windows 10 ARM.%ESC%[0m
+
+if /i "%Dualboot%" EQU "Y" (
+	if "%HasCameraBtn%" EQU "1" (
+		echo  %ESC%[97m- At the boot menu, press volume up / down to move selection %ESC%[0m
+		echo  %ESC%[97m  then press the camera key to select.%ESC%[0m
+	) else (
+		echo  %ESC%[97m- At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
+	)
+)
+
 echo  %ESC%[97m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
 echo  %ESC%[97m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
 echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
