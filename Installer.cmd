@@ -32,7 +32,7 @@ if %WinBuild% LSS 9600 (
 
 echo  - Checking Windows Powershell ...
 Powershell /? >nul 2>&1
-set "PLV=%errorlevel%"
+set "PLV=%Errorlevel%"
 if %PLV% NEQ 0 (
 	rd /s /q Temp\
 	echo Powershell cannot be found. Please enable Powershell and try again.
@@ -249,8 +249,7 @@ for /l %%i in (0,1,47) do (
 	Files\dsfo Temp\GPT !Offset! 128 Temp\GPT-PartEntry >nul
 	Files\dsfo Temp\GPT-PartEntry 56 72 Temp\GPT-PartName >nul
 	
-	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S\x00" Temp\GPT-PartName >nul
-	if !Errorlevel! EQU 0 goto PartitionNumber
+	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S\x00" Temp\GPT-PartName >nul || goto PartitionNumber
 	
 	del Temp\GPT-PartName
 	del Temp\GPT-PartEntry
@@ -280,8 +279,7 @@ set /p "MainOS=%ESC%[92m Enter MainOS Path: %ESC%[0m"
 if not defined MainOS goto MOSPath
 set "MainOS=%MainOS:"=%"
 
-echo "%MainOS%"| findstr /I "^\"[A-Z][:]\"$" >nul
-if %errorlevel% NEQ 0 (
+echo "%MainOS%"| findstr /I "^\"[A-Z][:]\"$" >nul || (
 	echo %ESC%[91m Not a valid MainOS partition. Example: H: %ESC%[0m
 	goto MOSPath
 )
@@ -298,7 +296,6 @@ set "DLMOS=%MainOS:~0,-1%"
 
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber 2>$null"') do set "DiskNumber=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber 2>$null"') do set "PartitionNumber=%%i"
-set "Temp="
 goto Win10MountCheck
 ::---------------------------------------------------------------
 
@@ -316,7 +313,7 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%i"
 :: TODO: ERROR HANDLING & LOGGING
 
-if /i "%Dualboot%" EQU "N" goto LogNameInit
+if /i "%Dualboot%" EQU "N" goto ChargeThresholdPrompt
 
 :StorageSpace
 set "Win10SizeMB="
@@ -324,8 +321,7 @@ set /p "Win10SizeMB=%ESC%[92m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
 if not defined Win10SizeMB goto StorageSpace
 set "Win10SizeMB=%Win10SizeMB:"=%"
 
-echo "%Win10SizeMB%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" >nul
-if %Errorlevel% NEQ 0 (
+echo "%Win10SizeMB%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" >nul || (
 	echo  %ESC%[91mPlease enter a natural number.%ESC%[0m
 	goto StorageSpace
 )
@@ -345,6 +341,22 @@ if %Win10SizeMB% GTR %FreeSpace% (
 	echo  %ESC%[91mYou only have %FreeSpace% MB of storage space.%ESC%[0m
 	goto StorageSpace
 )
+
+:ChargeThresholdPrompt
+set "ChargeThreshold="
+set /p "ChargeThreshold=%ESC%[92m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
+if not defined ChargeThreshold goto ChargeThresholdPrompt
+set "ChargeThreshold=%ChargeThreshold:"=%"
+
+echo "%ChargeThreshold%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" >nul || (
+	echo  %ESC%[91mPlease enter a natural number.%ESC%[0m
+	goto ChargeThresholdPrompt
+)
+
+if %ChargeThreshold% GTR 99 (
+	goto ChargeThresholdPrompt
+)
+
 goto LogNameInit
 
 ::--------------------------------------------------------------- INSTALL PROCESS
@@ -548,10 +560,13 @@ if /i "%Dualboot%" EQU "N" (
 	if "%HasCameraBtn%" EQU "1" (
 		Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
 	) else (
-		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} customactions 0x1000048000001 0x54000001 0x1000050000001 0x54000002
-		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} custom:0x54000001 {703c511b-98f3-4630-b752-6d177cbfb89c}
+		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} customactions 0x1000048000001 0x54000001 0x1000050000001 0x54000002 %Logger%
+		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} custom:0x54000001 {703c511b-98f3-4630-b752-6d177cbfb89c} %Logger%
 	)
 )
+
+:: Charge threshold
+if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%bcdLoc%" /set {globalsettings} %ChargeThreshold% %Logger%
 
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
