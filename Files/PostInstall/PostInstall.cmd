@@ -29,8 +29,8 @@ for /f "delims=" %%a in ('fsutil reparsepoint query %SYSTEMDRIVE%\EFIESP') do (
 :: Dualboot
 
 md Temp\
-echo>Temp\diskpart1.txt sel dis !DiskNumber!
-echo>>Temp\diskpart1.txt sel par !PartitionNumber!
+echo>Temp\diskpart1.txt sel dis %DiskNumber%
+echo>>Temp\diskpart1.txt sel par %PartitionNumber%
 echo>>Temp\diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 diskpart /s Temp\diskpart1.txt
 rd /s /q Temp\

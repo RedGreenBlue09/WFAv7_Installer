@@ -271,7 +271,7 @@ del Temp\GPT*
 set "DLMOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
 echo %ESC%[96m Detected MainOS at %DriveLetter%:%ESC%[0m
-goto PartitionInfo
+goto Win10MountCheck
 ::---------------------------------------------------------------
 
 :MOSPath
@@ -299,10 +299,17 @@ set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber 2>$null"') do set "DiskNumber=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber 2>$null"') do set "PartitionNumber=%%i"
 set "Temp="
-goto PartitionInfo
+goto Win10MountCheck
 ::---------------------------------------------------------------
 
-:PartitionInfo
+:Win10MountCheck
+if exist "%MainOS%\Windows10\" (
+	echo %ESC%[91m Please remove/rename %MainOS%\Windows10.%ESC%[0m
+	pause
+	if exist "%MainOS%\Windows10\" goto Win10MountCheck
+)
+
+::PartitionInfo
 echo %ESC%[96m Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber 2>$null"') do set "PartitionNumberDPP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber 2>$null"') do set "PartitionNumberEFIESP=%%i"
@@ -404,9 +411,7 @@ chkdsk /f /x %MainOS%\Data %Logger%
 chkdsk /f /x %MainOS% %Logger%
 
 if /i "%Dualboot%" EQU "Y" (
-			
-	:: A bit dangerous
-	if exist %MainOS%\Windows10\ rd /s /q %MainOS%\Windows10\ %Logger%
+	
 	md %MainOS%\Windows10\ %Logger%
 	
 	if "%DevSpec%" EQU "A" (
