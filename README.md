@@ -63,6 +63,11 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 Go to [Issues page](https://github.com/RedGreenBlue09/WFAv7_Installer/issues), check if your issue is already reported.  
 If not, open an issue ticket providing detailed information and logs.
 
+## License notice
+
+Some script files are licensed under the Microsoft Reciprocal License (MS-RL).  
+If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should add the license's content into it.
+
 ## Credits
 
 	fadilfadz01 (Fadil Fadz)     : Helping me write the script

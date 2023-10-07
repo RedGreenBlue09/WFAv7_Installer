@@ -1,3 +1,6 @@
+:: This file is licensed under the Microsoft Reciprocal License (MS-RL).
+:: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
+
 @echo off
 setlocal EnableDelayedExpansion
 cd /D "%~dp0"

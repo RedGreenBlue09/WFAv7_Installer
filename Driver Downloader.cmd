@@ -1,3 +1,6 @@
+:: This file is licensed under the Microsoft Reciprocal License (MS-RL).
+:: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
+
 @echo off
 cd /D "%~dp0"
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set "WinBuild=%%a"
