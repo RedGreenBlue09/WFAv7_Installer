@@ -252,7 +252,7 @@ for /l %%i in (0,1,47) do (
 	Files\dsfo Temp\GPT !Offset! 128 Temp\GPT-PartEntry >nul
 	Files\dsfo Temp\GPT-PartEntry 56 72 Temp\GPT-PartName >nul
 	
-	Files\grep -P "M\x00a\x00i\x00n\x00O\x00S\x00" Temp\GPT-PartName >nul || goto PartitionNumber
+	Files\grep -P "^M\x00a\x00i\x00n\x00O\x00S\x00\x00{60}$" Temp\GPT-PartName >nul || goto PartitionNumber
 	
 	del Temp\GPT-PartName
 	del Temp\GPT-PartEntry
