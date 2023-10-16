@@ -231,28 +231,33 @@ goto ChooseDev
 ::---------------------------------------------------------------
 
 :MOSAutoDetectFail
+
 del Temp\GPT* 2>nul
 echo %ESC%[91m Unable to auto detect MainOS.%ESC%[0m
 goto MOSPath
 
 :MOSAutoDetect
+
 cls
 call :PrintLabel
 echo %ESC%[96m Trying to detect MainOS ...%ESC%[91m
+
 :: DiskNumber
+
 for /f %%i in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
 if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 
-Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
+:: Search for MainOS in the GPT
 
+Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
 for /l %%i in (0,1,47) do (
 	set /a "Offset=128*%%i"
 
 	Files\dsfo Temp\GPT !Offset! 128 Temp\GPT-PartEntry >nul
 	Files\dsfo Temp\GPT-PartEntry 56 72 Temp\GPT-PartName >nul
 	
-	Files\grep -P "^M\x00a\x00i\x00n\x00O\x00S\x00\x00{60}$" Temp\GPT-PartName >nul || goto PartitionNumber
+	fc /T /U Temp\GPT-PartName Files\MainOS-PartName.bin >null && goto PartitionNumber
 	
 	del Temp\GPT-PartName
 	del Temp\GPT-PartEntry
@@ -260,18 +265,22 @@ for /l %%i in (0,1,47) do (
 goto MOSAutoDetectFail
 
 :PartitionNumber
+
 Files\dsfo Temp\GPT-PartEntry 16 16 Temp\GPT-PartUUID >nul
-for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"`) do set "UuidHex=%%g"
+for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' ' 2>$null"`) do set "UuidHex=%%g"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
 	set "Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p"
 )
+
 for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber 2>$null"') do set "PartitionNumber=%%p"
 for /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter 2>$null"') do set "DriveLetter=%%d"
 if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
 if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
+
 del Temp\GPT*
 set "DLMOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
+
 echo %ESC%[96m Detected MainOS at %DriveLetter%:%ESC%[0m
 goto Win10MountCheck
 ::---------------------------------------------------------------
