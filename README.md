@@ -70,18 +70,20 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 
 ## Credits
 
-	fadilfadz01 (Fadil Fadz)     : Helping me write the script
-	Gus33000 (Gustave Monce)     : Making drivers & lot more
+	Microsoft Comporation        : Windows and other tools
 	Heathcliff74 (Rene Lergner)  : WPinternals
-	Windows ARM32 Telegram group : Testing my script
-	Microsoft                    : Windows and other tools
-	TortoiseSVN                  : SVN
-	Aria2 project                : aria2
-	Adoxa                        : ansicon
-	Wimlib                       : wimlib-imagex
+	WOA-Project                  : Inf drivers
+	TortoiseSVN project          : SVN
+	Systola GmbH                 : VhdxTool
 	Dariusz Stanislawek          : dsfo
-	Systola                      : VhdxTool
+	wimlib project               : wimlib-imagex
+	Aria2 project                : aria2c
+	adoxa (Jason Hood)           : ansicon
+	
 	RedGreenBlue123 (Me)         : Author of this script
+	Gus33000 (Gustave Monce)     : The main contributor to WOA-Project
+	Windows ARM32 Telegram group : Testing my script
+	fadilfadz01 (Fadil Fadz)     : Helping me write the script
 
 ## Screenshots
 
