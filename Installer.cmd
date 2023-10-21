@@ -90,12 +90,12 @@ color 07
 title Windows 10 for ARMv7 Installer 3.1
 echo.
 echo.
-echo                            %ESC%[97m%ESC%[1mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
+echo                            %ESC%[97mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
 echo.
-echo                     %ESC%[93m=======================================================
+echo                     %ESC%[93m=======================================================%ESC%[0m
 echo.
-echo                                           %ESC%[91mDISCLAIMER:
-echo %ESC%[95m
+echo                                           %ESC%[91mDISCLAIMER:%ESC%[0m
+echo.
 echo    %ESC%[36m+----------------------------------------------------------------------------------------+
 echo    ^|                                                                                        ^|
 echo    ^|%ESC%[95m  * I'm not responsible for bricked devices, dead SD cards,                             %ESC%[36m^|
@@ -141,8 +141,7 @@ echo  %ESC%[36mA) %ESC%[97mLumia 520
 echo  %ESC%[36mB) %ESC%[97mLumia 920
 echo  %ESC%[36mC) %ESC%[97mLumia 1020
 echo  %ESC%[36mD) %ESC%[97mLumia 1020 AT^&T
-
-set /p "Model=%ESC%[92mDevice%ESC%[32m:%ESC%[0m "
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
@@ -178,14 +177,14 @@ if /i "%Dualboot%" NEQ "Y" if /i "%Dualboot%" NEQ "N" goto Dualboot
 :Preparation
 cls
 call :PrintLabel
-echo %ESC%[92m PREPARATION:
+echo %ESC%[97m PREPARATION:
 echo   - Read README.md and instruction before using this Installer.
 echo   - Make sure your phone have enough battery for this installation.
 echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
 echo   * Highly recommend you to flash the original FFU before installation.
-if /i "%Dualboot%" EQU "Y" echo   * %ESC%[4m6.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
+if /i "%Dualboot%" EQU "Y" echo   * %ESC%[4m6.0 GB%ESC%[0m%ESC%[97m of empty phone storage is required.
 echo %ESC%[0m
-echo %ESC%[95m WARNING:
+echo %ESC%[93m WARNING:
 if /i "%Dualboot%" EQU "N" echo   * This will permanently remove Windows Phone.
 echo   * After pressing any key, the installation process will begin.
 echo     This cannot be cancelled properly which may cause damage to your device.
@@ -232,7 +231,7 @@ goto ChooseDev
 :MOSAutoDetect
 cls
 call :PrintLabel
-echo %ESC%[96m Trying to detect MainOS ...%ESC%[91m
+echo %ESC%[97m Trying to detect MainOS ...%ESC%[91m
 
 :: DiskNumber
 
@@ -257,7 +256,7 @@ for /l %%i in (0,1,47) do (
 
 :MOSAutoDetectFail
 del Temp\GPT* 2>nul
-echo %ESC%[91m Unable to auto detect MainOS.%ESC%[0m
+echo %ESC%[91m Unable to auto detect MainOS.%ESC%[97m
 goto MOSPath
 
 :PartitionNumber
@@ -276,13 +275,13 @@ del Temp\GPT*
 set "DLMOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
 
-echo %ESC%[96m Detected MainOS at %DriveLetter%:%ESC%[0m
+echo %ESC%[97m Detected MainOS at %DriveLetter%:%ESC%[0m
 goto Win10MountCheck
 ::---------------------------------------------------------------
 
 :MOSPath
 set "MainOS="
-set /p "MainOS=%ESC%[92m Enter MainOS Path: %ESC%[0m"
+set /p "MainOS=%ESC%[96m Enter MainOS Path: %ESC%[0m"
 if not defined MainOS goto MOSPath
 set "MainOS=%MainOS:"=%"
 
@@ -314,7 +313,7 @@ if exist "%MainOS%\Windows10\" (
 )
 
 ::PartitionInfo
-echo %ESC%[96m Getting Partition Infos ...%ESC%[91m
+echo %ESC%[97m Getting Partition Infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber 2>$null"') do set "PartitionNumberDPP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber 2>$null"') do set "PartitionNumberEFIESP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%i"
@@ -326,7 +325,7 @@ goto LogNameInit
 
 :StorageSpace
 set "Win10SizeMB="
-set /p "Win10SizeMB=%ESC%[92m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
+set /p "Win10SizeMB=%ESC%[96m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
 if not defined Win10SizeMB goto StorageSpace
 set "Win10SizeMB=%Win10SizeMB:"=%"
 
@@ -354,7 +353,7 @@ goto :EOF
 
 :ChargeThresholdPrompt
 set "ChargeThreshold="
-set /p "ChargeThreshold=%ESC%[92m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
+set /p "ChargeThreshold=%ESC%[96m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
 if not defined ChargeThreshold goto ChargeThresholdPrompt
 set "ChargeThreshold=%ChargeThreshold:"=%"
 
@@ -412,7 +411,7 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
 
 set "StartTime=%Time%"
 echo.
-echo %ESC%[96m[INFO] Installation was started at %StartTime%
+echo %ESC%[97m[INFO] Installation was started at %StartTime%
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
 echo ## Device is %Model%  ## >>"%LogName%"
@@ -428,7 +427,7 @@ echo ## Dualboot is %Dualboot% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "Y" echo ## Win10SizeMB is %Win10SizeMB% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "N" echo ## ChargeThreshold is %ChargeThreshold% ## >>"%LogName%"
 
-echo %ESC%[96m[INFO] Checking partition for errors ...%ESC%[91m
+echo %ESC%[97m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f /x %MainOS%\Data %Logger%
 chkdsk /f /x %MainOS% %Logger%
 
@@ -438,7 +437,7 @@ if /i "%Dualboot%" EQU "Y" (
 	
 	if "%DevSpec%" EQU "A" (
 		
-		echo %ESC%[96m[INFO] Creating Windows 10 ARM VHDX ...%ESC%[91m
+		echo %ESC%[97m[INFO] Creating Windows 10 ARM VHDX ...%ESC%[91m
 		Files\vhdxtool create -f "%MainOS%\Data\Windows10.vhdx" -s %Win10SizeMB%MB -v %SevLogger%
 
 		:: Unfortunately New-VHD requires Hyper-V to be enabled
@@ -453,7 +452,7 @@ if /i "%Dualboot%" EQU "Y" (
 
 	) else (
 		
-		echo %ESC%[96m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
+		echo %ESC%[97m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
 		
 		for /f %%i in ('Powershell -C "[Math]::Floor((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB% 2>>'%LogName%'"') do set "DataPartSizeMB=%%i"
 
@@ -468,7 +467,7 @@ if /i "%Dualboot%" EQU "Y" (
 	
 ) else (
 
-	echo %ESC%[96m[INFO] Resizing MainOS Partition ...%ESC%[91m
+	echo %ESC%[97m[INFO] Resizing MainOS Partition ...%ESC%[91m
 	echo ## Remove-Partition ## >>"%LogName%"
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
 	echo ## Resize-Partition ## >>"%LogName%"
@@ -477,12 +476,12 @@ if /i "%Dualboot%" EQU "Y" (
 
 )
 echo ## Windows 10 drive is %Win10Drive% ## >>"%LogName%"
-echo %ESC%[96m[INFO] Formatting Windows 10 ARM partition ...%ESC%[91m
+echo %ESC%[97m[INFO] Formatting Windows 10 ARM partition ...%ESC%[91m
 format %Win10Drive% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
-echo %ESC%[96m[INFO] Installing Windows 10 ARM ...%ESC%[91m
+echo %ESC%[97m[INFO] Installing Windows 10 ARM ...%ESC%[91m
 if %WinBuild% LSS 10240 (
 	Files\wimlib-imagex apply install.wim 1 %Win10Drive%\ --compact=lzx %SevLogger%
 ) else (
@@ -490,7 +489,7 @@ if %WinBuild% LSS 10240 (
 )
 
 ::---------------------------------------------------------------
-echo %ESC%[96m[INFO] Installing Drivers ...%ESC%[91m
+echo %ESC%[97m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 if "%Model%" EQU "1" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
 if "%Model%" EQU "2" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
@@ -508,7 +507,7 @@ if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
-echo %ESC%[96m[INFO] Mounting EFIESP and DPP ...%ESC%[91m
+echo %ESC%[97m[INFO] Mounting EFIESP and DPP ...%ESC%[91m
 md %Win10Drive%\EFIESP
 md %Win10Drive%\DPP
 echo>Temp\diskpart1.txt sel dis %DiskNumber%
@@ -519,10 +518,10 @@ echo>>Temp\diskpart1.txt assign mount=%Win10Drive%\DPP
 diskpart /s Temp\diskpart1.txt %Logger%
 del Temp\diskpart1.txt
 
-echo %ESC%[96m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
+echo %ESC%[97m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
 
-echo %ESC%[96m[INFO] Adding BCD Entry ...
+echo %ESC%[97m[INFO] Adding BCD Entry ...
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 set "bcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
 echo ## BCD Path is %bcdLoc% ## >>"%LogName%" 
@@ -586,7 +585,7 @@ Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
-echo %ESC%[96m[INFO] Setting up ESP ...%ESC%[91m
+echo %ESC%[97m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
 Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
 
@@ -601,7 +600,7 @@ copy "Files\PostInstall\PostInstall.cmd" "%Win10Drive%\PostInstall.cmd" %Logger%
 :: Unmount VHDX
 if "%DevSpec%" EQU "A" (
 	if /i "%Dualboot%" EQU "Y" (
-		echo %ESC%[96m[INFO] Unmounting VHDX ...%ESC%[91m
+		echo %ESC%[97m[INFO] Unmounting VHDX ...%ESC%[91m
 		echo>Temp\diskpart.txt sel vdisk file=%MainOS%\Data\Windows10.vhdx
 		echo>>Temp\diskpart.txt detach vdisk
 		diskpart /s Temp\diskpart.txt %Logger%
@@ -618,7 +617,7 @@ echo ========================================================= >>"%LogName%"
 echo.
 echo #### INSTALLATION FAILED ####>>"%LogName%"
 rd /s /q Temp\
-echo %ESC%[96m[INFO] Installation is cancelled because a%ESC%[91m severe error %ESC%[96moccurred.
+echo %ESC%[91m[INFO] Installation is cancelled because a severe error has occurred.
 echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.
 pause
@@ -627,32 +626,32 @@ exit /B
 :MissionCompleted
 if %ErrNum% GTR 0 (
 	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>"%LogName%"
-	echo %ESC%[96m[INFO] Installation has completed with%ESC%[91m %ErrNum% error^(s^)%ESC%[96m!
+	echo %ESC%[97m[WARN] Installation has completed with %ErrNum% error^(s^)!
 	echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 	echo.
 	pause
 )
 if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>"%LogName%"
-if %ErrNum% EQU 0 echo. & echo %ESC%[96m[INFO] Installation has completed successfully!%ESC%[0m
+if %ErrNum% EQU 0 echo. & echo %ESC%[97m[INFO] Installation has completed successfully!%ESC%[0m
 echo.
 pause
 cls
 call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
-echo  %ESC%[97m- Now, reboot your phone.%ESC%[0m
+echo  %ESC%[0m- Now, reboot your phone.%ESC%[0m
 
 if /i "%Dualboot%" EQU "Y" (
 	if "%HasCameraBtn%" EQU "1" (
-		echo  %ESC%[97m- At the boot menu, press volume up / down to move selection %ESC%[0m
-		echo  %ESC%[97m  then press the camera key to select.%ESC%[0m
+		echo  %ESC%[0m- At the boot menu, press volume up / down to move selection %ESC%[0m
+		echo  %ESC%[0m  then press the camera key to select.%ESC%[0m
 	) else (
-		echo  %ESC%[97m- At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
+		echo  %ESC%[0m- At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
 	)
 )
 
-echo  %ESC%[97m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
-echo  %ESC%[97m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
-echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
+echo  %ESC%[0m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
+echo  %ESC%[0m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
+echo  %ESC%[0m  as administrator to finish installation.%ESC%[0m
 echo.
 pause
 exit /b
