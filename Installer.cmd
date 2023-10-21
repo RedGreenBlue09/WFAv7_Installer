@@ -76,7 +76,7 @@ goto Disclaimer
 ::---------------------------------------------------------------
 :PrintLabel
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.0%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.1%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -87,7 +87,7 @@ goto :EOF
 :Disclaimer
 cls
 color 07
-title Windows 10 for ARMv7 Installer 3.0
+title Windows 10 for ARMv7 Installer 3.1
 echo.
 echo.
 echo                            %ESC%[97m%ESC%[1mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m

@@ -1,4 +1,4 @@
-# Windows 10 for ARMv7 Installer 3.0
+# Windows 10 for ARMv7 Installer
 ![1](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c22aa1d2-8790-4142-a018-c3eee25076d2 "Disclaimer screen")
 
 ## Disclaimer
