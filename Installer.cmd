@@ -179,15 +179,14 @@ if /i "%Dualboot%" NEQ "Y" if /i "%Dualboot%" NEQ "N" goto Dualboot
 cls
 call :PrintLabel
 echo %ESC%[92m PREPARATION:
-echo   - Read README.TXT and instruction before using this Installer.
-echo   - Close all programs during installation.
+echo   - Read README.md and instruction before using this Installer.
 echo   - Make sure your phone have enough battery for this installation.
 echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
 echo   * Highly recommend you to flash the original FFU before installation.
 if /i "%Dualboot%" EQU "Y" echo   * %ESC%[4m6.0 GB%ESC%[0m%ESC%[92m of empty phone storage is required.
-if /i "%Dualboot%" EQU "N" echo   * This will permanently remove Windows Phone.%ESC%[0m
 echo %ESC%[0m
 echo %ESC%[95m WARNING:
+if /i "%Dualboot%" EQU "N" echo   * This will permanently remove Windows Phone.
 echo   * After pressing any key, the installation process will begin.
 echo     This cannot be cancelled properly which may cause damage to your device.
 echo   * If you want to cancel the installation, close this console RIGHT NOW.
@@ -427,6 +426,7 @@ echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>"%LogName%"
 echo ## Data PN is %PartitionNumberData% ## >>"%LogName%"
 echo ## Dualboot is %Dualboot% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "Y" echo ## Win10SizeMB is %Win10SizeMB% ## >>"%LogName%"
+if /i "%Dualboot%" EQU "N" echo ## ChargeThreshold is %ChargeThreshold% ## >>"%LogName%"
 
 echo %ESC%[96m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f /x %MainOS%\Data %Logger%
@@ -576,7 +576,7 @@ if /i "%Dualboot%" EQU "N" (
 )
 
 :: Charge threshold
-if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%bcdLoc%" /set {globalsettings} %ChargeThreshold% %Logger%
+if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%bcdLoc%" /set {globalsettings} "chargethreshold" %ChargeThreshold% %Logger%
 
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
