@@ -624,17 +624,18 @@ pause
 exit /B
 
 :MissionCompleted
+echo.
 if %ErrNum% GTR 0 (
 	echo #### INSTALLATION COMPLETED WITH ERROR^(S^) #### >>"%LogName%"
-	echo %ESC%[97m[WARN] Installation has completed with %ErrNum% error^(s^)!
+	echo %ESC%[93m[WARN] Installation has completed with %ErrNum% error^(s^)!
 	echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
-	echo.
-	pause
+) else (
+	echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>"%LogName%"
+	echo %ESC%[97m[INFO] Installation has completed successfully!%ESC%[0m
 )
-if %ErrNum% EQU 0 echo #### INSTALLATION COMPLETED SUCCESSFULLY #### >>"%LogName%"
-if %ErrNum% EQU 0 echo. & echo %ESC%[97m[INFO] Installation has completed successfully!%ESC%[0m
 echo.
 pause
+
 cls
 call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
