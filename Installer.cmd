@@ -230,14 +230,7 @@ pause
 goto ChooseDev
 ::---------------------------------------------------------------
 
-:MOSAutoDetectFail
-
-del Temp\GPT* 2>nul
-echo %ESC%[91m Unable to auto detect MainOS.%ESC%[0m
-goto MOSPath
-
 :MOSAutoDetect
-
 cls
 call :PrintLabel
 echo %ESC%[96m Trying to detect MainOS ...%ESC%[91m
@@ -262,10 +255,13 @@ for /l %%i in (0,1,47) do (
 	del Temp\GPT-PartName
 	del Temp\GPT-PartEntry
 )
-goto MOSAutoDetectFail
+
+:MOSAutoDetectFail
+del Temp\GPT* 2>nul
+echo %ESC%[91m Unable to auto detect MainOS.%ESC%[0m
+goto MOSPath
 
 :PartitionNumber
-
 Files\dsfo Temp\GPT-PartEntry 16 16 Temp\GPT-PartUUID >nul
 for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' ' 2>$null"`) do set "UuidHex=%%g"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
@@ -325,7 +321,9 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%i"
 :: TODO: ERROR HANDLING & LOGGING
 
-if /i "%Dualboot%" EQU "N" goto ChargeThresholdPrompt
+if /i "%Dualboot%" EQU "N" call :ChargeThresholdPrompt
+if /i "%Dualboot%" EQU "Y" call :StorageSpace
+goto LogNameInit
 
 :StorageSpace
 set "Win10SizeMB="
@@ -353,6 +351,7 @@ if %Win10SizeMB% GTR %FreeSpace% (
 	echo  %ESC%[91mYou only have %FreeSpace% MB of storage space.%ESC%[0m
 	goto StorageSpace
 )
+goto :EOF
 
 :ChargeThresholdPrompt
 set "ChargeThreshold="
@@ -368,8 +367,7 @@ echo "%ChargeThreshold%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" >nul || (
 if %ChargeThreshold% GTR 99 (
 	goto ChargeThresholdPrompt
 )
-
-goto LogNameInit
+goto :EOF
 
 ::--------------------------------------------------------------- INSTALL PROCESS
 
