@@ -566,7 +566,7 @@ if /i "%Dualboot%" EQU "N" (
 	Files\bcdedit /store "%bcdLoc%" /set {default} description "Windows Phone" %Logger%
 	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
 
-	if "%HasCameraBtn%" EQU "1" (
+	if %HasCameraBtn% EQU 1 (
 		Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
 	) else (
 		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} customactions 0x1000048000001 0x54000001 0x1000050000001 0x54000002 %Logger%
@@ -642,7 +642,7 @@ echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
 echo  %ESC%[0m- Now, reboot your phone.%ESC%[0m
 
 if /i "%Dualboot%" EQU "Y" (
-	if "%HasCameraBtn%" EQU "1" (
+	if %HasCameraBtn% EQU 1 (
 		echo  %ESC%[0m- At the boot menu, press volume up / down to move selection %ESC%[0m
 		echo  %ESC%[0m  then press the camera key to select.%ESC%[0m
 	) else (
