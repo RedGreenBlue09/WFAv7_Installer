@@ -70,7 +70,7 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 
 ## Credits
 
-	Microsoft Comporation        : Windows and other tools
+	Microsoft Corporation        : Windows and other tools
 	Heathcliff74 (Rene Lergner)  : WPinternals
 	WOA-Project                  : Inf drivers
 	TortoiseSVN project          : SVN
