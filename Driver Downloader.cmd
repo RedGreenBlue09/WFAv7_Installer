@@ -2,32 +2,24 @@
 :: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
 
 @echo off
+setlocal EnableDelayedExpansion
 cd /D "%~dp0"
-for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /ri "REG_SZ"') do set "WinBuild=%%a"
-if %WinBuild% LSS 9600 (
-	title ERROR!
-	color 0c
-	echo ----------------------------------------------------------------
-	echo   This Windows version is not supported by WFAv7 Installer.
-	echo   Please use Windows 8.1+ ^(Build 9600+^) 
-	echo   Current OS build: %WinBuild%
-	pause
-	exit
-)
 
+for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set "WinBuild=%%a"
 if %WinBuild% LSS 10586 (
 	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
-title WFAv7 Driver Downloader 3.7
+
+title WFAv7 Driver Downloader 3.8
 set "ESC="
 
+::------------------------------------------------------------------
 :ChooseDev
-cd /D "%~dp0"
 set "Model="
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.7%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.8%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -65,144 +57,124 @@ if /I "%Model%" EQU "C" (goto DoDownload)
 goto ChooseDev
 
 ::------------------------------------------------------------------
-:: Constants
-
 :DoDownload
-
-:: Exe
 
 set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
 set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
 
 cls
-color 0b
-
-:: Get latest release
-::set "Tag=v2111.1"
-::goto Models
+color 0f
+if not exist Drivers\ md Drivers\
 
 echo Getting release tags ...
+"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/ >Drivers\Tags.txt || (
+	del Drivers\Tags.txt
+	goto DownloadFailed
+)
 
-for /f "usebackq" %%A in (`"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/`) do (
+:: The last line is the latest tag
+for /f %%A in (Drivers\Tags.txt) do (
 	set "Tag=%%A"
 )
-set "Tag=%Tag:~0,-1%"
-:: Remove / at the end
 
-: Models
+:: Remove / at the end
+set "Tag=%Tag:~0,-1%"
+
+del Drivers\Tags.txt
+
+:: Models
 
 set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
-set "DefDirLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/definitions"
+set "RepoRawLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%"
 
 if "%Model%" EQU "1" (
-	set "DrvDir=Lumia930"
-	set "DefLink=%DefDirLink%/930.txt"
-	set "Def=930.txt"
+	set "ModelDir=Lumia930"
+	set "DefName=930.txt"
 )
 if "%Model%" EQU "2" (
-	set "DrvDir=LumiaIcon"
-	set "DefLink=%DefDirLink%/icon.txt"
-	set "Def=icon.txt"
+	set "ModelDir=LumiaIcon"
+	set "DefName=icon.txt"
 )
 if "%Model%" EQU "3" (
-	set "DrvDir=Lumia1520"
-	set "DefLink=%DefDirLink%/1520upsidedown.txt"
-	set "Def=1520upsidedown.txt"
+	set "ModelDir=Lumia1520"
+	set "DefName=1520upsidedown.txt"
 )
 if "%Model%" EQU "4" (
-	set "DrvDir=Lumia1520-AT&T"
-	set "DefLink=%DefDirLink%/1520attupsidedown.txt"
-	set "Def=1520attupsidedown.txt"
+	set "ModelDir=Lumia1520-AT&T"
+	set "DefName=1520attupsidedown.txt"
 )
 if "%Model%" EQU "5" (
-	set "DrvDir=Lumia830"
-	set "DefLink=%DefDirLink%/830.txt"
-	set "Def=830.txt"
+	set "ModelDir=Lumia830"
+	set "DefName=830.txt"
 )
 if "%Model%" EQU "6" (
-	set "DrvDir=Lumia735"
-	set "DefLink=%DefDirLink%/735.txt"
-	set "Def=735.txt"
+	set "ModelDir=Lumia735"
+	set "DefName=735.txt"
 )
 if "%Model%" EQU "7" (
-	set "DrvDir=Lumia650"
-	set "DefLink=%DefDirLink%/650.txt"
-	set "Def=650.txt"
+	set "ModelDir=Lumia650"
+	set "DefName=650.txt"
 )
 if "%Model%" EQU "8" (
-	set "DrvDir=Lumia640XL"
-	set "DefLink=%DefDirLink%/640xl.txt"
-	set "Def=640xl.txt"
+	set "ModelDir=Lumia640XL"
+	set "DefName=640xl.txt"
 )
 if "%Model%" EQU "9" (
-	set "DrvDir=Lumia640XL-AT&T"
-	set "DefLink=%DefDirLink%/640xlatt.txt"
-	set "Def=640xlatt.txt"
+	set "ModelDir=Lumia640XL-AT&T"
+	set "DefName=640xlatt.txt"
 )
 if /I "%Model%" EQU "A" (
-	set "DrvDir=Lumia520"
-	set "DefLink=%DefDirLink%/520.txt"
-	set "Def=520.txt"
+	set "ModelDir=Lumia520"
+	set "DefName=520.txt"
 )
 if /I "%Model%" EQU "B" (
-	set "DrvDir=Lumia920"
-	set "DefLink=%DefDirLink%/920.txt"
-	set "Def=920.txt"
+	set "ModelDir=Lumia920"
+	set "DefName=920.txt"
 )
 if /I "%Model%" EQU "C" (
-	set "DrvDir=Lumia1020"
-	set "DefLink=%DefDirLink%/1020.txt"
-	set "Def=1020.txt"
+	set "ModelDir=Lumia1020"
+	set "DefName=1020.txt"
 )
 if /I "%Model%" EQU "D" (
-	set "DrvDir=Lumia1020-AT&T"
-	set "DefLink=%DefDirLink%/1020att.txt"
-	set "Def=1020att.txt"
+	set "ModelDir=Lumia1020-AT&T"
+	set "DefName=1020att.txt"
 )
 
 ::------------------------------------------------------------------
 :: Download
 
-setlocal EnableDelayedExpansion
+if exist Drivers\README.md del Drivers\README.md
+echo Downloading README.md ...
+"%Aria2cLoc%" -q -d Drivers\ "%RepoRawLink%/README.md"
 
-:: README
-
-if not exist Drivers\ mkdir Drivers
-cd Drivers\
-if not exist README.md "%Aria2cLoc%" -q "https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%/README.md"
-
-:: Delete old drivers
-
-set "Errors=0"
-if exist "%DrvDir%\" (
+if exist "Drivers\%ModelDir%\" (
 	echo Removing old drivers ...
-	rd /s /q "%DrvDir%\"
+	rd /s /q "Drivers\%ModelDir%\"
 )
 
-:: Download drivers
-
-md "%DrvDir%"
+md "Drivers\%ModelDir%"
 echo Downloading definition file ...
-"%Aria2cLoc%" -q -d "%DrvDir%" "%DefLink%"
+"%Aria2cLoc%" -q -d "Drivers\%ModelDir%" "%RepoRawLink%/definitions/%DefName%" || goto DownloadFailed
 
-for /f "tokens=* usebackq" %%A in ("%DrvDir%\%Def%") do (
-	set "Drv=%%A"
-	set "DrvLink=!Drv:\=/!"
-	title Downloading "%%A" package ...
-	echo Downloading "%%A" package ...
-	"%SVNLoc%" export "%RepoSvnLink%!DrvLink!" "%DrvDir%\%%A" >nul || (
-		set /a "Errors+=1"
-	)
+:: Download each packages
+
+for /f "tokens=* usebackq" %%A in ("Drivers\%ModelDir%\%DefName%") do (
+	set "PkgPath=%%A"
+	set "PkgLink=!PkgPath:\=/!"
+	echo Downloading "!PkgPath!" package ...
+	"%SVNLoc%" export "%RepoSvnLink%!PkgLink!" "Drivers\%ModelDir%\!PkgPath!" >nul || goto DownloadFailed
 )
 
-:: Reset
-
-set "DrvDir="
-set "DefLink="
-set "Def="
-
-echo.
 color 0a
-echo Download completed with %Errors% error(s).
+echo.
+echo Drivers have been downloaded successfully.
+pause
+goto ChooseDev
+
+:DownloadFailed
+
+color 0c
+echo.
+echo Failed to download drivers.
 pause
 goto ChooseDev
