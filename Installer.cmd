@@ -321,6 +321,7 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 
 if /i "%Dualboot%" EQU "N" call :ChargeThresholdPrompt
 if /i "%Dualboot%" EQU "Y" call :StorageSpace
+call :KernelDebugPrompt
 goto LogNameInit
 
 :StorageSpace
@@ -349,6 +350,20 @@ if %Win10SizeMB% GTR %FreeSpace% (
 	echo  %ESC%[91mYou only have %FreeSpace% MB of storage space.%ESC%[0m
 	goto StorageSpace
 )
+goto :EOF
+
+:KernelDebugPrompt
+set "DebugEnabled="
+set /p "DebugEnabled=%ESC%[96m Enable kernel debug? [Y/N] (Default: N) %ESC%[0m"
+if not defined DebugEnabled (
+	set "DebugEnabled=N"
+	goto :EOF
+)
+set "DebugEnabled=%DebugEnabled:"=%"
+
+if /i "%DebugEnabled%" NEQ "N" (
+	if /i "%DebugEnabled%" NEQ "Y" goto KernelDebugPrompt
+) 
 goto :EOF
 
 :ChargeThresholdPrompt
@@ -553,7 +568,12 @@ Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "winpe" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
 Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "debug" Yes %Logger%
+
+if /i "%DebugEnabled%" EQU "N" (
+	Files\bcdedit /store "%bcdLoc%" /set %id% "debug" No %Logger%
+) else (
+	Files\bcdedit /store "%bcdLoc%" /set %id% "debug" Yes %Logger%
+)
 
 Files\bcdedit /store "%bcdLoc%" /set {dbgsettings} "debugtype" USB %Logger%
 Files\bcdedit /store "%bcdLoc%" /set {dbgsettings} "targetname" "WOATARGET" %Logger%
