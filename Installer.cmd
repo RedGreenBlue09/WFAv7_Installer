@@ -145,33 +145,21 @@ set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
-if "%Model%" EQU "1" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
-if "%Model%" EQU "2" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
-if "%Model%" EQU "3" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
-if "%Model%" EQU "4" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
-if "%Model%" EQU "5" set "DevSpec=B" & set "HasCameraBtn=1" & goto Dualboot
-if "%Model%" EQU "6" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot8
-if "%Model%" EQU "7" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot
-if "%Model%" EQU "8" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot8
-if "%Model%" EQU "9" set "DevSpec=B" & set "HasCameraBtn=0" & goto Dualboot8
-if /i "%Model%" EQU "A" set "DevSpec=A" & set "HasCameraBtn=0" & goto Dualboot8
-if /i "%Model%" EQU "B" set "DevSpec=A" & set "HasCameraBtn=1" & goto Dualboot
-if /i "%Model%" EQU "C" set "DevSpec=A" & set "HasCameraBtn=1" & goto Dualboot
-if /i "%Model%" EQU "D" set "DevSpec=A" & set "HasCameraBtn=1" & goto Dualboot
+if "%Model%" EQU "1" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "2" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "3" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "4" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "5" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "6" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
+if "%Model%" EQU "7" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "8" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
+if "%Model%" EQU "9" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
+if /i "%Model%" EQU "A" set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
+if /i "%Model%" EQU "B" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if /i "%Model%" EQU "C" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if /i "%Model%" EQU "D" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
 goto ChooseDev
 
-::---------------------------------------------------------------
-:Dualboot8
-set "Dualboot=N"
-goto Preparation
-
-:Dualboot
-cls
-call :PrintLabel
-set /p "Dualboot=%ESC%[97m Use dualboot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
-if not defined Dualboot goto Dualboot
-set "DualBoot=%DualBoot:"=%"
-if /i "%Dualboot%" NEQ "Y" if /i "%Dualboot%" NEQ "N" goto Dualboot
 
 ::---------------------------------------------------------------
 :Preparation
@@ -182,13 +170,6 @@ echo   - Read README.md and instruction before using this Installer.
 echo   - Make sure your phone have enough battery for this installation.
 echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
 echo   * Highly recommend you to flash the original FFU before installation.
-if /i "%Dualboot%" EQU "Y" echo   * %ESC%[4m6.0 GB%ESC%[0m%ESC%[97m of empty phone storage is required.
-echo %ESC%[0m
-echo %ESC%[93m WARNING:
-if /i "%Dualboot%" EQU "N" echo   * This will permanently remove Windows Phone.
-echo   * After pressing any key, the installation process will begin.
-echo     This cannot be cancelled properly which may cause damage to your device.
-echo   * If you want to cancel the installation, close this console RIGHT NOW.
 echo %ESC%[0m
 pause
 
@@ -281,7 +262,7 @@ goto Win10MountCheck
 
 :MOSPath
 set "MainOS="
-set /p "MainOS=%ESC%[96m Enter MainOS Path: %ESC%[0m"
+set /p "MainOS=%ESC%[97m Enter MainOS Path: %ESC%[0m"
 if not defined MainOS goto MOSPath
 set "MainOS=%MainOS:"=%"
 
@@ -303,8 +284,8 @@ set "DLMOS=%MainOS:~0,-1%"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber 2>$null"') do set "DiskNumber=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber 2>$null"') do set "PartitionNumber=%%i"
 goto Win10MountCheck
-::---------------------------------------------------------------
 
+::---------------------------------------------------------------
 :Win10MountCheck
 if exist "%MainOS%\Windows10\" (
 	echo %ESC%[91m Please remove/rename %MainOS%\Windows10.%ESC%[0m
@@ -319,25 +300,50 @@ for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%i"
 :: TODO: ERROR HANDLING & LOGGING
 
+::---------------------------------------------------------------
+:: Prompts
+if %LargeStorage% EQU 1 (
+	call :DualbootPrompt
+) else (
+	set "Dualboot=N"
+)	
 if /i "%Dualboot%" EQU "N" call :ChargeThresholdPrompt
-if /i "%Dualboot%" EQU "Y" call :StorageSpace
+if /i "%Dualboot%" EQU "Y" call :StorageSpacePrompt
 call :KernelDebugPrompt
-goto LogNameInit
 
-:StorageSpace
+echo.
+echo %ESC%[93m WARNING:
+if /i "%Dualboot%" EQU "N" echo   * This will permanently remove Windows Phone.
+echo   * After pressing any key, the installation process will begin.
+echo     This cannot be cancelled properly which may cause damage to your device.
+echo   * If you want to cancel the installation, close this console RIGHT NOW.
+echo.
+pause >nul | set /p "=%ESC%[97m Press any key to begin installing ...%ESC%[0m "
+goto BeginInstall
+
+::---------------------------------------------------------------
+:DualbootPrompt
+set /p "Dualboot=%ESC%[97m Use dual-boot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+if not defined Dualboot goto DualbootPrompt
+set "DualBoot=%DualBoot:"=%"
+if /i "%Dualboot%" NEQ "Y" if /i "%Dualboot%" NEQ "N" goto DualbootPrompt
+goto :EOF
+
+::---------------------------------------------------------------
+:StorageSpacePrompt
 set "Win10SizeMB="
-set /p "Win10SizeMB=%ESC%[96m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
-if not defined Win10SizeMB goto StorageSpace
+set /p "Win10SizeMB=%ESC%[97m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
+if not defined Win10SizeMB goto StorageSpacePrompt
 set "Win10SizeMB=%Win10SizeMB:"=%"
 
 echo "%Win10SizeMB%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" >nul || (
 	echo  %ESC%[91mPlease enter a natural number.%ESC%[0m
-	goto StorageSpace
+	goto StorageSpacePrompt
 )
 
 if %Win10SizeMB% LSS 6144 (
 	echo  %ESC%[91mYou need at least 6144 MB for Windows 10 ARM.%ESC%[0m
-	goto StorageSpace
+	goto StorageSpacePrompt
 )
 
 :: For spec A, use Get-PartitionSupportedSize
@@ -348,13 +354,14 @@ if "%DevSpec%" EQU "B" for /f %%i in ('Powershell -C "$Partition = Get-Partition
 if %Win10SizeMB% GTR %FreeSpace% (
 	echo  %ESC%[91mNot enough storage space is available.
 	echo  %ESC%[91mYou only have %FreeSpace% MB of storage space.%ESC%[0m
-	goto StorageSpace
+	goto StorageSpacePrompt
 )
 goto :EOF
 
+::---------------------------------------------------------------
 :KernelDebugPrompt
 set "DebugEnabled="
-set /p "DebugEnabled=%ESC%[96m Enable kernel debug? [Y/N] (Default: N) %ESC%[0m"
+set /p "DebugEnabled=%ESC%[97m Enable kernel debug? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91m%ESC%[4mN%ESC%[0m%ESC%[93m]%ESC%[0m "
 if not defined DebugEnabled (
 	set "DebugEnabled=N"
 	goto :EOF
@@ -366,9 +373,10 @@ if /i "%DebugEnabled%" NEQ "N" (
 ) 
 goto :EOF
 
+::---------------------------------------------------------------
 :ChargeThresholdPrompt
 set "ChargeThreshold="
-set /p "ChargeThreshold=%ESC%[96m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
+set /p "ChargeThreshold=%ESC%[97m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
 if not defined ChargeThreshold goto ChargeThresholdPrompt
 set "ChargeThreshold=%ChargeThreshold:"=%"
 
@@ -382,9 +390,12 @@ if %ChargeThreshold% GTR 99 (
 )
 goto :EOF
 
-::--------------------------------------------------------------- INSTALL PROCESS
+::--------------------------------------------------------------- UNINTERRUPTABLE INSTALL PROCESS
+:BeginInstall
+cls
+call :PrintLabel
 
-:LogNameInit
+:: Generate log file name
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ md Logs
 cd Logs
