@@ -66,6 +66,9 @@ cls
 color 0f
 if not exist Drivers\ md Drivers\
 
+set "Tag=2209.36"
+goto Models
+
 echo Getting release tags ...
 "%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/ >Drivers\Tags.txt || (
 	del Drivers\Tags.txt
@@ -82,7 +85,7 @@ set "Tag=%Tag:~0,-1%"
 
 del Drivers\Tags.txt
 
-:: Models
+:Models
 
 set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
 set "RepoRawLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%"
