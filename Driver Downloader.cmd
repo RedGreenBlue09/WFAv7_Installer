@@ -10,7 +10,7 @@ if %WinBuild% LSS 10586 (
 	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
 
-title WFAv7 Driver Downloader 3.8
+title WFAv7 Driver Downloader 4.0
 set "ESC="
 
 ::------------------------------------------------------------------
@@ -19,7 +19,7 @@ set "Model="
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 3.8%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 4.0%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -59,113 +59,136 @@ goto ChooseDev
 ::------------------------------------------------------------------
 :DoDownload
 
-set "SVNLoc=%~dp0\Files\DownloaderFiles\svn"
-set "Aria2cLoc=%~dp0\Files\DownloaderFiles\aria2c"
-
 cls
-color 0f
 if not exist Drivers\ md Drivers\
 
-echo Getting release tags ...
-"%SVNLoc%" ls https://github.com/WOA-Project/Lumia-Drivers/tags/ >Drivers\Tags.txt || (
-	del Drivers\Tags.txt
-	goto DownloadFailed
-)
-
-:: The last line is the latest tag
-for /f %%A in (Drivers\Tags.txt) do (
-	set "Tag=%%A"
-)
-
-:: Remove / at the end
-set "Tag=%Tag:~0,-1%"
-
-del Drivers\Tags.txt
-
+:: TODO: Fetch latest tag
+set "Tag=v2401.16"
 :: Models
 
-set "RepoSvnLink=https://github.com/WOA-Project/Lumia-Drivers/tags/%Tag%"
-set "RepoRawLink=https://raw.githubusercontent.com/WOA-Project/Lumia-Drivers/%Tag%"
+set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
 
 if "%Model%" EQU "1" (
 	set "ModelDir=Lumia930"
-	set "DefName=930.txt"
+	set "DefName=930.xml"
 )
 if "%Model%" EQU "2" (
 	set "ModelDir=LumiaIcon"
-	set "DefName=icon.txt"
+	set "DefName=icon.xml"
 )
 if "%Model%" EQU "3" (
 	set "ModelDir=Lumia1520"
-	set "DefName=1520upsidedown.txt"
+	set "DefName=1520upsidedown.xml"
 )
 if "%Model%" EQU "4" (
 	set "ModelDir=Lumia1520-AT&T"
-	set "DefName=1520attupsidedown.txt"
+	set "DefName=1520attupsidedown.xml"
 )
 if "%Model%" EQU "5" (
 	set "ModelDir=Lumia830"
-	set "DefName=830.txt"
+	set "DefName=830.xml"
 )
 if "%Model%" EQU "6" (
 	set "ModelDir=Lumia735"
-	set "DefName=735.txt"
+	set "DefName=735.xml"
 )
 if "%Model%" EQU "7" (
 	set "ModelDir=Lumia650"
-	set "DefName=650.txt"
+	set "DefName=650.xml"
 )
 if "%Model%" EQU "8" (
 	set "ModelDir=Lumia640XL"
-	set "DefName=640xl.txt"
+	set "DefName=640xl.xml"
 )
 if "%Model%" EQU "9" (
 	set "ModelDir=Lumia640XL-AT&T"
-	set "DefName=640xlatt.txt"
+	set "DefName=640xlatt.xml"
 )
 if /I "%Model%" EQU "A" (
 	set "ModelDir=Lumia520"
-	set "DefName=520.txt"
+	set "DefName=520.xml"
 )
 if /I "%Model%" EQU "B" (
 	set "ModelDir=Lumia920"
-	set "DefName=920.txt"
+	set "DefName=920.xml"
 )
 if /I "%Model%" EQU "C" (
 	set "ModelDir=Lumia1020"
-	set "DefName=1020.txt"
+	set "DefName=1020.xml"
 )
 if /I "%Model%" EQU "D" (
 	set "ModelDir=Lumia1020-AT&T"
-	set "DefName=1020att.txt"
+	set "DefName=1020att.xml"
 )
 
 ::------------------------------------------------------------------
 :: Download
 
-if exist Drivers\README.md del Drivers\README.md
-echo Downloading README.md ...
-"%Aria2cLoc%" -q -d Drivers\ "%RepoRawLink%/README.md"
+if not exist Temp\ md Temp\
 
 if exist "Drivers\%ModelDir%\" (
 	echo Removing old drivers ...
 	rd /s /q "Drivers\%ModelDir%\"
 )
 
-md "Drivers\%ModelDir%"
+set "InstallerDir=%~dp0"
+set "RepoDir=Drivers\%ModelDir%"
+md "%RepoDir%"
+git clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% --sparse "%RepoLink%" "%RepoDir%"
+
+echo.
 echo Downloading definition file ...
-"%Aria2cLoc%" -q -d "Drivers\%ModelDir%" "%RepoRawLink%/definitions/%DefName%" || goto DownloadFailed
+echo.
+cd "%RepoDir%"
+git config core.ignorecase true
 
-:: Download each packages
+echo>".git\info\sparse-checkout" definitions/%DefName%
+git checkout
+cd "%InstallerDir%"
 
-for /f "tokens=* usebackq" %%A in ("Drivers\%ModelDir%\%DefName%") do (
-	set "PkgPath=%%A"
-	set "PkgLink=!PkgPath:\=/!"
-	echo Downloading "!PkgPath!" package ...
-	"%SVNLoc%" export "%RepoSvnLink%!PkgLink!" "Drivers\%ModelDir%\!PkgPath!" >nul || goto DownloadFailed
+echo.
+echo Enumerating INF files ...
+echo.
+Files\DownloaderFiles\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt
+for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
+	set "InfPath=%%A"
+	set "InfPath=!InfPath:\=/!"
+	echo>>"%RepoDir%\.git\info\sparse-checkout" !InfPath!
 )
 
-color 0a
+echo.
+echo Downloading INF files ...
+echo.
+cd "%RepoDir%"
+git checkout
+cd "%InstallerDir%"
+
+echo.
+echo Enumerating driver source files ...
+echo.
+for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
+	for %%B in ("%%A") do set "InfPathOnly=%%~dpB"
+	:: Convert absolute to relative
+	set "InfPathOnly=!InfPathOnly:*%CD%\=!"
+	
+	Files\DownloaderFiles\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt"
+	for /f "usebackq delims=" %%B in ("Temp\DriverSourceList.txt") do (
+		set "SourcePath=!InfPathOnly!%%B"
+		set "SourcePath=!SourcePath:\=/!"
+		echo>>"%RepoDir%\.git\info\sparse-checkout" !SourcePath!
+	)
+)
+
+if exist "Temp\DriverSourceList.txt" del "Temp\DriverSourceList.txt"
+del "Temp\InfList.txt"
+
+echo.
+echo Downloading driver source files ...
+echo.
+cd "%RepoDir%"
+git checkout
+cd "%InstallerDir%"
+
 echo.
 echo Drivers have been downloaded successfully.
 pause
@@ -173,7 +196,6 @@ goto ChooseDev
 
 :DownloadFailed
 
-color 0c
 echo.
 echo Failed to download drivers.
 pause
