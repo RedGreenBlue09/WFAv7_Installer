@@ -262,6 +262,7 @@ goto Win10MountCheck
 
 :MOSPath
 set "MainOS="
+echo.
 set /p "MainOS=%ESC%[97m Enter MainOS Path: %ESC%[0m"
 if not defined MainOS goto MOSPath
 set "MainOS=%MainOS:"=%"
@@ -281,6 +282,7 @@ if not exist "%MainOS%\Data" (
 )
 set "DLMOS=%MainOS:~0,-1%"
 
+echo %ESC%[97m Getting MainOS infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber 2>$null"') do set "DiskNumber=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber 2>$null"') do set "PartitionNumber=%%i"
 goto Win10MountCheck
@@ -294,7 +296,7 @@ if exist "%MainOS%\Windows10\" (
 )
 
 ::PartitionInfo
-echo %ESC%[97m Getting Partition Infos ...%ESC%[91m
+echo %ESC%[97m Getting partitions' infos ...%ESC%[91m
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber 2>$null"') do set "PartitionNumberDPP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber 2>$null"') do set "PartitionNumberEFIESP=%%i"
 for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%i"
@@ -323,7 +325,9 @@ goto BeginInstall
 
 ::---------------------------------------------------------------
 :DualbootPrompt
-set /p "Dualboot=%ESC%[97m Use dual-boot? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91mN%ESC%[93m]%ESC%[0m "
+set "Dualboot="
+echo.
+set /p "Dualboot=%ESC%[97m Use dual-boot? [Y/N]%ESC%[0m "
 if not defined Dualboot goto DualbootPrompt
 set "DualBoot=%DualBoot:"=%"
 if /i "%Dualboot%" NEQ "Y" if /i "%Dualboot%" NEQ "N" goto DualbootPrompt
@@ -332,6 +336,7 @@ goto :EOF
 ::---------------------------------------------------------------
 :StorageSpacePrompt
 set "Win10SizeMB="
+echo.
 set /p "Win10SizeMB=%ESC%[97m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
 if not defined Win10SizeMB goto StorageSpacePrompt
 set "Win10SizeMB=%Win10SizeMB:"=%"
@@ -361,7 +366,8 @@ goto :EOF
 ::---------------------------------------------------------------
 :KernelDebugPrompt
 set "DebugEnabled="
-set /p "DebugEnabled=%ESC%[97m Enable kernel debug? %ESC%[93m[%ESC%[92mY%ESC%[93m/%ESC%[91m%ESC%[4mN%ESC%[0m%ESC%[93m]%ESC%[0m "
+echo.
+set /p "DebugEnabled=%ESC%[97m Enable kernel debug? [Y/%ESC%[4mN%ESC%[0m%ESC%[97m]%ESC%[0m "
 if not defined DebugEnabled (
 	set "DebugEnabled=N"
 	goto :EOF
@@ -376,6 +382,7 @@ goto :EOF
 ::---------------------------------------------------------------
 :ChargeThresholdPrompt
 set "ChargeThreshold="
+echo.
 set /p "ChargeThreshold=%ESC%[97m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
 if not defined ChargeThreshold goto ChargeThresholdPrompt
 set "ChargeThreshold=%ChargeThreshold:"=%"
