@@ -10,11 +10,6 @@ if %WinBuild% LSS 10586 (
 	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
 
-:: Find git
-where git >nul 2>&1 || (
-	echo Cannot find Git. Please install Git for Windows and add it to PATH.
-)
-
 title WFAv7 Driver Downloader 4.0
 set "ESC="
 
@@ -59,6 +54,7 @@ if "%Model%" EQU "9" (goto DoDownload)
 if /I "%Model%" EQU "A" (goto DoDownload)
 if /I "%Model%" EQU "B" (goto DoDownload)
 if /I "%Model%" EQU "C" (goto DoDownload)
+if /I "%Model%" EQU "D" (goto DoDownload)
 goto ChooseDev
 
 ::------------------------------------------------------------------
@@ -66,11 +62,13 @@ goto ChooseDev
 
 set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
 
+set "GitPath=%~dp0\Files\DownloaderFiles\Git\cmd\git"
+
 cls
 if not exist Drivers\ md Drivers\
 
 echo Fetching latest release tag ...
-git ls-remote --tags "%RepoLink%" >Temp\Tags.txt || (
+"%GitPath%" ls-remote --tags "%RepoLink%" >Temp\Tags.txt || (
 	del Temp\Tags.txt
 	goto DownloadFailed
 )
@@ -152,17 +150,17 @@ if exist "Drivers\%ModelDir%\" (
 set "InstallerDir=%~dp0"
 set "RepoDir=Drivers\%ModelDir%"
 md "%RepoDir%"
-git clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% "%RepoLink%" "%RepoDir%" || goto DownloadFailed
+"%GitPath%" clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% "%RepoLink%" "%RepoDir%" || goto DownloadFailed
 
 echo.
 echo Downloading definition file ...
 echo.
 cd "%RepoDir%"
-git sparse-checkout set --no-cone
-git config core.ignorecase true
+"%GitPath%" sparse-checkout set --no-cone
+"%GitPath%" config core.ignorecase true
 
 echo>".git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
-git checkout || goto DownloadFailed
+"%GitPath%" checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
 echo.
@@ -179,7 +177,7 @@ echo.
 echo Downloading INF files ...
 echo.
 cd "%RepoDir%"
-git checkout || goto DownloadFailed
+"%GitPath%" checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
 echo.
@@ -205,7 +203,7 @@ echo.
 echo Downloading driver source files ...
 echo.
 cd "%RepoDir%"
-git checkout || goto DownloadFailed
+"%GitPath%" checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
 rd /s /q "%RepoDir%\.git\"
