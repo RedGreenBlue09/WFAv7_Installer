@@ -1,0 +1,1 @@
+The source code is always distributed to satisfy its license.

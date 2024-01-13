@@ -17,8 +17,7 @@ net session >nul 2>&1 || (
 )
 ::---------------------------------------------------------------
 
-if exist "Temp\" rd /s /q "Temp\"
-md "Temp"
+if not exist Temp\ md Temp\
 
 :Check2
 title Checking compatibility ...
@@ -37,7 +36,6 @@ echo  - Checking Windows Powershell ...
 Powershell /? >nul 2>&1
 set "PLV=%Errorlevel%"
 if %PLV% NEQ 0 (
-	rd /s /q Temp\
 	echo Powershell cannot be found. Please enable Powershell and try again.
 	echo Error code: %PLV%
 	pause
@@ -60,7 +58,6 @@ del Temp\Commands.txt
 goto SkipMissingCommand
 
 :MissingCommand
-rd /s /q Temp\
 echo Required powershell cmdlets are not found.
 echo Please use Official Windows 8.1 or Windows 10.
 pause
@@ -112,7 +109,6 @@ set /p "Disclaimer=%ESC%[97m   Do you agree with the DISCLAIMER? %ESC%[93m[%ESC%
 if not defined Disclaimer goto Disclaimer
 set "Disclaimer=%Disclaimer:"=%"
 if /i "%Disclaimer%" EQU "N" (
-	rd /s /q Temp\
 	cls
 	call :PrintLabel
 	echo  %ESC%[91mYou MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
@@ -647,7 +643,6 @@ if "%DevSpec%" EQU "A" (
 	)
 )
 
-rd /s /q Temp\
 goto MissionCompleted
 ::---------------------------------------------------------------
 
@@ -655,7 +650,6 @@ goto MissionCompleted
 echo ========================================================= >>"%LogName%"
 echo.
 echo #### INSTALLATION FAILED ####>>"%LogName%"
-rd /s /q Temp\
 echo %ESC%[91m[INFO] Installation is cancelled because a severe error has occurred.
 echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.
