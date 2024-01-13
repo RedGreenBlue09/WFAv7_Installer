@@ -64,14 +64,27 @@ goto ChooseDev
 ::------------------------------------------------------------------
 :DoDownload
 
+set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
+
 cls
 if not exist Drivers\ md Drivers\
 
-:: TODO: Fetch latest tag
-set "Tag=v2401.16"
-:: Models
+echo Fetching latest release tag ...
+git ls-remote --tags "%RepoLink%" >Temp\Tags.txt || (
+	del Temp\Tags.txt
+	goto DownloadFailed
+)
 
-set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
+:: The last line is the latest tag
+for /f "tokens=2 delims=	" %%A in (Temp\Tags.txt) do (
+	set "Tag=%%A"
+)
+del Temp\Tags.txt
+
+:: Remove refs/tags/
+set "Tag=%Tag:~10%"
+
+:: Models
 
 if "%Model%" EQU "1" (
 	set "ModelDir=Lumia930"
