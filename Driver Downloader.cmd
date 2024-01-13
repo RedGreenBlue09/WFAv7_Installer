@@ -139,12 +139,13 @@ if exist "Drivers\%ModelDir%\" (
 set "InstallerDir=%~dp0"
 set "RepoDir=Drivers\%ModelDir%"
 md "%RepoDir%"
-git clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% --sparse "%RepoLink%" "%RepoDir%" || goto DownloadFailed
+git clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% "%RepoLink%" "%RepoDir%" || goto DownloadFailed
 
 echo.
 echo Downloading definition file ...
 echo.
 cd "%RepoDir%"
+git sparse-checkout set --no-cone
 git config core.ignorecase true
 
 echo>".git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
