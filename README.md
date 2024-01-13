@@ -63,27 +63,30 @@ For latest development version, use the green `Code` button, `Download ZIP`.
 Go to [Issues page](https://github.com/RedGreenBlue09/WFAv7_Installer/issues), check if your issue is already reported.  
 If not, open an issue ticket providing detailed information and logs.
 
-## License notice
+## License
 
 Some script files are licensed under the Microsoft Reciprocal License (MS-RL).  
 If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should add the license's content into it.
 
-## Credits
-
-	Microsoft Corporation        : Windows and other tools
-	Heathcliff74 (Rene Lergner)  : WPinternals
-	WOA-Project                  : Inf drivers
-	TortoiseSVN project          : SVN
-	Systola GmbH                 : VhdxTool
-	Dariusz Stanislawek          : dsfo
-	wimlib project               : wimlib-imagex
-	Aria2 project                : aria2c
-	adoxa (Jason Hood)           : ansicon
+## Thanks to
 	
 	RedGreenBlue123 (Me)         : Author of this script
 	Gus33000 (Gustave Monce)     : The main contributor to WOA-Project
+    WOA-Project                  : Inf drivers
 	Windows ARM32 Telegram group : Testing my script
 	fadilfadz01 (Fadil Fadz)     : Helping me write the script
+
+## External softwares included
+
+| Software                 | Author                      | Version                         | Link    |
+|--------------------------|-----------------------------|---------------------------------|---------|
+| bcdedit                  | Microsoft Corporation       | 10.0.18362.1                    | from Windows 10 |
+| bcdedit                  | Microsoft Corporation       | 10.0.19041.1                    | from Windows SDK |
+| VhdxTool                 | Systola GmbH                | 2016.8.19                       | [Systola](https://systola.com/support/kb100005) |
+| dsfo                     | Dariusz Stanislawek         | 1.03                            | [Softpaz](https://www.softpaz.com/software/download-dsfok-windows-7269.htm) |
+| wimlib-imagex            | wimlib project              | 1.14.1                          | [wimlib](https://wimlib.net/index.html) |
+| Git                      | Git for Windows project     | 2.43.0.1 (MinGit busybox)       | [GitHub](https://github.com/git-for-windows/git/releases/tag/v2.43.0.windows.1) |
+| ansicon                  | adoxa (Jason Hood)          | 1.89                            | [GitHub](https://github.com/adoxa/ansicon/releases/tag/v1.89)
 
 ## Screenshots
 
