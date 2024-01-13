@@ -10,6 +10,11 @@ if %WinBuild% LSS 10586 (
 	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
 
+:: Find git
+where git >nul 2>&1 || (
+	echo Cannot find Git. Please install Git for Windows and add it to PATH.
+)
+
 title WFAv7 Driver Downloader 4.0
 set "ESC="
 
@@ -134,7 +139,7 @@ if exist "Drivers\%ModelDir%\" (
 set "InstallerDir=%~dp0"
 set "RepoDir=Drivers\%ModelDir%"
 md "%RepoDir%"
-git clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% --sparse "%RepoLink%" "%RepoDir%"
+git clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% --sparse "%RepoLink%" "%RepoDir%" || goto DownloadFailed
 
 echo.
 echo Downloading definition file ...
@@ -142,14 +147,14 @@ echo.
 cd "%RepoDir%"
 git config core.ignorecase true
 
-echo>".git\info\sparse-checkout" definitions/%DefName%
-git checkout
+echo>".git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
+git checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
 echo.
 echo Enumerating INF files ...
 echo.
-Files\DownloaderFiles\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt
+Files\DownloaderFiles\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt || goto DownloadFailed
 for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	set "InfPath=%%A"
 	set "InfPath=!InfPath:\=/!"
@@ -160,7 +165,7 @@ echo.
 echo Downloading INF files ...
 echo.
 cd "%RepoDir%"
-git checkout
+git checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
 echo.
@@ -171,7 +176,7 @@ for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	:: Convert absolute to relative
 	set "InfPathOnly=!InfPathOnly:*%CD%\=!"
 	
-	Files\DownloaderFiles\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt"
+	Files\DownloaderFiles\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || goto DownloadFailed
 	for /f "usebackq delims=" %%B in ("Temp\DriverSourceList.txt") do (
 		set "SourcePath=!InfPathOnly!%%B"
 		set "SourcePath=!SourcePath:\=/!"
@@ -186,9 +191,10 @@ echo.
 echo Downloading driver source files ...
 echo.
 cd "%RepoDir%"
-git checkout
+git checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
+rd /s /q "%RepoDir%\.git\"
 echo.
 echo Drivers have been downloaded successfully.
 pause
@@ -196,6 +202,8 @@ goto ChooseDev
 
 :DownloadFailed
 
+if exist "Temp\DriverSourceList.txt" del "Temp\DriverSourceList.txt"
+if exist "Temp\InfList.txt" del "Temp\InfList.txt"
 echo.
 echo Failed to download drivers.
 pause
