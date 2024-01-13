@@ -459,6 +459,7 @@ echo ## Data PN is %PartitionNumberData% ## >>"%LogName%"
 echo ## Dualboot is %Dualboot% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "Y" echo ## Win10SizeMB is %Win10SizeMB% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "N" echo ## ChargeThreshold is %ChargeThreshold% ## >>"%LogName%"
+if /i "%Dualboot%" EQU "N" echo ## DebugEnabled is %DebugEnabled% ## >>"%LogName%"
 
 echo %ESC%[97m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f /x %MainOS%\Data %Logger%
