@@ -66,6 +66,7 @@ set "GitPath=%~dp0\Files\DownloaderFiles\Git\cmd\git"
 
 cls
 if not exist Drivers\ md Drivers\
+if not exist Temp\ md Temp\
 
 echo Fetching latest release tag ...
 "%GitPath%" ls-remote --tags "%RepoLink%" >Temp\Tags.txt || (
