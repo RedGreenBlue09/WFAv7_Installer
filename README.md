@@ -91,6 +91,8 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 | VhdxTool       | Systola GmbH                | 2016.8.19                       | [Systola](https://systola.com/support/kb100005) |
 | wimlib-imagex  | wimlib project              | 1.14.1                          | [wimlib](https://wimlib.net/index.html) |
 
+Source code for some of these softwares are available under `Files/Source code`.
+
 ## Screenshots
 
 ![1](https://github.com/RedGreenBlue09/WFAv7_Installer/assets/59783856/c22aa1d2-8790-4142-a018-c3eee25076d2 "Disclaimer screen")
