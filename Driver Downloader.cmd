@@ -148,18 +148,23 @@ if exist "Drivers\%ModelDir%\" (
 	rd /s /q "Drivers\%ModelDir%\"
 )
 
+echo.
+echo Setting up the repository...
+echo.
 set "InstallerDir=%~dp0"
 set "RepoDir=Drivers\%ModelDir%"
 md "%RepoDir%"
 "%GitPath%" clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% "%RepoLink%" "%RepoDir%" || goto DownloadFailed
 
+cd "%RepoDir%"
+"%GitPath%" sparse-checkout set --no-cone
+"%GitPath%" config core.ignorecase true
+cd "%InstallerDir%"
+
 echo.
 echo Downloading definition file ...
 echo.
 cd "%RepoDir%"
-"%GitPath%" sparse-checkout set --no-cone
-"%GitPath%" config core.ignorecase true
-
 echo>".git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
 "%GitPath%" checkout || goto DownloadFailed
 cd "%InstallerDir%"
