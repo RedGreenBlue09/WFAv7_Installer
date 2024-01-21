@@ -85,7 +85,7 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 | DISM           | Microsoft Corporation       | 10.0.19041.1                    | from Windows ADK |
 | DriverDefPaths | RedGreenBlue09              | 0.0.1                           | [Github](https://github.com/RedGreenBlue09/DriverDefPaths/releases/tag/0.0.1) |
 | Elevate        | RedGreenBlue09              |                                 | [Github](https://gist.github.com/RedGreenBlue09/beb75798eac3f7883848dd0a54304a2e) |
-| GetDriverFiles | RedGreenBlue09              | 0.0.1                           | [Github](https://github.com/RedGreenBlue09/GetDriverFiles/releases/tag/0.0.1) |
+| GetDriverFiles | RedGreenBlue09              | 0.1.0                           | [Github](https://github.com/RedGreenBlue09/GetDriverFiles/releases/tag/0.1.0) |
 | Git            | Git for Windows project     | 2.43.0.1 (MinGit busybox)       | [GitHub](https://github.com/git-for-windows/git/releases/tag/v2.43.0.windows.1) |
 | dsfo           | Dariusz Stanislawek         | 1.03                            | [Softpaz](https://www.softpaz.com/software/download-dsfok-windows-7269.htm) |
 | VhdxTool       | Systola GmbH                | 2016.8.19                       | [Systola](https://systola.com/support/kb100005) |
