@@ -138,8 +138,28 @@ if /I "%Model%" EQU "D" (
 	set "DefName=1020att.xml"
 )
 
+goto Download
+
 ::------------------------------------------------------------------
-:: Download
+:FilePathOnly
+set "MyPath2=%MyPath:/=\%"
+set "MyPath2=%MyPath2: =/%"
+set "MyPath2="%MyPath2:\=" "%""
+set "Output="
+set "Output2="
+for %%A in (%MyPath2%) do (
+	set "Line=%%~A"
+	if "!Line!" NEQ "" (
+		set "Output=!Output2!"
+		set "Output2=!Output2!!Line:/= !\"
+	)
+)
+:: Edge case: trailing slash
+if "%Line%" EQU "" set "Output=%Output2%"
+goto :EOF
+
+::------------------------------------------------------------------
+:Download
 
 if not exist Temp\ md Temp\
 
@@ -190,9 +210,9 @@ echo.
 echo Enumerating driver source files ...
 echo.
 for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
-	for %%B in ("%%A") do set "InfPathOnly=%%~dpB"
-	:: Convert absolute to relative
-	set "InfPathOnly=!InfPathOnly:*%CD%\=!"
+	set "MyPath=%%A"
+	call :FilePathOnly
+	set "InfPathOnly=!Output!"
 	
 	Files\DownloaderFiles\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || goto DownloadFailed
 	for /f "usebackq delims=" %%B in ("Temp\DriverSourceList.txt") do (
