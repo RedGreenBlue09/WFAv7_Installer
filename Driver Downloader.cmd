@@ -192,7 +192,10 @@ cd "%InstallerDir%"
 echo.
 echo Enumerating INF files ...
 echo.
-Files\DownloaderFiles\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt || goto DownloadFailed
+Files\DownloaderFiles\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt || (
+	del Temp\InfList.txt
+	goto DownloadFailed
+)
 for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	set "InfPath=%%A"
 	set "InfPath=!InfPath:\=/!"
@@ -214,7 +217,11 @@ for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	call :FilePathOnly
 	set "InfPathOnly=!Output!"
 	
-	Files\DownloaderFiles\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || goto DownloadFailed
+	Files\DownloaderFiles\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || (
+		del Temp\DriverSourceList.txt
+		del Temp\InfList.txt
+		goto DownloadFailed
+	)
 	for /f "usebackq delims=" %%B in ("Temp\DriverSourceList.txt") do (
 		set "SourcePath=!InfPathOnly!%%B"
 		set "SourcePath=!SourcePath:\=/!"
@@ -232,6 +239,7 @@ cd "%RepoDir%"
 "%GitPath%" checkout || goto DownloadFailed
 cd "%InstallerDir%"
 
+::------------------------------------------------------------------
 rd /s /q "%RepoDir%\.git\"
 echo.
 echo Drivers have been downloaded successfully.
@@ -239,9 +247,6 @@ pause
 goto ChooseDev
 
 :DownloadFailed
-
-if exist "Temp\DriverSourceList.txt" del "Temp\DriverSourceList.txt"
-if exist "Temp\InfList.txt" del "Temp\InfList.txt"
 echo.
 echo Failed to download drivers.
 pause
