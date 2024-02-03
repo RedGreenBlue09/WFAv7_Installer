@@ -83,7 +83,7 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 | ansicon        | adoxa (Jason Hood)          | 1.89                            | [GitHub](https://github.com/adoxa/ansicon/releases/tag/v1.89) |
 | bcdedit        | Microsoft Corporation       | 10.0.18362.1                    | from Windows 10 |
 | DISM           | Microsoft Corporation       | 10.0.19041.1                    | from Windows ADK |
-| DriverDefPaths | RedGreenBlue09              | 0.0.1                           | [Github](https://github.com/RedGreenBlue09/DriverDefPaths/releases/tag/0.0.1) |
+| DriverDefPaths | RedGreenBlue09              | 0.0.2                           | [Github](https://github.com/RedGreenBlue09/DriverDefPaths/releases/tag/0.0.2) |
 | Elevate        | RedGreenBlue09              |                                 | [Github](https://gist.github.com/RedGreenBlue09/beb75798eac3f7883848dd0a54304a2e) |
 | GetDriverFiles | RedGreenBlue09              | 0.2                             | [Github](https://github.com/RedGreenBlue09/GetDriverFiles/releases/tag/0.2) |
 | Git            | Git for Windows project     | 2.43.0.1 (MinGit busybox)       | [GitHub](https://github.com/git-for-windows/git/releases/tag/v2.43.0.windows.1) |
