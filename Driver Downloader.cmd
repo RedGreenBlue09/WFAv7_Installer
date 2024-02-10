@@ -179,6 +179,7 @@ md "%RepoDir%"
 cd "%RepoDir%"
 "%GitPath%" sparse-checkout set --no-cone
 "%GitPath%" config core.ignorecase true
+"%GitPath%" config core.autocrlf false
 cd "%InstallerDir%"
 
 echo.
