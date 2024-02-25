@@ -441,6 +441,7 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
 set "StartTime=%Time%"
 echo.
 echo %ESC%[97m[INFO] Installation was started at %StartTime%
+echo #### Windows 10 for ARMv7 Installer 3.1.2 #### >>"%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
 echo ## Device is %Model%  ## >>"%LogName%"
@@ -449,6 +450,7 @@ echo. >>"%LogName%"
 if not exist Temp\ md Temp\
 
 echo ## MainOS DriveLetter is %MainOS% ## >>"%LogName%"
+echo ## Disk number is %DiskNumber% ## >>"%LogName%"
 echo ## DPP PN is %PartitionNumberDPP% ## >>"%LogName%"
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>"%LogName%"
 echo ## Data PN is %PartitionNumberData% ## >>"%LogName%"
@@ -538,8 +540,8 @@ if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
 echo %ESC%[97m[INFO] Mounting EFIESP and DPP ...%ESC%[91m
-md %Win10Drive%\EFIESP
-md %Win10Drive%\DPP
+md %Win10Drive%\EFIESP %Logger%
+md %Win10Drive%\DPP %Logger%
 echo>Temp\diskpart1.txt sel dis %DiskNumber%
 echo>>Temp\diskpart1.txt sel par %PartitionNumberEFIESP%
 echo>>Temp\diskpart1.txt assign mount=%Win10Drive%\EFIESP
