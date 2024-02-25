@@ -161,8 +161,6 @@ goto :EOF
 ::------------------------------------------------------------------
 :Download
 
-if not exist Temp\ md Temp\
-
 if exist "Drivers\%ModelDir%\" (
 	echo Removing old drivers ...
 	rd /s /q "Drivers\%ModelDir%\"

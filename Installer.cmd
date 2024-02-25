@@ -674,20 +674,20 @@ pause
 cls
 call :PrintLabel
 echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
-echo  %ESC%[0m- Now, reboot your phone.%ESC%[0m
+echo  %ESC%[97m- Now, reboot your phone.%ESC%[0m
 
 if /i "%Dualboot%" EQU "Y" (
 	if %HasCameraBtn% EQU 1 (
-		echo  %ESC%[0m- At the boot menu, press volume up / down to move selection %ESC%[0m
-		echo  %ESC%[0m  then press the camera key to select.%ESC%[0m
+		echo  %ESC%[97m- At the boot menu, press volume up / down to move selection %ESC%[0m
+		echo  %ESC%[97m  then press the camera key to select.%ESC%[0m
 	) else (
-		echo  %ESC%[0m- At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
+		echo  %ESC%[97m- At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
 	)
 )
 
-echo  %ESC%[0m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
-echo  %ESC%[0m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
-echo  %ESC%[0m  as administrator to finish installation.%ESC%[0m
+echo  %ESC%[97m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
+echo  %ESC%[97m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
+echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
 echo.
 pause
 exit /b
