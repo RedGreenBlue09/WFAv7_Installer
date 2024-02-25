@@ -515,7 +515,7 @@ format %Win10Drive% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
 echo ========================================================= >>"%LogName%"
 echo %ESC%[97m[INFO] Installing Windows 10 ARM ...%ESC%[91m
 if %WinBuild% LSS 10240 (
-	Files\wimlib-imagex apply install.wim 1 %Win10Drive%\ --compact=lzx %SevLogger%
+	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%Win10Drive%\ %SevLogger%
 ) else (
 	Files\DISM\dism /Apply-Image /ImageFile:".\install.wim" /Index:1 /ApplyDir:%Win10Drive%\ /Compact %SevLogger%
 )
