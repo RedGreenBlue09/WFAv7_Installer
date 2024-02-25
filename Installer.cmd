@@ -441,7 +441,7 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
 set "StartTime=%Time%"
 echo.
 echo %ESC%[97m[INFO] Installation was started at %StartTime%
-echo #### Windows 10 for ARMv7 Installer 3.1.2 #### >>"%LogName%"
+echo #### Windows 10 for ARMv7 Installer 3.1.3 #### >>"%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
 echo ## Device is %Model%  ## >>"%LogName%"
