@@ -137,6 +137,7 @@ echo  %ESC%[36mA) %ESC%[97mLumia 520
 echo  %ESC%[36mB) %ESC%[97mLumia 920
 echo  %ESC%[36mC) %ESC%[97mLumia 1020
 echo  %ESC%[36mD) %ESC%[97mLumia 1020 AT^&T
+echo  %ESC%[36mE) %ESC%[97mLumia 630
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -154,6 +155,7 @@ if /i "%Model%" EQU "A" set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStora
 if /i "%Model%" EQU "B" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
 if /i "%Model%" EQU "C" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
 if /i "%Model%" EQU "D" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if /i "%Model%" EQU "E" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
 goto ChooseDev
 
 
@@ -185,6 +187,7 @@ if /i "%Model%" EQU "A" (if not exist "Drivers\Lumia520" goto MissingDrivers)
 if /i "%Model%" EQU "B" (if not exist "Drivers\Lumia920" goto MissingDrivers)
 if /i "%Model%" EQU "C" (if not exist "Drivers\Lumia1020" goto MissingDrivers)
 if /i "%Model%" EQU "D" (if not exist "Drivers\Lumia1020-AT&T" goto MissingDrivers)
+if /i "%Model%" EQU "E" (if not exist "Drivers\Lumia630" goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
 	cls
 	call :PrintLabel
@@ -536,6 +539,7 @@ if /i "%Model%" EQU "A" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver
 if /i "%Model%" EQU "B" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
 if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
 if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT&T" /Recurse %Logger%
+if /i "%Model%" EQU "E" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia630" /Recurse %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
