@@ -5,7 +5,7 @@
 
 set "CurrentDir=%~dp0"
 if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
-	echo Please remove exclamation marks (^!^) from the current path.
+	echo Please remove exclamation marks ^(^!^) from the current path.
 	pause
 	exit /B
 )
@@ -31,10 +31,10 @@ if not exist Temp\ md Temp\
 title Checking compatibility ...
 echo  - Checking Windows Build ...
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set "WinBuild=%%a"
-if %WinBuild% LSS 9600 (
+if %WinBuild% LSS 9200 (
 	rd /s /q Temp\
 	echo This Windows version is not supported by WFAv7 Installer.
-	echo Please use Windows 8.1+ ^(Build 9600+^) 
+	echo Please use Windows 8+ ^(Build 9200+^) 
 	echo Current OS build: %WinBuild%
 	pause
 	exit /B

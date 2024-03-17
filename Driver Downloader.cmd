@@ -5,7 +5,7 @@
 
 set "CurrentDir=%~dp0"
 if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
-	echo Please remove exclamation marks (^!^) from the current path.
+	echo Please remove exclamation marks ^(^!^) from the current path.
 	pause
 	exit /B
 )

@@ -29,7 +29,7 @@
 
 ## Prerequisite (on your PC)
 
-- Official Windows 8.1 or newer   
+- Official Windows 8 (build 9200) or newer   
 - Windows Powershell enabled
 - WPinternals 2.9 or newer - [Download](https://github.com/ReneLergner/WPinternals/releases/latest)
 - Win32 Disk Imager - [Download](https://sourceforge.net/projects/win32diskimager/)
