@@ -2,6 +2,14 @@
 :: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
 
 @echo off
+
+set "CurrentDir=%~dp0"
+if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
+	echo Please remove exclamation marks (^!^) from the current path.
+	pause
+	exit /B
+)
+
 setlocal EnableDelayedExpansion
 cd /D "%~dp0"
 
