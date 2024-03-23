@@ -6,6 +6,7 @@
 set "CurrentDir=%~dp0"
 if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
 	echo Please remove exclamation marks ^(^!^) from the current path.
+	echo.
 	pause
 	exit /B
 )
@@ -36,6 +37,7 @@ if %WinBuild% LSS 9200 (
 	echo This Windows version is not supported by WFAv7 Installer.
 	echo Please use Windows 8+ ^(Build 9200+^) 
 	echo Current OS build: %WinBuild%
+	echo.
 	pause
 	exit /B
 )
@@ -46,6 +48,7 @@ set "PLV=%Errorlevel%"
 if %PLV% NEQ 0 (
 	echo Powershell cannot be found. Please enable Powershell and try again.
 	echo Error code: %PLV%
+	echo.
 	pause
 	exit /B
 )
@@ -68,6 +71,7 @@ goto SkipMissingCommand
 :MissingCommand
 echo Required powershell cmdlets are not found.
 echo Please use Official Windows 8.1 or Windows 10.
+echo.
 pause
 exit /B
 
@@ -563,70 +567,70 @@ xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %
 
 echo %ESC%[97m[INFO] Adding BCD Entry ...
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-set "bcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
-echo ## BCD Path is %bcdLoc% ## >>"%LogName%" 
+set "BcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
+echo ## BCD Path is %BcdLoc% ## >>"%LogName%" 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 
-Files\bcdedit /store "%bcdLoc%" /create %id% /d "Windows 10 ARM" /application "osloader" %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /create %id% /d "Windows 10 ARM" /application osloader %SevLogger%
 
 if "%DevSpec%" EQU "A" (
 	if /i "%Dualboot%" EQU "Y" (
-		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% device "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
 	) else (
-		Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%Win10Drive%" %SevLogger%
-		Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%Win10Drive%" %SevLogger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% device "partition=%Win10Drive%" %SevLogger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "partition=%Win10Drive%" %SevLogger%
 	)
 ) else (
-	Files\bcdedit /store "%bcdLoc%" /set %id% "device" "partition=%Win10Drive%" %SevLogger%
-	Files\bcdedit /store "%bcdLoc%" /set %id% "osdevice" "partition=%Win10Drive%" %SevLogger%
+	Files\bcdedit /store "%BcdLoc%" /set %id% device "partition=%Win10Drive%" %SevLogger%
+	Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "partition=%Win10Drive%" %SevLogger%
 )
 
-Files\bcdedit /store "%bcdLoc%" /set %id% "path" "\Windows\System32\winload.efi" %SevLogger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "systemroot" "\Windows" %SevLogger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "locale" "en-US" %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "testsigning" Yes %SevLogger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "nointegritychecks" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "inherit" "{bootloadersettings}" %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "bootmenupolicy" "Standard" %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "detecthal" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "winpe" No %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "ems" No %Logger%
-Files\bcdedit /store "%bcdLoc%" /set %id% "bootdebug" No %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% path "\Windows\System32\winload.efi" %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set %id% systemroot "\Windows" %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set %id% locale en-US %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% testsigning Yes %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set %id% nointegritychecks Yes %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% inherit {bootloadersettings} %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% bootmenupolicy Standard %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% detecthal Yes %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% winpe No %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% ems No %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% bootdebug No %Logger%
 
 if /i "%DebugEnabled%" EQU "N" (
-	Files\bcdedit /store "%bcdLoc%" /set %id% "debug" No %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set %id% debug No %Logger%
 ) else (
-	Files\bcdedit /store "%bcdLoc%" /set %id% "debug" Yes %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set %id% debug Yes %Logger%
 )
 
-Files\bcdedit /store "%bcdLoc%" /set {dbgsettings} "debugtype" USB %Logger%
-Files\bcdedit /store "%bcdLoc%" /set {dbgsettings} "targetname" "WOATARGET" %Logger%
+Files\bcdedit /store "%BcdLoc%" /set {dbgsettings} debugtype USB %Logger%
+Files\bcdedit /store "%BcdLoc%" /set {dbgsettings} targetname "WOATARGET" %Logger%
 
 :: Boot entry display
 if /i "%Dualboot%" EQU "N" (
-	Files\bcdedit /store "%bcdLoc%" /default %id% %Logger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder %id% %Logger%
+	Files\bcdedit /store "%BcdLoc%" /default %id% %Logger%
+	Files\bcdedit /store "%BcdLoc%" /displayorder %id% %Logger%
 ) else (
-	Files\bcdedit /store "%bcdLoc%" /set {default} description "Windows Phone" %Logger%
-	Files\bcdedit /store "%bcdLoc%" /displayorder %id% {default} %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set {default} description "Windows Phone" %Logger%
+	Files\bcdedit /store "%BcdLoc%" /displayorder %id% {default} %Logger%
 
 	if %HasCameraBtn% EQU 1 (
-		Files\bcdedit /store "%bcdLoc%" /deletevalue {bootmgr} customactions %Logger%
+		Files\bcdedit /store "%BcdLoc%" /deletevalue {bootmgr} customactions %Logger%
 	) else (
-		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} customactions 0x1000048000001 0x54000001 0x1000050000001 0x54000002 %Logger%
-		Files\bcdedit /store "%bcdLoc%" /set {bootmgr} custom:0x54000001 {703c511b-98f3-4630-b752-6d177cbfb89c} %Logger%
+		Files\bcdedit /store "%BcdLoc%" /set {bootmgr} customactions 0x1000048000001 0x54000001 0x1000050000001 0x54000002 %Logger%
+		Files\bcdedit /store "%BcdLoc%" /set {bootmgr} custom:0x54000001 {703c511b-98f3-4630-b752-6d177cbfb89c} %Logger%
 	)
 )
 
 :: Charge threshold
-if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%bcdLoc%" /set {globalsettings} "chargethreshold" %ChargeThreshold% %Logger%
+if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%BcdLoc%" /set {globalsettings} chargethreshold %ChargeThreshold% %Logger%
 
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "nointegritychecks" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "testsigning" Yes %Logger%
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "booterrorux" Standard %Logger%
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "displaybootmenu" Yes %SevLogger%
-Files\bcdedit /store "%bcdLoc%" /set {bootmgr} "timeout" 5 %Logger%
+Files\bcdedit /store "%BcdLoc%" /set {bootmgr} nointegritychecks Yes %Logger%
+Files\bcdedit /store "%BcdLoc%" /set {bootmgr} testsigning Yes %Logger%
+Files\bcdedit /store "%BcdLoc%" /set {bootmgr} booterrorux Standard %Logger%
+Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displaybootmenu Yes %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set {bootmgr} timeout 5 %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"

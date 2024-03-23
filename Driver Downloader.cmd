@@ -169,16 +169,17 @@ goto :EOF
 ::------------------------------------------------------------------
 :Download
 
-if exist "Drivers\%ModelDir%\" (
+set "InstallerDir=%~dp0"
+set "RepoDir=%InstallerDir%\Drivers\%ModelDir%"
+
+if exist "%RepoDir%\" (
 	echo Removing old drivers ...
-	rd /s /q "Drivers\%ModelDir%\"
+	rd /s /q "%RepoDir%"
 )
 
 echo.
 echo Setting up the repository...
 echo.
-set "InstallerDir=%~dp0"
-set "RepoDir=Drivers\%ModelDir%"
 md "%RepoDir%"
 "%GitPath%" clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% "%RepoLink%" "%RepoDir%" || goto DownloadFailed
 
