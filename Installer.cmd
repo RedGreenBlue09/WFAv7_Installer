@@ -2,12 +2,23 @@
 :: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
 
 @echo off
+goto CurrentPathCheck
 
+:: This is quite slow as it launches 2 more cmd instances for "call" and "|"
+:CustomPause
+if "%~1" EQU "" (
+	pause >nul | set /p "=Press any key to continue ... "
+) else (
+	pause >nul | set /p "=%~1"
+)
+goto :EOF
+
+:CurrentPathCheck
 set "CurrentDir=%~dp0"
 if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
 	echo Please remove exclamation marks ^(^!^) from the current path.
 	echo.
-	pause
+	call :CustomPause "Press any key to exit ... "
 	exit /B
 )
 
@@ -20,7 +31,7 @@ net session >nul 2>&1 || (
 	Files\elevate_%PROCESSOR_ARCHITECTURE% %0 || (
 		echo Unable to grant administrative privileges. Please run the file as administrator.
 		echo.
-		pause
+		call :CustomPause "Press any key to exit ... "
 	)
 	exit /B
 )
@@ -38,7 +49,7 @@ if %WinBuild% LSS 9200 (
 	echo Please use Windows 8+ ^(Build 9200+^) 
 	echo Current OS build: %WinBuild%
 	echo.
-	pause
+	call :CustomPause "Press any key to exit ... "
 	exit /B
 )
 
@@ -49,7 +60,7 @@ if %PLV% NEQ 0 (
 	echo Powershell cannot be found. Please enable Powershell.
 	echo Error code: %PLV%
 	echo.
-	pause
+	call :CustomPause "Press any key to exit ... "
 	exit /B
 )
 
@@ -72,7 +83,7 @@ goto SkipMissingCommand
 echo Required powershell cmdlets are not found.
 echo Please use Official Windows 8.1 or Windows 10.
 echo.
-pause
+call :CustomPause "Press any key to exit ... "
 exit /B
 
 :SkipMissingCommand
@@ -125,8 +136,8 @@ if /i "%Disclaimer%" EQU "N" (
 	call :PrintLabel
 	echo  %ESC%[91mYou MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
 	echo.
-	pause
-	exit /b
+	call :CustomPause " Press any key to exit ... "
+	exit /B
 )
 if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
 
@@ -179,7 +190,7 @@ echo   - Make sure your phone have enough battery for this installation.
 echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
 echo   * Highly recommend you to flash the original FFU before installation.
 echo %ESC%[0m
-pause
+call :CustomPause " Press any key to continue ... "
 
 ::---------------------------------------------------------------
 :CheckReqFiles
@@ -201,7 +212,7 @@ if /i "%Model%" EQU "D" (if not exist "Drivers\Lumia1020-AT&T" goto MissingDrive
 if not exist "%~dp0\install.wim" (
 	echo  %ESC%[91minstall.wim not found.
 	echo  Please place install.wim in the current folder.%ESC%[0m
-	pause
+	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
 )
 goto RegistryCheck
@@ -209,13 +220,13 @@ goto RegistryCheck
 :MissingDrivers
 echo  %ESC%[91mDrivers not found.
 echo  Please download drivers for your device using Driver Downloader.%ESC%[0m
-pause
+call :CustomPause " Press any key to go back ... "
 goto ChooseDev
 
 :RegistryCheck
 reg query HKLM\RTSYSTEM /ve >nul 2>&1 && (
 	echo %ESC%[91m Please unload registry hive HKLM\RTSYSTEM.%ESC%[0m
-	pause
+	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
 )
 ::---------------------------------------------------------------
@@ -300,7 +311,7 @@ goto Win10MountCheck
 :Win10MountCheck
 if exist "%MainOS%\Windows10\" (
 	echo %ESC%[91m Please remove/rename %MainOS%\Windows10.%ESC%[0m
-	pause
+	call :CustomPause " Press any key to retry ... "
 	if exist "%MainOS%\Windows10\" goto Win10MountCheck
 )
 
@@ -329,7 +340,7 @@ echo   * After pressing any key, the installation process will begin.
 echo     This cannot be cancelled properly which may cause damage to your device.
 echo   * If you want to cancel the installation, close this console RIGHT NOW.
 echo.
-pause >nul | set /p "=%ESC%[97m Press any key to begin installing ...%ESC%[0m "
+call :CustomPause " Press any key to begin installing ... "
 goto BeginInstall
 
 ::---------------------------------------------------------------
@@ -673,7 +684,7 @@ echo #### INSTALLATION FAILED ####>>"%LogName%"
 echo %ESC%[91m[INFO] Installation is cancelled because a severe error has occurred.
 echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.
-pause
+call :CustomPause "Press any key to exit ... "
 exit /B
 
 :MissionCompleted
@@ -687,7 +698,7 @@ if %ErrNum% GTR 0 (
 	echo %ESC%[97m[INFO] Installation has completed successfully!%ESC%[0m
 )
 echo.
-pause
+call :CustomPause
 
 cls
 call :PrintLabel
@@ -707,5 +718,5 @@ echo  %ESC%[97m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
 echo  %ESC%[97m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
 echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
 echo.
-pause
-exit /b
+call :CustomPause " Press any key to exit ... "
+exit /B
