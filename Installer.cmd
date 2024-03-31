@@ -46,7 +46,7 @@ echo  - Checking Windows Powershell ...
 Powershell /? >nul 2>&1
 set "PLV=%Errorlevel%"
 if %PLV% NEQ 0 (
-	echo Powershell cannot be found. Please enable Powershell and try again.
+	echo Powershell cannot be found. Please enable Powershell.
 	echo Error code: %PLV%
 	echo.
 	pause
@@ -184,6 +184,7 @@ pause
 ::---------------------------------------------------------------
 :CheckReqFiles
 cls
+call :PrintLabel
 if "%Model%" EQU "1" (if not exist "Drivers\Lumia930" goto MissingDrivers)
 if "%Model%" EQU "2" (if not exist "Drivers\LumiaIcon" goto MissingDrivers)
 if "%Model%" EQU "3" (if not exist "Drivers\Lumia1520" goto MissingDrivers)
@@ -198,28 +199,28 @@ if /i "%Model%" EQU "B" (if not exist "Drivers\Lumia920" goto MissingDrivers)
 if /i "%Model%" EQU "C" (if not exist "Drivers\Lumia1020" goto MissingDrivers)
 if /i "%Model%" EQU "D" (if not exist "Drivers\Lumia1020-AT&T" goto MissingDrivers)
 if not exist "%~dp0\install.wim" (
-	cls
-	call :PrintLabel
-	echo  %ESC%[91mPlace install.wim in the Installer folder then try again.%ESC%[0m
-	echo.
+	echo  %ESC%[91minstall.wim not found.
+	echo  Please place install.wim in the current folder.%ESC%[0m
 	pause
 	goto ChooseDev
 )
-goto MOSAutoDetect
+goto RegistryCheck
 
 :MissingDrivers
-cls
-call :PrintLabel
 echo  %ESC%[91mDrivers not found.
-echo  Please download drivers for your device using Driver Downloader then try again.%ESC%[0m
-echo.
+echo  Please download drivers for your device using Driver Downloader.%ESC%[0m
 pause
 goto ChooseDev
+
+:RegistryCheck
+reg query HKLM\RTSYSTEM /ve >nul 2>&1 && (
+	echo %ESC%[91m Please unload registry hive HKLM\RTSYSTEM.%ESC%[0m
+	pause
+	goto ChooseDev
+)
 ::---------------------------------------------------------------
 
-:MOSAutoDetect
-cls
-call :PrintLabel
+:: MOSAutoDetect
 echo %ESC%[97m Trying to detect MainOS ...%ESC%[91m
 
 :: DiskNumber
