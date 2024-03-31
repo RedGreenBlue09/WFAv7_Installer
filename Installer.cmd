@@ -549,6 +549,11 @@ if /i "%Model%" EQU "B" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver
 if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
 if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT&T" /Recurse %Logger%
 
+echo %ESC%[97m[INFO] Enabling page file ...%ESC%[91m
+reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\system" %Logger%
+reg add "HKLM\RTSYSTEM\ControlSet001\Control\Session Manager\Memory Management" /v "PagingFiles" /t REG_MULTI_SZ /d "C:\pagefile.sys 512 768" %Logger%
+reg unload "HKLM\RTSYSTEM" %Logger%
+
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
 echo %ESC%[97m[INFO] Mounting EFIESP and DPP ...%ESC%[91m
