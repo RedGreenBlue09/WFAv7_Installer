@@ -614,11 +614,11 @@ Files\bcdedit /store "%BcdLoc%" /set {dbgsettings} targetname "WOATARGET" %Logge
 
 :: Boot entry display
 if /i "%Dualboot%" EQU "N" (
-	Files\bcdedit /store "%BcdLoc%" /default %id% %Logger%
-	Files\bcdedit /store "%BcdLoc%" /displayorder %id% %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set {bootmgr} default %id% %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displayorder %id% %Logger%
 ) else (
 	Files\bcdedit /store "%BcdLoc%" /set {default} description "Windows Phone" %Logger%
-	Files\bcdedit /store "%BcdLoc%" /displayorder %id% {default} %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displayorder %id% {default} %Logger%
 
 	if %HasCameraBtn% EQU 1 (
 		Files\bcdedit /store "%BcdLoc%" /deletevalue {bootmgr} customactions %Logger%
@@ -628,14 +628,14 @@ if /i "%Dualboot%" EQU "N" (
 	)
 )
 
-:: Charge threshold
-if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%BcdLoc%" /set {globalsettings} chargethreshold %ChargeThreshold% %Logger%
-
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} nointegritychecks Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} testsigning Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} booterrorux Standard %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displaybootmenu Yes %SevLogger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} timeout 5 %Logger%
+
+:: Charge threshold
+if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%BcdLoc%" /set {globalsettings} chargethreshold %ChargeThreshold% %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
