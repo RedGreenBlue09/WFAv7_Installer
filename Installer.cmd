@@ -11,6 +11,7 @@ if "%~1" EQU "" (
 ) else (
 	pause >nul | set /p "=%~1"
 )
+echo.
 goto :EOF
 
 :CurrentPathCheck
@@ -27,7 +28,7 @@ cd /D "%~dp0"
 ::---------------------------------------------------------------
 :GetAdministrator
 net session >nul 2>&1 || (
-	echo Requesting administrative privileges...
+	echo Requesting administrative privileges ...
 	Files\elevate_%PROCESSOR_ARCHITECTURE% %0 || (
 		echo Unable to grant administrative privileges. Please run the file as administrator.
 		echo.
@@ -338,7 +339,7 @@ echo %ESC%[93m WARNING:
 if /i "%Dualboot%" EQU "N" echo   * This will permanently remove Windows Phone.
 echo   * After pressing any key, the installation process will begin.
 echo     This cannot be cancelled properly which may cause damage to your device.
-echo   * If you want to cancel the installation, close this console RIGHT NOW.
+echo   * If you want to cancel the installation, close this console RIGHT NOW.%ESC%[0m
 echo.
 call :CustomPause " Press any key to begin installing ... "
 goto BeginInstall
@@ -562,7 +563,7 @@ if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver
 if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT&T" /Recurse %Logger%
 
 echo %ESC%[97m[INFO] Enabling page file ...%ESC%[91m
-reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\system" %Logger%
+reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\SYSTEM" %Logger%
 reg add "HKLM\RTSYSTEM\ControlSet001\Control\Session Manager\Memory Management" /v "PagingFiles" /t REG_MULTI_SZ /d "C:\pagefile.sys 512 768" /f %Logger%
 reg unload "HKLM\RTSYSTEM" %Logger%
 
