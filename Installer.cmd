@@ -2,19 +2,6 @@
 :: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
 
 @echo off
-goto CurrentPathCheck
-
-:: This is quite slow as it launches 2 more cmd instances for "call" and "|"
-:CustomPause
-if "%~1" EQU "" (
-	pause >nul | set /p "=Press any key to continue ... "
-) else (
-	pause >nul | set /p "=%~1"
-)
-echo.
-goto :EOF
-
-:CurrentPathCheck
 set "CurrentDir=%~dp0"
 if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
 	echo Please remove exclamation marks ^(^!^) from the current path.
@@ -721,3 +708,12 @@ echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
 echo.
 call :CustomPause " Press any key to exit ... "
 exit /B
+
+:CustomPause
+set "PauseMessage=%~1"
+if "%PauseMessage%" EQU "" (set "PauseMessage=Press any key to continue ... ")
+set<nul /p "= %PauseMessage%"
+pause>nul
+echo.
+goto :EOF
+
