@@ -183,19 +183,15 @@ echo.
 md "%RepoDir%"
 "%GitPath%" clone --filter=tree:0 --no-checkout --depth 1 --branch %Tag% "%RepoLink%" "%RepoDir%" || goto DownloadFailed
 
-cd "%RepoDir%"
-"%GitPath%" sparse-checkout set --no-cone
-"%GitPath%" config core.ignorecase true
-"%GitPath%" config core.autocrlf false
-cd "%InstallerDir%"
+"%GitPath%" -C "%RepoDir%" sparse-checkout set --no-cone
+"%GitPath%" -C "%RepoDir%" config core.ignorecase true
+"%GitPath%" -C "%RepoDir%" config core.autocrlf false
 
 echo.
 echo Downloading definition file ...
 echo.
-cd "%RepoDir%"
-echo>".git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
-"%GitPath%" checkout || goto DownloadFailed
-cd "%InstallerDir%"
+echo>"%RepoDir%\.git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
+"%GitPath%" -C "%RepoDir%" checkout || goto DownloadFailed
 
 echo.
 echo Enumerating INF files ...
@@ -213,9 +209,7 @@ for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 echo.
 echo Downloading INF files ...
 echo.
-cd "%RepoDir%"
-"%GitPath%" checkout || goto DownloadFailed
-cd "%InstallerDir%"
+"%GitPath%" -C "%RepoDir%" checkout || goto DownloadFailed
 
 echo.
 echo Enumerating driver source files ...
@@ -243,9 +237,7 @@ del "Temp\InfList.txt"
 echo.
 echo Downloading driver source files ...
 echo.
-cd "%RepoDir%"
-"%GitPath%" checkout || goto DownloadFailed
-cd "%InstallerDir%"
+"%GitPath%" -C "%RepoDir%" checkout || goto DownloadFailed
 
 ::------------------------------------------------------------------
 rd /s /q "%RepoDir%\.git\"
