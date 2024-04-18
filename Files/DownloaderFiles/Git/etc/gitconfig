@@ -19,3 +19,5 @@
 	required = true
 [credential]
 	helper = manager
+
+# 17 April 2024 (RedGreenBlue09): Removed Program Files includes
