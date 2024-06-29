@@ -448,6 +448,7 @@ set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
  (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!SevErr^^! NEQ 0 (set /a "ErrNum+=1" ^>nul ^& goto SevErrFound))
 
+start "WFAv7 Installer log: %LogName%" Files\less +FG -Kr~ "%LogName%"
 ::---------------------------------------------------------------
 
 set "StartTime=%Time%"
