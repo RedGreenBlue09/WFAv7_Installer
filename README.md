@@ -39,7 +39,9 @@
 ## Download
 
 For latest stable version, go to `Releases` section.  
-For latest development version, use the green `Code` button, `Download ZIP`.
+For latest development version, use Git or any of its clients (such as GitHub Desktop) to clone this repository.
+- **Make sure the line endings of the script is CRLF (Windows) or else it will malfunction which can DELETE YOUR DATA.**
+- **For this reason, DO NOT use the "Download ZIP" feature as it will convert all line endings to LF (Unix).**
  
 ## Instruction
 
