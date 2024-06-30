@@ -10,7 +10,8 @@ if %PLV% NEQ 0 (
 	echo Powershell cannot be found. Please enable Powershell.
 	echo Error code: %PLV%
 	echo.
-	call :CustomPause "Press any key to exit ... "
+	set<nul /p "= Press any key to exit ... "
+	pause >nul
 	exit /B
 )
 
@@ -22,7 +23,8 @@ if "%NotCrlf%" EQU "True" (
 	echo The script's line endings must be CRLF ^(Windows^).
 	echo Please fully convert it to CRLF.
 	echo.
-	call :CustomPause "Press any key to exit ... "
+	set<nul /p "= Press any key to exit ... "
+	pause >nul
 	exit /B
 )
 
@@ -726,6 +728,6 @@ exit /B
 set "PauseMessage=%~1"
 if "%PauseMessage%" EQU "" (set "PauseMessage=Press any key to continue ... ")
 set<nul /p "= %PauseMessage%"
-pause>nul
+pause >nul
 echo.
 goto :EOF
