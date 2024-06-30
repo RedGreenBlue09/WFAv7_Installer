@@ -23,7 +23,7 @@
 - Microsoft Lumia 640 XL LTE (Global, AT&T)
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
-- Nokia Lumia 520
+- ~~Nokia Lumia 520~~ (Have a major issue at the moment)
 <br><br>
 - **Windows 10 Mobile**: Builds newer than `14393.x` are not supported.
 
