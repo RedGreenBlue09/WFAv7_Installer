@@ -2,6 +2,30 @@
 :: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
 
 @echo off
+
+echo Checking Windows Powershell ...
+Powershell /? >nul 2>&1
+set "PLV=%Errorlevel%"
+if %PLV% NEQ 0 (
+	echo Powershell cannot be found. Please enable Powershell.
+	echo Error code: %PLV%
+	echo.
+	call :CustomPause "Press any key to exit ... "
+	exit /B
+)
+
+:: Goto and call is affected so this must be done early.
+:: Both findstr and busybox grep fail to do this properly so I have to rely on the slow Powershell.
+echo Checking line endings ...
+for /f %%A in ('Powershell -C "(Get-Content '%~f0' -Raw) -Match '[^\r]\n'"') do set "NotCrlf=%%A"
+if "%NotCrlf%" EQU "True" (
+	echo The script's line endings must be CRLF ^(Windows^).
+	echo Please fully convert it to CRLF.
+	echo.
+	call :CustomPause "Press any key to exit ... "
+	exit /B
+)
+
 set "CurrentDir=%~dp0"
 if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
 	echo Please remove exclamation marks ^(^!^) from the current path.
@@ -28,8 +52,7 @@ net session >nul 2>&1 || (
 if not exist Temp\ md Temp\
 
 :Check2
-title Checking compatibility ...
-echo  - Checking Windows Build ...
+echo Checking Windows Build ...
 for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set "WinBuild=%%a"
 if %WinBuild% LSS 9200 (
 	rd /s /q Temp\
@@ -41,18 +64,7 @@ if %WinBuild% LSS 9200 (
 	exit /B
 )
 
-echo  - Checking Windows Powershell ...
-Powershell /? >nul 2>&1
-set "PLV=%Errorlevel%"
-if %PLV% NEQ 0 (
-	echo Powershell cannot be found. Please enable Powershell.
-	echo Error code: %PLV%
-	echo.
-	call :CustomPause "Press any key to exit ... "
-	exit /B
-)
-
-echo  - Checking Cmdlets ...
+echo Checking Cmdlets ...
 Powershell -C "(Get-Command).name" > Temp\Commands.txt
 findstr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-Volume" Temp\Commands.txt >nul || goto MissingCommand
@@ -717,4 +729,3 @@ set<nul /p "= %PauseMessage%"
 pause>nul
 echo.
 goto :EOF
-
