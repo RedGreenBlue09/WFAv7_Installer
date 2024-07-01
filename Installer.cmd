@@ -428,7 +428,8 @@ call :PrintLabel
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ md Logs
 cd Logs
-for /f %%d in ('Powershell Get-Date -format "dd-MMM-yy 2>$null"') do set "Date1=%%d"
+set "Date1=%Date%"
+set "Date1=%Date1:~6,4%-%Date1:~3,2%-%Date1:~0,2%"
 if not exist "%Date1%.log" set "LogName=Logs\%Date1%.log" & goto LoggerInit
 if not exist "%Date1%-1.log" set "LogName=Logs\%Date1%-1.log" & goto LoggerInit
 set "LogNum=1"
