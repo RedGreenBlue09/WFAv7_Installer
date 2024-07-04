@@ -447,20 +447,12 @@ if exist "%Date1%-*.log" (
 :LoggerInit
 cd ..
 set "ErrNum=0"
-set Logger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
+set Logger=^>^> "%LogName%" 2^>^&1 ^&^
  set "Err=^!Errorlevel^!" ^&^
- (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [ERR ] %%a) ^>^> Temp\ErrorConsole.log ^&^
- (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
- type Temp\CurrentError.log ^>^> "%LogName%" ^&^
- (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!Err^^! NEQ 0 (set /a "ErrNum+=1" ^& echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m))
 
-set SevLogger=2^>Temp\CurrentError.log ^>^> "%LogName%" ^&^
+set SevLogger=^>^> "%LogName%" 2^>^&1 ^&^
  set "SevErr=^!Errorlevel^!" ^&^
- (for /f "tokens=*" %%a in (Temp\CurrentError.log) do echo [ERR ] %%a) ^>^> Temp\ErrorConsole.log ^&^
- (if exist Temp\ErrorConsole.log type Temp\ErrorConsole.log) ^&^
- type Temp\CurrentError.log ^>^> "%LogName%" ^&^
- (if exist Temp\ErrorConsole.log del Temp\ErrorConsole.log) ^&^
  (if ^^!SevErr^^! NEQ 0 (set /a "ErrNum+=1" ^>nul ^& goto SevErrFound))
 
 start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n0 "%LogName%"
@@ -685,7 +677,7 @@ goto MissionCompleted
 echo ========================================================= >>"%LogName%"
 echo.
 echo #### INSTALLATION FAILED ####>>"%LogName%"
-echo %ESC%[91m[INFO] Installation is cancelled because a severe error has occurred.
+echo %ESC%[91m[ERRO] Installation is cancelled because a severe error has occurred.%ESC%[0m
 echo %ESC%[93m[WARN] Please check installation log in Logs folder.%ESC%[0m
 echo.
 call :CustomPause "Press any key to exit ... "
