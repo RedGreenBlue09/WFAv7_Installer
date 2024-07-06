@@ -68,6 +68,7 @@ if %WinBuild% LSS 9200 (
 
 echo Checking Cmdlets ...
 Powershell -C "(Get-Command).name" > Temp\Commands.txt
+findstr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-Volume" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
@@ -427,8 +428,7 @@ call :PrintLabel
 if not exist Logs\NUL del Logs /Q 2>nul
 if not exist Logs\ md Logs
 cd Logs
-set "Date1=%Date%"
-set "Date1=%Date1:~6,4%-%Date1:~3,2%-%Date1:~0,2%"
+for /f %%A in ('Powershell -C "Get-Date -format 'yyyy-MM-dd' 2>$null"') do set "Date1=%%A"
 if not exist "%Date1%.log" set "LogName=Logs\%Date1%.log" & goto LoggerInit
 if not exist "%Date1%-1.log" set "LogName=Logs\%Date1%-1.log" & goto LoggerInit
 set "LogNum=1"
