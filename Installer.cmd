@@ -68,7 +68,6 @@ if %WinBuild% LSS 9200 (
 
 echo Checking Cmdlets ...
 Powershell -C "(Get-Command).name" > Temp\Commands.txt
-findstr /X /C:"Get-Date" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-Volume" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"Get-Partition" Temp\Commands.txt >nul || goto MissingCommand
 findstr /X /C:"New-Partition" Temp\Commands.txt >nul || goto MissingCommand
