@@ -51,20 +51,20 @@ set /p "Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m"
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
-if "%Model%" EQU "1" (goto DoDownload)
-if "%Model%" EQU "2" (goto DoDownload)
-if "%Model%" EQU "3" (goto DoDownload)
-if "%Model%" EQU "4" (goto DoDownload)
-if "%Model%" EQU "5" (goto DoDownload)
-if "%Model%" EQU "6" (goto DoDownload)
-if "%Model%" EQU "7" (goto DoDownload)
-if "%Model%" EQU "8" (goto DoDownload)
-if "%Model%" EQU "9" (goto DoDownload)
-if /I "%Model%" EQU "A" (goto DoDownload)
-if /I "%Model%" EQU "B" (goto DoDownload)
-if /I "%Model%" EQU "C" (goto DoDownload)
-if /I "%Model%" EQU "D" (goto DoDownload)
-if /I "%Model%" EQU "E" (goto DoDownload)
+if "%Model%" EQU "1" (set "ModelDir=Lumia930"       & set "DefName=930.xml"               & goto DoDownload)
+if "%Model%" EQU "2" (set "ModelDir=LumiaIcon"      & set "DefName=icon.xml"              & goto DoDownload)
+if "%Model%" EQU "3" (set "ModelDir=Lumia1520"      & set "DefName=1520upsidedown.xml"    & goto DoDownload)
+if "%Model%" EQU "4" (set "ModelDir=Lumia1520-AT&T" & set "DefName=1520attupsidedown.xml" & goto DoDownload)
+if "%Model%" EQU "5" (set "ModelDir=Lumia830"       & set "DefName=830.xml"               & goto DoDownload)
+if "%Model%" EQU "6" (set "ModelDir=Lumia735"       & set "DefName=735.xml"               & goto DoDownload)
+if "%Model%" EQU "7" (set "ModelDir=Lumia650"       & set "DefName=650.xml"               & goto DoDownload)
+if "%Model%" EQU "8" (set "ModelDir=Lumia640XL-3G"  & set "DefName=640xlds.xml"           & goto DoDownload)
+if "%Model%" EQU "9" (set "ModelDir=Lumia640XL-LTE" & set "DefName=640xl.xml"             & goto DoDownload)
+if /I "%Model%" EQU "A" (set "ModelDir=Lumia640XL-AT&T" & set "DefName=640xlatt.xml" & goto DoDownload)
+if /I "%Model%" EQU "B" (set "ModelDir=Lumia520"        & set "DefName=520.xml"      & goto DoDownload)
+if /I "%Model%" EQU "C" (set "ModelDir=Lumia920"        & set "DefName=920.xml"      & goto DoDownload)
+if /I "%Model%" EQU "D" (set "ModelDir=Lumia1020"       & set "DefName=1020.xml"     & goto DoDownload)
+if /I "%Model%" EQU "E" (set "ModelDir=Lumia1020-AT&T"  & set "DefName=1020att.xml"  & goto DoDownload)
 goto ChooseDev
 
 ::------------------------------------------------------------------
@@ -94,86 +94,7 @@ del Temp\Tags.txt
 :: Remove refs/tags/
 set "Tag=%Tag:~10%"
 
-:: Models
-
-if "%Model%" EQU "1" (
-	set "ModelDir=Lumia930"
-	set "DefName=930.xml"
-)
-if "%Model%" EQU "2" (
-	set "ModelDir=LumiaIcon"
-	set "DefName=icon.xml"
-)
-if "%Model%" EQU "3" (
-	set "ModelDir=Lumia1520"
-	set "DefName=1520upsidedown.xml"
-)
-if "%Model%" EQU "4" (
-	set "ModelDir=Lumia1520-AT&T"
-	set "DefName=1520attupsidedown.xml"
-)
-if "%Model%" EQU "5" (
-	set "ModelDir=Lumia830"
-	set "DefName=830.xml"
-)
-if "%Model%" EQU "6" (
-	set "ModelDir=Lumia735"
-	set "DefName=735.xml"
-)
-if "%Model%" EQU "7" (
-	set "ModelDir=Lumia650"
-	set "DefName=650.xml"
-)
-if "%Model%" EQU "8" (
-	set "ModelDir=Lumia640XL-3G"
-	set "DefName=640xlds.xml"
-)
-if "%Model%" EQU "9" (
-	set "ModelDir=Lumia640XL-LTE"
-	set "DefName=640xl.xml"
-)
-if /I "%Model%" EQU "A" (
-	set "ModelDir=Lumia640XL-AT&T"
-	set "DefName=640xlatt.xml"
-)
-if /I "%Model%" EQU "B" (
-	set "ModelDir=Lumia520"
-	set "DefName=520.xml"
-)
-if /I "%Model%" EQU "C" (
-	set "ModelDir=Lumia920"
-	set "DefName=920.xml"
-)
-if /I "%Model%" EQU "D" (
-	set "ModelDir=Lumia1020"
-	set "DefName=1020.xml"
-)
-if /I "%Model%" EQU "E" (
-	set "ModelDir=Lumia1020-AT&T"
-	set "DefName=1020att.xml"
-)
-goto Download
-
 ::------------------------------------------------------------------
-:FilePathOnly
-set "MyPath2=%MyPath:/=\%"
-set "MyPath2=%MyPath2: =/%"
-set "MyPath2="%MyPath2:\=" "%""
-set "Output="
-set "Output2="
-for %%A in (%MyPath2%) do (
-	set "Line=%%~A"
-	if "!Line!" NEQ "" (
-		set "Output=!Output2!"
-		set "Output2=!Output2!!Line:/= !\"
-	)
-)
-:: Edge case: trailing slash
-if "%Line%" EQU "" set "Output=%Output2%"
-goto :EOF
-
-::------------------------------------------------------------------
-:Download
 
 set "InstallerDir=%~dp0"
 set "RepoDir=%InstallerDir%\Drivers\%ModelDir%"
@@ -193,6 +114,7 @@ md "%RepoDir%"
 "%GitPath%" -C "%RepoDir%" config core.ignorecase true
 "%GitPath%" -C "%RepoDir%" config core.autocrlf false
 
+::------------------------------------------------------------------
 echo.
 echo Downloading definition file ...
 echo.
@@ -217,6 +139,7 @@ echo Downloading INF files ...
 echo.
 "%GitPath%" -C "%RepoDir%" checkout || goto DownloadFailed
 
+::------------------------------------------------------------------
 echo.
 echo Enumerating driver source files ...
 echo.
@@ -257,3 +180,21 @@ echo.
 echo Failed to download drivers.
 pause
 goto ChooseDev
+
+::------------------------------------------------------------------
+:FilePathOnly
+set "MyPath2=%MyPath:/=\%"
+set "MyPath2=%MyPath2: =/%"
+set "MyPath2="%MyPath2:\=" "%""
+set "Output="
+set "Output2="
+for %%A in (%MyPath2%) do (
+	set "Line=%%~A"
+	if "!Line!" NEQ "" (
+		set "Output=!Output2!"
+		set "Output2=!Output2!!Line:/= !\"
+	)
+)
+:: Edge case: trailing slash
+if "%Line%" EQU "" set "Output=%Output2%"
+goto :EOF
