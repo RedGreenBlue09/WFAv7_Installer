@@ -39,12 +39,13 @@ echo  %ESC%[36m4)%ESC%[97m Lumia 1520 AT^&T
 echo  %ESC%[36m5)%ESC%[97m Lumia 830 Global
 echo  %ESC%[36m6)%ESC%[97m Lumia 735 Global
 echo  %ESC%[36m7)%ESC%[97m Lumia 650
-echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL LTE Global
-echo  %ESC%[36m9)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[36mA)%ESC%[97m Lumia 520
-echo  %ESC%[36mB)%ESC%[97m Lumia 920
-echo  %ESC%[36mC)%ESC%[97m Lumia 1020
-echo  %ESC%[36mD)%ESC%[97m Lumia 1020 AT^&T
+echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL 3G
+echo  %ESC%[36m9)%ESC%[97m Lumia 640 XL LTE Global
+echo  %ESC%[36mA)%ESC%[97m Lumia 640 XL LTE AT^&T
+echo  %ESC%[36mB)%ESC%[97m Lumia 520
+echo  %ESC%[36mC)%ESC%[97m Lumia 920
+echo  %ESC%[36mD)%ESC%[97m Lumia 1020
+echo  %ESC%[36mE)%ESC%[97m Lumia 1020 AT^&T
 
 set /p "Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m"
 if not defined Model goto ChooseDev
@@ -63,12 +64,14 @@ if /I "%Model%" EQU "A" (goto DoDownload)
 if /I "%Model%" EQU "B" (goto DoDownload)
 if /I "%Model%" EQU "C" (goto DoDownload)
 if /I "%Model%" EQU "D" (goto DoDownload)
+if /I "%Model%" EQU "E" (goto DoDownload)
 goto ChooseDev
 
 ::------------------------------------------------------------------
 :DoDownload
 
-set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
+:: set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
+set "RepoLink=https://github.com/bibarub/Lumia-Drivers.git"
 
 set "GitPath=%~dp0\Files\DriverDownloader\Git\cmd\git"
 
@@ -122,30 +125,33 @@ if "%Model%" EQU "7" (
 	set "DefName=650.xml"
 )
 if "%Model%" EQU "8" (
-	set "ModelDir=Lumia640XL"
-	set "DefName=640xl.xml"
+	set "ModelDir=Lumia640XL-3G"
+	set "DefName=640xlds.xml"
 )
 if "%Model%" EQU "9" (
+	set "ModelDir=Lumia640XL-LTE"
+	set "DefName=640xl.xml"
+)
+if /I "%Model%" EQU "A" (
 	set "ModelDir=Lumia640XL-AT&T"
 	set "DefName=640xlatt.xml"
 )
-if /I "%Model%" EQU "A" (
+if /I "%Model%" EQU "B" (
 	set "ModelDir=Lumia520"
 	set "DefName=520.xml"
 )
-if /I "%Model%" EQU "B" (
+if /I "%Model%" EQU "C" (
 	set "ModelDir=Lumia920"
 	set "DefName=920.xml"
 )
-if /I "%Model%" EQU "C" (
+if /I "%Model%" EQU "D" (
 	set "ModelDir=Lumia1020"
 	set "DefName=1020.xml"
 )
-if /I "%Model%" EQU "D" (
+if /I "%Model%" EQU "E" (
 	set "ModelDir=Lumia1020-AT&T"
 	set "DefName=1020att.xml"
 )
-
 goto Download
 
 ::------------------------------------------------------------------

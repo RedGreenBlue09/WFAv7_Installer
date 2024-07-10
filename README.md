@@ -20,7 +20,7 @@
 - Nokia Lumia 830 Global
 - Nokia Lumia 735 Global
 - Microsoft Lumia 650
-- Microsoft Lumia 640 XL LTE (Global, AT&T)
+- Microsoft Lumia 640 XL (3G, LTE Global, AT&T)
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
 - ~~Nokia Lumia 520~~ (Have a major issue at the moment)
@@ -71,9 +71,10 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 ## Thanks to
 	
 	RedGreenBlue09 (Me)          : Author of this script
-	Gus33000 (Gustave Monce)     : The main contributor to WOA-Project
+	gus33000 (Gustave Monce)     : The main contributor to WOA-Project
     WOA-Project                  : Inf drivers
 	Windows ARM32 Telegram group : Testing my script
+	bibarub                      : Downstream driver repository
 	fadilfadz01 (Fadil Fadz)     : Helping me write the script
 
 ## External softwares included
