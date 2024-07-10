@@ -70,7 +70,7 @@ goto ChooseDev
 
 set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
 
-set "GitPath=%~dp0\Files\Downloader\Git\cmd\git"
+set "GitPath=%~dp0\Files\DriverDownloader\Git\cmd\git"
 
 cls
 if not exist Drivers\ md Drivers\
@@ -196,7 +196,7 @@ echo>"%RepoDir%\.git\info\sparse-checkout" definitions/%DefName% || goto Downloa
 echo.
 echo Enumerating INF files ...
 echo.
-Files\Downloader\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt || (
+Files\DriverDownloader\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt || (
 	del Temp\InfList.txt
 	goto DownloadFailed
 )
@@ -219,7 +219,7 @@ for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	call :FilePathOnly
 	set "InfPathOnly=!Output!"
 	
-	Files\Downloader\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || (
+	Files\DriverDownloader\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || (
 		del Temp\DriverSourceList.txt
 		del Temp\InfList.txt
 		goto DownloadFailed
