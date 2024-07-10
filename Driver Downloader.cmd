@@ -18,7 +18,7 @@ if %WinBuild% LSS 10586 (
 	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
 
-title WFAv7 Driver Downloader 4.0
+title WFAv7 Driver Downloader 4.1
 set "ESC="
 
 ::------------------------------------------------------------------
@@ -27,7 +27,7 @@ set "Model="
 cls
 color 0f
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 4.0%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 4.1%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
