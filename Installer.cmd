@@ -630,7 +630,7 @@ echo>>Temp\diskpart.txt set id=c12a7328-f81f-11d2-ba4b-00a0c93ec93b override
 diskpart /s Temp\diskpart.txt %Logger%
 del Temp\diskpart.txt
 
-copy "Files\PostInstall\PostInstall.cmd" "%Win10Drive%\PostInstall.cmd" %Logger%
+copy "Files\PostInstall.cmd" "%Win10Drive%\PostInstall.cmd" %Logger%
 
 :: Unmount VHDX
 if "%DevSpec%" EQU "A" (
