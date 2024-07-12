@@ -98,7 +98,7 @@ goto Disclaimer
 ::---------------------------------------------------------------
 :PrintLabel
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.1%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.2%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -109,7 +109,7 @@ goto :EOF
 :Disclaimer
 cls
 color 07
-title Windows 10 for ARMv7 Installer 3.1
+title Windows 10 for ARMv7 Installer 3.2
 echo.
 echo.
 echo                            %ESC%[97mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
@@ -450,7 +450,7 @@ start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n0 "%LogName%"
 set "StartTime=%Time%"
 echo.
 echo %ESC%[97m[INFO] Installation was started at %StartTime%
-echo #### Windows 10 for ARMv7 Installer 3.1.5 #### >>"%LogName%"
+echo #### Windows 10 for ARMv7 Installer 3.2 #### >>"%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
 echo ## Device is "%Model%"  ## >>"%LogName%"
