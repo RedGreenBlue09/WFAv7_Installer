@@ -2,7 +2,21 @@
 :: A copy of this license is provided in the file LICENSE-SCRIPTS.txt.
 
 @echo off
+cd /D "%~dp0"
 
+:: GetAdministrator
+net session >nul 2>&1 || (
+	echo Requesting administrative privileges ...
+	Files\elevate_%PROCESSOR_ARCHITECTURE% %0 || (
+		echo Unable to grant administrative privileges. Please run the file as administrator.
+		echo.
+		set<nul /p "= Press any key to exit ... "
+		pause >nul
+	)
+	exit /B
+)
+
+::---------------------------------------------------------------
 echo Checking Windows Powershell ...
 Powershell /? >nul 2>&1
 set "PLV=%Errorlevel%"
@@ -35,22 +49,9 @@ if "%CurrentDir:!=%" NEQ "%CurrentDir%" (
 	call :CustomPause "Press any key to exit ... "
 	exit /B
 )
-
 setlocal EnableDelayedExpansion
-cd /D "%~dp0"
-::---------------------------------------------------------------
-:GetAdministrator
-net session >nul 2>&1 || (
-	echo Requesting administrative privileges ...
-	Files\elevate_%PROCESSOR_ARCHITECTURE% %0 || (
-		echo Unable to grant administrative privileges. Please run the file as administrator.
-		echo.
-		call :CustomPause "Press any key to exit ... "
-	)
-	exit /B
-)
-::---------------------------------------------------------------
 
+::---------------------------------------------------------------
 if not exist Temp\ md Temp\
 
 :Check2
