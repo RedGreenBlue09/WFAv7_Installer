@@ -167,20 +167,20 @@ set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
-if "%Model%" EQU "1" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if "%Model%" EQU "2" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if "%Model%" EQU "3" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if "%Model%" EQU "4" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if "%Model%" EQU "5" set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if "%Model%" EQU "6" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
-if "%Model%" EQU "7" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=1" & goto Preparation
-if "%Model%" EQU "8" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
-if "%Model%" EQU "9" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
-if /i "%Model%" EQU "A" set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
-if /i "%Model%" EQU "B" set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation
-if /i "%Model%" EQU "C" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if /i "%Model%" EQU "D" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
-if /i "%Model%" EQU "E" set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation
+if "%Model%" EQU "1" (set "Model=Lumia930"       & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "2" (set "Model=LumiaIcon"      & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "3" (set "Model=Lumia1520"      & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "4" (set "Model=Lumia1520-AT&T" & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "5" (set "Model=Lumia830"       & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "6" (set "Model=Lumia735"       & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "7" (set "Model=Lumia650"       & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "8" (set "Model=Lumia640XL-3G"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "9" (set "Model=Lumia640XL-LTE" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if /i "%Model%" EQU "A" (set "Model=Lumia640XL-AT&T" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if /i "%Model%" EQU "B" (set "Model=Lumia520"        & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if /i "%Model%" EQU "C" (set "Model=Lumia920"        & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if /i "%Model%" EQU "D" (set "Model=Lumia1020"       & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if /i "%Model%" EQU "E" (set "Model=Lumia1020-AT&T"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
 goto ChooseDev
 
 
@@ -200,20 +200,7 @@ call :CustomPause " Press any key to continue ... "
 :CheckReqFiles
 cls
 call :PrintLabel
-if "%Model%" EQU "1" (if not exist "Drivers\Lumia930" goto MissingDrivers)
-if "%Model%" EQU "2" (if not exist "Drivers\LumiaIcon" goto MissingDrivers)
-if "%Model%" EQU "3" (if not exist "Drivers\Lumia1520" goto MissingDrivers)
-if "%Model%" EQU "4" (if not exist "Drivers\Lumia1520-AT&T" goto MissingDrivers)
-if "%Model%" EQU "5" (if not exist "Drivers\Lumia830" goto MissingDrivers)
-if "%Model%" EQU "6" (if not exist "Drivers\Lumia735" goto MissingDrivers)
-if "%Model%" EQU "7" (if not exist "Drivers\Lumia650" goto MissingDrivers)
-if "%Model%" EQU "8" (if not exist "Drivers\Lumia640XL-3G" goto MissingDrivers)
-if "%Model%" EQU "9" (if not exist "Drivers\Lumia640XL-LTE" goto MissingDrivers)
-if /i "%Model%" EQU "A" (if not exist "Drivers\Lumia640XL-AT&T" goto MissingDrivers)
-if /i "%Model%" EQU "B" (if not exist "Drivers\Lumia520" goto MissingDrivers)
-if /i "%Model%" EQU "C" (if not exist "Drivers\Lumia920" goto MissingDrivers)
-if /i "%Model%" EQU "D" (if not exist "Drivers\Lumia1020" goto MissingDrivers)
-if /i "%Model%" EQU "E" (if not exist "Drivers\Lumia1020-AT&T" goto MissingDrivers)
+if not exist "Drivers\%Model%" goto MissingDrivers
 if not exist "%~dp0\install.wim" (
 	echo  %ESC%[91minstall.wim not found.
 	echo  Please place install.wim in the current folder.%ESC%[0m
@@ -466,12 +453,8 @@ echo %ESC%[97m[INFO] Installation was started at %StartTime%
 echo #### Windows 10 for ARMv7 Installer 3.1.5 #### >>"%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
-echo ## Device is %Model%  ## >>"%LogName%"
+echo ## Device is "%Model%"  ## >>"%LogName%"
 echo ## MainOS is %MainOS% ## >>"%LogName%"
-echo. >>"%LogName%"
-if not exist Temp\ md Temp\
-
-echo ## MainOS DriveLetter is %MainOS% ## >>"%LogName%"
 echo ## Disk number is %DiskNumber% ## >>"%LogName%"
 echo ## DPP PN is %PartitionNumberDPP% ## >>"%LogName%"
 echo ## EFIESP PN is %PartitionNumberEFIESP% ## >>"%LogName%"
@@ -545,20 +528,7 @@ if %WinBuild% LSS 10240 (
 ::---------------------------------------------------------------
 echo %ESC%[97m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
-if "%Model%" EQU "1" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia930" /Recurse %Logger%
-if "%Model%" EQU "2" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\LumiaIcon" /Recurse %Logger%
-if "%Model%" EQU "3" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520" /Recurse %Logger%
-if "%Model%" EQU "4" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1520-AT&T" /Recurse %Logger%
-if "%Model%" EQU "5" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia830" /Recurse %Logger%
-if "%Model%" EQU "6" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia735" /Recurse %Logger%
-if "%Model%" EQU "7" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia650" /Recurse %Logger%
-if "%Model%" EQU "8" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-3G" /Recurse %Logger%
-if "%Model%" EQU "9" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-LTE" /Recurse %Logger%
-if /i "%Model%" EQU "A" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia640XL-AT&T" /Recurse %Logger%
-if /i "%Model%" EQU "B" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia520" /Recurse %Logger%
-if /i "%Model%" EQU "C" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia920" /Recurse %Logger%
-if /i "%Model%" EQU "D" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020" /Recurse %Logger%
-if /i "%Model%" EQU "E" Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\Lumia1020-AT&T" /Recurse %Logger%
+Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\%Model%" /Recurse %Logger%
 
 echo %ESC%[97m[INFO] Enabling page file ...%ESC%[91m
 reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\SYSTEM" %Logger%
