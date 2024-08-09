@@ -19,15 +19,21 @@ for /f "delims=" %%a in ('fsutil reparsepoint query %SYSTEMDRIVE%\EFIESP') do (
 	if "!Errorlevel!" EQU "0" (
 		for /f "tokens=2 delims=:" %%b in ("%%a") do (
 			set "VolumeName=%%b"
+			echo Getting disk number ...
 			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).DiskNumber 2>$null"') do set "DiskNumber=%%p"
+			echo Getting partition number ...
 			for /f %%p in ('Powershell -C "(Get-Partition | ? { '!VolumeName!' -Match $_.Guid }).PartitionNumber 2>$null"') do set "PartitionNumber=%%p"
-			set "Uuid="
+			goto PartitionType
 		)
 	)
 )
+echo Unable to detect EFIESP. Make sure EFIESP is mounted at %SYSTEMDRIVE%\EFIESP
+pause
+exit /b
 
-:: Dualboot
+:PartitionType
 
+echo Resetting EFIESP partition type ...
 md Temp\
 echo>Temp\diskpart1.txt sel dis %DiskNumber%
 echo>>Temp\diskpart1.txt sel par %PartitionNumber%
@@ -35,7 +41,8 @@ echo>>Temp\diskpart1.txt set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
 diskpart /s Temp\diskpart1.txt
 rd /s /q Temp\
 
-bcdedit /store "%SYSTEMDRIVE%\EFIESP\EFI\Microsoft\Boot\BCD" /set "{bootmgr}" "timeout" "5"
+echo Setting boot menu timeout ...
+bcdedit /store "%SYSTEMDRIVE%\EFIESP\EFI\Microsoft\Boot\BCD" /set {bootmgr} timeout 5
 
 echo.
 echo More functionalities has been enabled.
