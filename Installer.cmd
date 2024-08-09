@@ -56,7 +56,7 @@ if not exist Temp\ md Temp\
 
 :Check2
 echo Checking Windows Build ...
-for /f "tokens=3" %%a in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set "WinBuild=%%a"
+for /f "tokens=3" %%A in ('Reg Query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild ^| findstr /r /i "REG_SZ"') do set "WinBuild=%%A"
 if %WinBuild% LSS 9200 (
 	rd /s /q Temp\
 	echo This Windows version is not supported by WFAv7 Installer.
@@ -229,15 +229,15 @@ echo %ESC%[97m Trying to detect MainOS ...%ESC%[91m
 
 :: DiskNumber
 
-for /f %%i in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%i"
-if "%DiskNumber%" EQU "" (for /f %%i in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%i")
+for /f %%A in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index 2>$null"') do set "DiskNumber=%%A"
+if "%DiskNumber%" EQU "" (for /f %%A in ('Powershell -C "(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index 2>$null"') do set "DiskNumber=%%A")
 if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 
 :: Search for MainOS in the GPT
 
 Files\dsfo \\.\PHYSICALDRIVE%DiskNumber% 1024 16384 Temp\GPT >nul
-for /l %%i in (0,1,47) do (
-	set /a "Offset=128*%%i"
+for /l %%I in (0,1,47) do (
+	set /a "Offset=128*%%I"
 
 	Files\dsfo Temp\GPT !Offset! 128 Temp\GPT-PartEntry >nul
 	Files\dsfo Temp\GPT-PartEntry 56 72 Temp\GPT-PartName >nul
@@ -255,18 +255,18 @@ goto MOSPath
 
 :PartitionNumber
 Files\dsfo Temp\GPT-PartEntry 16 16 Temp\GPT-PartUUID >nul
-for /f "usebackq delims=" %%g in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' ' 2>$null"`) do set "UuidHex=%%g"
-for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%a in ("%UuidHex%") do (
-	set "Uuid=%%d%%c%%b%%a-%%f%%e-%%h%%g-%%i%%j-%%k%%l%%m%%n%%o%%p"
+for /f "usebackq delims=" %%A in (`Powershell -C "([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' ' 2>$null"`) do set "UuidHex=%%A"
+for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%A in ("%UuidHex%") do (
+	set "Uuid=%%D%%C%%B%%A-%%F%%E-%%H%%G-%%I%%J-%%K%%L%%M%%N%%O%%P"
 )
 
-for /f %%p in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber 2>$null"') do set "PartitionNumber=%%p"
-for /f %%d in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter 2>$null"') do set "DriveLetter=%%d"
+for /f %%A in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber 2>$null"') do set "PartitionNumberMainOS=%%A"
+for /f %%A in ('Powershell -C "(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).DriveLetter 2>$null"') do set "DriveLetter=%%A"
 if not exist %DriveLetter%:\EFIESP goto MOSAutoDetectFail
 if not exist %DriveLetter%:\Data goto MOSAutoDetectFail
 
 del Temp\GPT*
-set "DLMOS=%DriveLetter%"
+set "DriveLetterMainOS=%DriveLetter%"
 set "MainOS=%DriveLetter%:"
 
 echo %ESC%[97m Detected MainOS at %DriveLetter%:%ESC%[0m
@@ -293,11 +293,11 @@ if not exist "%MainOS%\Data" (
 	echo %ESC%[91m Not a valid MainOS partition. Example: H: %ESC%[0m
 	goto MOSPath
 )
-set "DLMOS=%MainOS:~0,-1%"
+set "DriveLetterMainOS=%MainOS:~0,-1%"
 
 echo %ESC%[97m Getting MainOS infos ...%ESC%[91m
-for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).DiskNumber 2>$null"') do set "DiskNumber=%%i"
-for /f %%i in ('Powershell -C "(Get-Partition -DriveLetter %DLMOS%).PartitionNumber 2>$null"') do set "PartitionNumber=%%i"
+for /f %%A in ('Powershell -C "(Get-Partition -DriveLetter %DriveLetterMainOS%).DiskNumber 2>$null"') do set "DiskNumber=%%A"
+for /f %%A in ('Powershell -C "(Get-Partition -DriveLetter %DriveLetterMainOS%).PartitionNumber 2>$null"') do set "PartitionNumberMainOS=%%A"
 goto Win10MountCheck
 
 ::---------------------------------------------------------------
@@ -310,9 +310,9 @@ if exist "%MainOS%\Windows10\" (
 
 ::PartitionInfo
 echo %ESC%[97m Getting partitions' infos ...%ESC%[91m
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber 2>$null"') do set "PartitionNumberDPP=%%i"
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber 2>$null"') do set "PartitionNumberEFIESP=%%i"
-for /f %%i in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%i"
+for /f %%A in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber 2>$null"') do set "PartitionNumberDPP=%%A"
+for /f %%A in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber 2>$null"') do set "PartitionNumberEFIESP=%%A"
+for /f %%A in ('Powershell -C "(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber 2>$null"') do set "PartitionNumberData=%%A"
 :: TODO: ERROR HANDLING & LOGGING
 
 ::---------------------------------------------------------------
@@ -367,8 +367,8 @@ if %Win10SizeMB% LSS 6144 (
 :: For spec A, use Get-PartitionSupportedSize
 :: For spec B, use Get-Volume
 
-if "%DevSpec%" EQU "A" for /f %%i in ('Powershell -C "[Math]::Floor(((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% | Get-Volume).SizeRemaining) / 1MB) 2>$null"') do set "FreeSpace=%%i"
-if "%DevSpec%" EQU "B" for /f %%i in ('Powershell -C "$Partition = Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%; [Math]::Floor((($Partition | Get-Volume).Size - ($Partition | Get-PartitionSupportedSize).SizeMin) / 1MB) 2>$null"') do set "FreeSpace=%%i"
+if "%DevSpec%" EQU "A" for /f %%A in ('Powershell -C "[Math]::Floor(((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% | Get-Volume).SizeRemaining) / 1MB) 2>$null"') do set "FreeSpace=%%A"
+if "%DevSpec%" EQU "B" for /f %%A in ('Powershell -C "$Partition = Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%; [Math]::Floor((($Partition | Get-Volume).Size - ($Partition | Get-PartitionSupportedSize).SizeMin) / 1MB) 2>$null"') do set "FreeSpace=%%A"
 if %Win10SizeMB% GTR %FreeSpace% (
 	echo  %ESC%[91mNot enough storage space is available.
 	echo  %ESC%[91mYou only have %FreeSpace% MB of storage space.%ESC%[0m
@@ -492,7 +492,7 @@ if /i "%Dualboot%" EQU "Y" (
 		
 		echo %ESC%[97m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
 		
-		for /f %%i in ('Powershell -C "[Math]::Floor((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB% 2>>'%LogName%'"') do set "DataPartSizeMB=%%i"
+		for /f %%A in ('Powershell -C "[Math]::Floor((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB% 2>>'%LogName%'"') do set "DataPartSizeMB=%%A"
 
 		echo ## Resize-Partition ## >>"%LogName%"
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size !DataPartSizeMB!MB; exit $Error.count" %SevLogger%
@@ -509,7 +509,7 @@ if /i "%Dualboot%" EQU "Y" (
 	echo ## Remove-Partition ## >>"%LogName%"
 	Powershell -C "Remove-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -confirm:$false; exit $Error.count" %SevLogger%
 	echo ## Resize-Partition ## >>"%LogName%"
-	Powershell -C "Resize-Partition -DriveLetter %DLMOS% -Size (Get-PartitionSupportedSize -DriveLetter %DLMOS%).sizeMax; exit $Error.count" %SevLogger%
+	Powershell -C "Resize-Partition -DriveLetter %DriveLetterMainOS% -Size (Get-PartitionSupportedSize -DriveLetter %DriveLetterMainOS%).sizeMax; exit $Error.count" %SevLogger%
 	set "Win10Drive=%MainOS%"
 
 )
