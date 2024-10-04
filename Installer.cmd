@@ -32,8 +32,8 @@ if %PLV% NEQ 0 (
 :: Goto and call is affected so this must be done early.
 :: Both findstr and busybox grep fail to do this properly so I have to rely on the slow Powershell.
 echo Checking line endings ...
-for /f %%A in ('Powershell -C "(Get-Content '%~f0' -Raw) -Match '[^\r]\n'"') do set "NotCrlf=%%A"
-if "%NotCrlf%" EQU "True" (
+for /f %%A in ('Powershell -C "(Get-Content '%~f0' -Raw) -Match '[^\r]\n'"') do set "HasLf=%%A"
+if "%HasLf%" EQU "True" (
 	echo The script's line endings must be CRLF ^(Windows^).
 	echo Please fully convert it to CRLF.
 	echo.
