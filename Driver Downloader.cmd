@@ -19,53 +19,102 @@ if %WinBuild% LSS 10586 (
 )
 
 title WFAv7 Driver Downloader 4.1
-set "ESC="
-
-::------------------------------------------------------------------
-:ChooseDev
-set "Model="
-cls
 color 0f
+set "ESC="
+goto ChooseDev
+
+::---------------------------------------------------------------
+:PrintLabel
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
 echo  //                               %ESC%[97mWFAv7 Driver Downloader 4.1%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
-echo Choose your Device Model below%ESC%[32m:
-echo  %ESC%[36m1)%ESC%[97m Lumia 930
-echo  %ESC%[36m2)%ESC%[97m Lumia 929 (Icon)
-echo  %ESC%[36m3)%ESC%[97m Lumia 1520
-echo  %ESC%[36m4)%ESC%[97m Lumia 1520 AT^&T
-echo  %ESC%[36m5)%ESC%[97m Lumia 830 Global
-echo  %ESC%[36m6)%ESC%[97m Lumia 735 Global
-echo  %ESC%[36m7)%ESC%[97m Lumia 650
-echo  %ESC%[36m8)%ESC%[97m Lumia 640 XL 3G
-echo  %ESC%[36m9)%ESC%[97m Lumia 640 XL LTE Global
-echo  %ESC%[36mA)%ESC%[97m Lumia 640 XL LTE AT^&T
-echo  %ESC%[36mB)%ESC%[97m Lumia 520
-echo  %ESC%[36mC)%ESC%[97m Lumia 920
-echo  %ESC%[36mD)%ESC%[97m Lumia 1020
-echo  %ESC%[36mE)%ESC%[97m Lumia 1020 AT^&T
+goto :EOF
 
-set /p "Model=%ESC%[92mDevice%ESC%[92m: %ESC%[0m"
+::------------------------------------------------------------------
+:ChooseDev
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device model below:
+echo  %ESC%[36m1) %ESC%[97mLumia 1520
+echo  %ESC%[36m2) %ESC%[97mLumia 930
+echo  %ESC%[36m3) %ESC%[97mLumia 929 (Icon)
+echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
+echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
+echo  %ESC%[36m6) %ESC%[97mLumia 650
+echo  %ESC%[36m7) %ESC%[97mLumia 640 (and XL)
+echo  %ESC%[36m8) %ESC%[97mLumia 1020
+echo  %ESC%[36m9) %ESC%[97mLumia 920
+echo  %ESC%[36mA) %ESC%[97mLumia 520
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
-if "%Model%" EQU "1" (set "ModelDir=Lumia930"       & set "DefName=930.xml"               & goto DoDownload)
-if "%Model%" EQU "2" (set "ModelDir=LumiaIcon"      & set "DefName=icon.xml"              & goto DoDownload)
-if "%Model%" EQU "3" (set "ModelDir=Lumia1520"      & set "DefName=1520upsidedown.xml"    & goto DoDownload)
-if "%Model%" EQU "4" (set "ModelDir=Lumia1520-AT&T" & set "DefName=1520attupsidedown.xml" & goto DoDownload)
-if "%Model%" EQU "5" (set "ModelDir=Lumia830"       & set "DefName=830.xml"               & goto DoDownload)
-if "%Model%" EQU "6" (set "ModelDir=Lumia735"       & set "DefName=735.xml"               & goto DoDownload)
-if "%Model%" EQU "7" (set "ModelDir=Lumia650"       & set "DefName=650.xml"               & goto DoDownload)
-if "%Model%" EQU "8" (set "ModelDir=Lumia640XL-3G"  & set "DefName=640xlds.xml"           & goto DoDownload)
-if "%Model%" EQU "9" (set "ModelDir=Lumia640XL-LTE" & set "DefName=640xl.xml"             & goto DoDownload)
-if /I "%Model%" EQU "A" (set "ModelDir=Lumia640XL-AT&T" & set "DefName=640xlatt.xml" & goto DoDownload)
-if /I "%Model%" EQU "B" (set "ModelDir=Lumia520"        & set "DefName=520.xml"      & goto DoDownload)
-if /I "%Model%" EQU "C" (set "ModelDir=Lumia920"        & set "DefName=920.xml"      & goto DoDownload)
-if /I "%Model%" EQU "D" (set "ModelDir=Lumia1020"       & set "DefName=1020.xml"     & goto DoDownload)
-if /I "%Model%" EQU "E" (set "ModelDir=Lumia1020-AT&T"  & set "DefName=1020att.xml"  & goto DoDownload)
+if "%Model%" EQU "1" (goto ChooseDev1520)
+if "%Model%" EQU "2" (set "ModelDir=Lumia930"  & set "DefName=930.xml"  & goto DoDownload)
+if "%Model%" EQU "3" (set "ModelDir=LumiaIcon" & set "DefName=icon.xml" & goto DoDownload)
+if "%Model%" EQU "4" (set "ModelDir=Lumia830"  & set "DefName=830.xml"  & goto DoDownload)
+if "%Model%" EQU "5" (set "ModelDir=Lumia735"  & set "DefName=735.xml"  & goto DoDownload)
+if "%Model%" EQU "6" (set "ModelDir=Lumia650"  & set "DefName=650.xml"  & goto DoDownload)
+if "%Model%" EQU "7" (goto ChooseDev640)
+if "%Model%" EQU "8" (goto ChooseDev1020)
+if "%Model%" EQU "9" (set "ModelDir=Lumia920"  & set "DefName=920.xml"  & goto DoDownload)
+if /i "%Model%" EQU "A" (set "ModelDir=Lumia520" & set "DefName=520.xml" & goto DoDownload)
 goto ChooseDev
+
+:ChooseDev1520
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mLumia 1520 Global
+echo  %ESC%[36m2) %ESC%[97mLumia 1520 AT^&T
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDev1520
+set "Model=%Model:"=%"
+
+if "%Model%" EQU "1" (set "ModelDir=Lumia1520"      & set "DefName=1520upsidedown.xml"    & goto DoDownload)
+if "%Model%" EQU "2" (set "ModelDir=Lumia1520-AT&T" & set "DefName=1520attupsidedown.xml" & goto DoDownload)
+goto ChooseDev1520
+
+
+:ChooseDev640
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mLumia 640 3G
+echo  %ESC%[36m2) %ESC%[97mLumia 640 LTE
+echo  %ESC%[36m3) %ESC%[97mLumia 640 XL 3G
+echo  %ESC%[36m4) %ESC%[97mLumia 640 XL LTE Global
+echo  %ESC%[36m5) %ESC%[97mLumia 640 XL LTE AT^&T
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDev640
+set "Model=%Model:"=%"
+
+if "%Model%" EQU "1" (set "ModelDir=Lumia640-3G"     & set "DefName=640ds.xml"    & goto DoDownload)
+if "%Model%" EQU "2" (set "ModelDir=Lumia640-LTE"    & set "DefName=640lte.xml"   & goto DoDownload)
+if "%Model%" EQU "3" (set "ModelDir=Lumia640XL-3G"   & set "DefName=640xlds.xml"  & goto DoDownload)
+if "%Model%" EQU "4" (set "ModelDir=Lumia640XL-LTE"  & set "DefName=640xl.xml"    & goto DoDownload)
+if "%Model%" EQU "5" (set "ModelDir=Lumia640XL-AT&T" & set "DefName=640xlatt.xml" & goto DoDownload)
+goto ChooseDev640
+
+:ChooseDev1020
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mLumia 1020 Global
+echo  %ESC%[36m2) %ESC%[97mLumia 1020 AT^&T
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDev1020
+set "Model=%Model:"=%"
+
+if "%Model%" EQU "1" (set "ModelDir=Lumia1020"       & set "DefName=1020.xml"     & goto DoDownload)
+if "%Model%" EQU "2" (set "ModelDir=Lumia1020-AT&T"  & set "DefName=1020att.xml"  & goto DoDownload)
+goto ChooseDev1020
 
 ::------------------------------------------------------------------
 :DoDownload

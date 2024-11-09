@@ -150,40 +150,83 @@ set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device model below:
-echo  %ESC%[36m1) %ESC%[97mLumia 930
-echo  %ESC%[36m2) %ESC%[97mLumia 929 (Icon)
-echo  %ESC%[36m3) %ESC%[97mLumia 1520
-echo  %ESC%[36m4) %ESC%[97mLumia 1520 AT^&T
-echo  %ESC%[36m5) %ESC%[97mLumia 830 Global
-echo  %ESC%[36m6) %ESC%[97mLumia 735 Global
-echo  %ESC%[36m7) %ESC%[97mLumia 650
-echo  %ESC%[36m8) %ESC%[97mLumia 640 XL 3G
-echo  %ESC%[36m9) %ESC%[97mLumia 640 XL LTE Global
-echo  %ESC%[36mA) %ESC%[97mLumia 640 XL LTE AT^&T
-echo  %ESC%[36mB) %ESC%[97mLumia 520
-echo  %ESC%[36mC) %ESC%[97mLumia 920
-echo  %ESC%[36mD) %ESC%[97mLumia 1020
-echo  %ESC%[36mE) %ESC%[97mLumia 1020 AT^&T
+echo  %ESC%[36m1) %ESC%[97mLumia 1520
+echo  %ESC%[36m2) %ESC%[97mLumia 930
+echo  %ESC%[36m3) %ESC%[97mLumia 929 (Icon)
+echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
+echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
+echo  %ESC%[36m6) %ESC%[97mLumia 650
+echo  %ESC%[36m7) %ESC%[97mLumia 640 (and XL)
+echo  %ESC%[36m8) %ESC%[97mLumia 1020
+echo  %ESC%[36m9) %ESC%[97mLumia 920
+echo  %ESC%[36mA) %ESC%[97mLumia 520
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
 
-if "%Model%" EQU "1" (set "Model=Lumia930"       & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if "%Model%" EQU "2" (set "Model=LumiaIcon"      & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if "%Model%" EQU "3" (set "Model=Lumia1520"      & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if "%Model%" EQU "4" (set "Model=Lumia1520-AT&T" & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if "%Model%" EQU "5" (set "Model=Lumia830"       & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if "%Model%" EQU "6" (set "Model=Lumia735"       & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if "%Model%" EQU "7" (set "Model=Lumia650"       & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=1" & goto Preparation)
-if "%Model%" EQU "8" (set "Model=Lumia640XL-3G"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if "%Model%" EQU "9" (set "Model=Lumia640XL-LTE" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if /i "%Model%" EQU "A" (set "Model=Lumia640XL-AT&T" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if /i "%Model%" EQU "B" (set "Model=Lumia520"        & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if /i "%Model%" EQU "C" (set "Model=Lumia920"        & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if /i "%Model%" EQU "D" (set "Model=Lumia1020"       & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if /i "%Model%" EQU "E" (set "Model=Lumia1020-AT&T"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "1" (goto ChooseDev1520)
+if "%Model%" EQU "2" (set "Model=Lumia930"  & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "3" (set "Model=LumiaIcon" & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "4" (set "Model=Lumia830"  & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "5" (set "Model=Lumia735"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "6" (set "Model=Lumia650"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "7" (goto ChooseDev640)
+if "%Model%" EQU "8" (goto ChooseDev1020)
+if "%Model%" EQU "9" (set "Model=Lumia920"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if /i "%Model%" EQU "A" (set "Model=Lumia520" & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
 goto ChooseDev
 
+:ChooseDev1520
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mLumia 1520 Global
+echo  %ESC%[36m2) %ESC%[97mLumia 1520 AT^&T
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDev1520
+set "Model=%Model:"=%"
+
+if "%Model%" EQU "1" (set "Model=Lumia1520"      & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "2" (set "Model=Lumia1520-AT&T" & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+goto ChooseDev1520
+
+
+:ChooseDev640
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mLumia 640 3G
+echo  %ESC%[36m2) %ESC%[97mLumia 640 LTE
+echo  %ESC%[36m3) %ESC%[97mLumia 640 XL 3G
+echo  %ESC%[36m4) %ESC%[97mLumia 640 XL LTE Global
+echo  %ESC%[36m5) %ESC%[97mLumia 640 XL LTE AT^&T
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDev640
+set "Model=%Model:"=%"
+
+if "%Model%" EQU "1" (set "Model=Lumia640-3G"     & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "2" (set "Model=Lumia640-LTE"    & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "3" (set "Model=Lumia640XL-3G"   & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "4" (set "Model=Lumia640XL-LTE"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "5" (set "Model=Lumia640XL-AT&T" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+goto ChooseDev640
+
+:ChooseDev1020
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mLumia 1020 Global
+echo  %ESC%[36m2) %ESC%[97mLumia 1020 AT^&T
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDev1020
+set "Model=%Model:"=%"
+
+if "%Model%" EQU "1" (set "Model=Lumia1020"      & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "2" (set "Model=Lumia1020-AT&T" & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+goto ChooseDev1020
 
 ::---------------------------------------------------------------
 :Preparation
