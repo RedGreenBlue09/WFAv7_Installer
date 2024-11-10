@@ -14,13 +14,13 @@
 	
 ## Supported Devices
 
+- Nokia Lumia 1520 (Global, AT&T)
 - Nokia Lumia 930
 - Nokia Lumia Icon
-- Nokia Lumia 1520 (Global, AT&T)
 - Nokia Lumia 830 Global
 - Nokia Lumia 735 Global
 - Microsoft Lumia 650
-- Microsoft Lumia 640 XL (3G, LTE Global, AT&T)
+- Microsoft Lumia 640 & 640 XL
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
 - ~~Nokia Lumia 520~~ (Have a major issue at the moment)
