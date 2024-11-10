@@ -488,7 +488,7 @@ set SevLogger=^>^> "%LogName%" 2^>^&1 ^&^
  set "SevErr=^!Errorlevel^!" ^&^
  (if ^^!SevErr^^! NEQ 0 (set /a "ErrNum+=1" ^>nul ^& goto SevErrFound))
 
-start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n0 "%LogName%"
+start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n +1 "%LogName%"
 ::---------------------------------------------------------------
 
 set "StartTime=%Time%"
