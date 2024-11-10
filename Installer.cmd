@@ -110,7 +110,7 @@ goto :EOF
 :Disclaimer
 cls
 color 07
-title Windows 10 for ARMv7 Installer 3.2
+title Windows 10 for ARMv7 Installer 3.2.1
 echo.
 echo.
 echo                            %ESC%[97mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
@@ -156,7 +156,7 @@ echo  %ESC%[36m3) %ESC%[97mLumia 929 (Icon)
 echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
 echo  %ESC%[36m6) %ESC%[97mLumia 650
-echo  %ESC%[36m7) %ESC%[97mLumia 640 (and XL)
+echo  %ESC%[36m7) %ESC%[97mLumia 640 / 640 XL
 echo  %ESC%[36m8) %ESC%[97mLumia 1020
 echo  %ESC%[36m9) %ESC%[97mLumia 920
 echo  %ESC%[36mA) %ESC%[97mLumia 520
@@ -494,7 +494,7 @@ start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n0 "%LogName%"
 set "StartTime=%Time%"
 echo.
 echo %ESC%[97m[INFO] Installation was started at %StartTime%
-echo #### Windows 10 for ARMv7 Installer 3.2 #### >>"%LogName%"
+echo #### Windows 10 for ARMv7 Installer 3.2.1 #### >>"%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
 echo ## Device is "%Model%"  ## >>"%LogName%"

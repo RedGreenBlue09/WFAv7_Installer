@@ -18,7 +18,7 @@ if %WinBuild% LSS 10586 (
 	Files\ansicon_%PROCESSOR_ARCHITECTURE% -p
 )
 
-title WFAv7 Driver Downloader 4.1
+title WFAv7 Driver Downloader 4.2
 color 0f
 set "ESC="
 goto ChooseDev
@@ -26,7 +26,7 @@ goto ChooseDev
 ::---------------------------------------------------------------
 :PrintLabel
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                               %ESC%[97mWFAv7 Driver Downloader 4.1%ESC%[93m                                //
+echo  //                               %ESC%[97mWFAv7 Driver Downloader 4.2%ESC%[93m                                //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[92m
 echo.
@@ -44,7 +44,7 @@ echo  %ESC%[36m3) %ESC%[97mLumia 929 (Icon)
 echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
 echo  %ESC%[36m6) %ESC%[97mLumia 650
-echo  %ESC%[36m7) %ESC%[97mLumia 640 (and XL)
+echo  %ESC%[36m7) %ESC%[97mLumia 640 / 640 XL
 echo  %ESC%[36m8) %ESC%[97mLumia 1020
 echo  %ESC%[36m9) %ESC%[97mLumia 920
 echo  %ESC%[36mA) %ESC%[97mLumia 520
