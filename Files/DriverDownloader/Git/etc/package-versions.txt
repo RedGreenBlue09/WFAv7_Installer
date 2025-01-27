@@ -13,8 +13,8 @@ mingw-w64-i686-curl-winssl 8.10.1-1
 mingw-w64-i686-expat 2.6.3-1
 mingw-w64-i686-gcc-libs 14.2.0-1
 mingw-w64-i686-gettext-runtime 0.22.5-2
-mingw-w64-i686-git 2.46.2.1.1e20af0e80-1
-mingw-w64-i686-git-credential-manager 2.5.1-1
+mingw-w64-i686-git 2.46.2.2.61df50cc51-1
+mingw-w64-i686-git-credential-manager 2.6.1-1
 mingw-w64-i686-git-extra 1.1.641.031e03baf-1
 mingw-w64-i686-libffi 3.4.6-1
 mingw-w64-i686-libiconv 1.17-4

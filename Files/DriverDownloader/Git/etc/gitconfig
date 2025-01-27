@@ -20,4 +20,4 @@
 [credential]
 	helper = manager
 
-# 04 Oct 2024 (RedGreenBlue09): Removed Program Files includes to prevent certificate error.
+# 27 Jan 2025 (RedGreenBlue09): Removed Program Files includes to prevent certificate error.
