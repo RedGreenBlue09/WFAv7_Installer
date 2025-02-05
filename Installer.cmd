@@ -558,7 +558,7 @@ if /i "%Dualboot%" EQU "Y" (
 )
 echo ## Windows 10 drive is %Win10Drive% ## >>"%LogName%"
 echo %ESC%[97m[INFO] Formatting Windows 10 ARM partition ...%ESC%[91m
-format %Win10Drive% /FS:NTFS /V:Windows10 /Q /C /Y %SevLogger%
+format %Win10Drive% /FS:NTFS /V:Windows10 /Q /Y %SevLogger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
