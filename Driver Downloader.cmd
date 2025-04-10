@@ -48,6 +48,7 @@ echo  %ESC%[36m7) %ESC%[97mLumia 640 / 640 XL
 echo  %ESC%[36m8) %ESC%[97mLumia 1020
 echo  %ESC%[36m9) %ESC%[97mLumia 920
 echo  %ESC%[36mA) %ESC%[97mLumia 520
+echo  %ESC%[36mB) %ESC%[97mGeneric INF
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -62,6 +63,7 @@ if "%Model%" EQU "7" (goto ChooseDev640)
 if "%Model%" EQU "8" (goto ChooseDev1020)
 if "%Model%" EQU "9" (set "ModelDir=Lumia920"  & set "DefName=920.xml"  & goto DoDownload)
 if /i "%Model%" EQU "A" (set "ModelDir=Lumia520" & set "DefName=520.xml" & goto DoDownload)
+if /i "%Model%" EQU "B" (goto ChooseDevGenericINF)
 goto ChooseDev
 
 :ChooseDev1520
@@ -116,17 +118,42 @@ if "%Model%" EQU "1" (set "ModelDir=Lumia1020"       & set "DefName=1020.xml"   
 if "%Model%" EQU "2" (set "ModelDir=Lumia1020-AT&T"  & set "DefName=1020att.xml"  & goto DoDownload)
 goto ChooseDev1020
 
+:ChooseDevGenericInf
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below (you need at least 8 GB of internal storage):
+echo  %ESC%[36m1) %ESC%[97mLumia 630
+echo  %ESC%[36m2) %ESC%[97mLumia 430, 435, 540
+echo  %ESC%[36m3) %ESC%[97mLumia 820, 925
+echo  %ESC%[36m4) %ESC%[97mLumia 525, 620, 625, 720
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDevGenericInf
+set "Model=%Model:"=%"
+
+set "Generic=1"
+if "%Model%" EQU "1" (set "ModelDir=Generic8226" & set "DefName=generic8226.xml" & goto DoDownload)
+if "%Model%" EQU "2" (set "ModelDir=Generic8212" & set "DefName=generic8212.xml" & goto DoDownload)
+if "%Model%" EQU "3" (set "ModelDir=Generic8960" & set "DefName=generic8960.xml" & goto DoDownload)
+if "%Model%" EQU "4" (set "ModelDir=Generic8930" & set "DefName=generic8930.xml" & goto DoDownload)
+goto ChooseDevGenericInf
+
 ::------------------------------------------------------------------
 :DoDownload
 
 :: set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
-set "RepoLink=https://github.com/bibarub/Lumia-Drivers.git"
+:: set "RepoLink=https://github.com/bibarub/Lumia-Drivers.git"
+set "RepoLink=https://github.com/RedGreenBlue09/Lumia-Drivers.git"
 
 set "GitPath=%~dp0\Files\DriverDownloader\Git\cmd\git"
 
 cls
 if not exist Drivers\ md Drivers\
 if not exist Temp\ md Temp\
+
+:: TEMP
+set "Tag=generic_inf"
+goto DoDownload2
 
 echo Fetching latest release tag ...
 "%GitPath%" ls-remote --tags "%RepoLink%" >Temp\Tags.txt || (
@@ -144,7 +171,7 @@ del Temp\Tags.txt
 set "Tag=%Tag:~10%"
 
 ::------------------------------------------------------------------
-
+:DoDownload2
 set "InstallerDir=%~dp0"
 set "RepoDir=%InstallerDir%\Drivers\%ModelDir%"
 
