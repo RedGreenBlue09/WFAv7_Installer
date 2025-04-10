@@ -157,11 +157,11 @@ echo  %ESC%[36m3) %ESC%[97mLumia 929 (Icon)
 echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
 echo  %ESC%[36m6) %ESC%[97mLumia 650
-echo  %ESC%[36m7) %ESC%[97mLumia 640 / 640 XL
+echo  %ESC%[36m7) %ESC%[97mLumia 640, 640 XL
 echo  %ESC%[36m8) %ESC%[97mLumia 1020
 echo  %ESC%[36m9) %ESC%[97mLumia 920
 echo  %ESC%[36mA) %ESC%[97mLumia 520
-echo  %ESC%[36mZ) %ESC%[97mGeneric INF
+echo  %ESC%[36mB) %ESC%[97mGeneric INF
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -176,7 +176,7 @@ if "%Model%" EQU "7" (goto ChooseDev640)
 if "%Model%" EQU "8" (goto ChooseDev1020)
 if "%Model%" EQU "9" (set "Model=Lumia920"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
 if /i "%Model%" EQU "A" (set "Model=Lumia520" & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if /i "%Model%" EQU "Z" (goto ChooseDevGenericInf)
+if /i "%Model%" EQU "B" (goto ChooseDevGenericInf)
 goto ChooseDev
 
 :ChooseDev1520
@@ -235,14 +235,20 @@ goto ChooseDev1020
 set "Model="
 cls
 call :PrintLabel
-echo %ESC%[92mChoose your device variant below:
-echo  %ESC%[36m1) %ESC%[97mMSM8974
+echo %ESC%[92mChoose your device variant below (you need at least 8 GB of internal storage):
+echo  %ESC%[36m1) %ESC%[97mLumia 630
+echo  %ESC%[36m2) %ESC%[97mLumia 430, 435, 540
+echo  %ESC%[36m3) %ESC%[97mLumia 820, 925
+echo  %ESC%[36m4) %ESC%[97mLumia 525, 620, 625, 720
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDevGenericInf
 set "Model=%Model:"=%"
 
 set "Generic=1"
-if "%Model%" EQU "1" (set "Model=Generic8974" & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "1" (set "Model=Generic8226" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "2" (set "Model=Generic8212" & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "3" (set "Model=Generic8960" & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if "%Model%" EQU "4" (set "Model=Generic8930" & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=0" & goto Preparation)
 goto ChooseDevGenericInf
 
 ::---------------------------------------------------------------
@@ -535,40 +541,38 @@ if not defined Generic goto CheckPartitions
 
 echo %ESC%[97m[INFO] Copying hardware-specific files ...%ESC%[91m
 rd /s /q "Temp\%Model%" %Logger%
-if "%Model%" EQU "Generic8974" (
-	xcopy "%MainOS%\Windows\System32\Bluetooth_cal_8974.acdb" "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Codec_cal_8974.acdb"     "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\General_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Global_cal_8974.acdb"    "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Handset_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Hdmi_cal_8974.acdb"      "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Headset_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Speaker_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	
-	xcopy "%MainOS%\Windows\System32\qcvss8974.mbn"           "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\Drivers\ColorData.bin"   "Temp\%Model%\Files\Drivers\*" /H /I /Y %Logger%
-	
-	xcopy "%MainOS%\Windows\System32\qcadsp8974.mbn"          "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\qcdsp1v28974.mbn"        "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\qcdsp28974.mbn"          "Temp\%Model%\Files\*" /H /I /Y %Logger%
-	xcopy "%MainOS%\Windows\System32\qcwcnss8974.mbn"         "Temp\%Model%\Files\*" /H /I /Y %Logger%
+if %DevSpec% EQU A (
+	if "%Model%" EQU "Generic8930" set "QCACDB=qcacdb8930.sys"
+	if "%Model%" EQU "Generic8960" set "QCACDB=qcacdb8960.sys"
+	xcopy "%MainOS%\Windows\System32\Drivers\!QCACDB!" "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
+) else (
+	xcopy "%MainOS%\Windows\System32\*.acdb" "Temp\%Model%\Files\*" /H /I %Logger%
 )
+xcopy "%MainOS%\Windows\System32\*.mbn"                 "Temp\%Model%\Files\*" /H /I %Logger%
+xcopy "%MainOS%\Windows\System32\Drivers\*.dcc"         "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
+xcopy "%MainOS%\Windows\System32\Drivers\*.dfc"         "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
+xcopy "%MainOS%\Windows\System32\Drivers\ColorData.bin" "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
 
 reg load "HKLM\RTSYSTEM" "%MainOS%\Windows\System32\config\SYSTEM" %Logger%
 reg load "HKLM\RTSOFTWARE" "%MainOS%\Windows\System32\config\SOFTWARE" %Logger%
 
 md "Temp\%Model%\Registry" %Logger%
-reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                    "Temp\%Model%\Registry\0.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"              "Temp\%Model%\Registry\1.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                          "Temp\%Model%\Registry\2.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"               "Temp\%Model%\Registry\3.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                           "Temp\%Model%\Registry\4.reg" %Logger%
-reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters" "Temp\%Model%\Registry\5.reg" %Logger%
-reg export "HKLM\RTSYSTEM\TOUCH"                                         "Temp\%Model%\Registry\6.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                     "Temp\%Model%\Registry\0.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\Microsoft\CaptureService\OEMCustomProperties" "Temp\%Model%\Registry\1.reg" %Logger%
+:: HACKY because only MaxEnumerablePhotoSize value is needed
+reg export "HKLM\RTSOFTWARE\Microsoft\Photos\OEM"                         "Temp\%Model%\Registry\2.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"               "Temp\%Model%\Registry\3.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                           "Temp\%Model%\Registry\4.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"                "Temp\%Model%\Registry\5.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Nokia\Camera"                             "Temp\%Model%\Registry\6.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                            "Temp\%Model%\Registry\7.reg" %Logger%
+reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters"  "Temp\%Model%\Registry\8.reg" %Logger%
+reg export "HKLM\RTSYSTEM\TOUCH"                                          "Temp\%Model%\Registry\9.reg" %Logger%
 
 reg unload "HKLM\RTSYSTEM" %Logger%
 reg unload "HKLM\RTSOFTWARE" %Logger%
 
+::---------------------------------------------------------------
 :CheckPartitions
 echo %ESC%[97m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f /x %MainOS%\Data %Logger%
@@ -635,14 +639,23 @@ if %WinBuild% LSS 10240 (
 echo %ESC%[97m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\%Model%" /Recurse %Logger%
-if defined Generic (xcopy "Temp\%Model%\Files" "%Win10Drive%\Windows\System32" /E /H /I /Y %Logger%)
+
+if defined Generic (
+	if %DevSpec% EQU A (
+		if "%Model%" EQU "Generic8930" set "QCACDB=qcacdb8930.sys"
+		if "%Model%" EQU "Generic8960" set "QCACDB=qcacdb8960.sys"
+		takeown /F  "%MainOS%\Windows\System32\Drivers\!QCACDB!" %Logger%
+		icacls "%MainOS%\Windows\System32\Drivers\!QCACDB!" /grant Administrators:F %Logger%
+	)
+	xcopy "Temp\%Model%\Files" "%Win10Drive%\Windows\System32" /E /H /I /Y %Logger%
+)
 
 echo %ESC%[97m[INFO] Importing registry configuration ...%ESC%[91m
 reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\SYSTEM" %Logger%
 reg load "HKLM\RTSOFTWARE" "%Win10Drive%\Windows\System32\config\SOFTWARE" %Logger%
 
 reg add "HKLM\RTSYSTEM\ControlSet001\Control\Session Manager\Memory Management" /v "PagingFiles" /t REG_MULTI_SZ /d "C:\pagefile.sys 512 768" /f %Logger%
-if defined Generic (for %%A in (Temp\%Model%\Registry\*) do reg import "%%A" %Logger%)
+if defined Generic (for %%A in ("Temp\%Model%\Registry\*") do reg import "%%A" %Logger%)
 
 reg unload "HKLM\RTSYSTEM" %Logger%
 reg unload "HKLM\RTSOFTWARE" %Logger%
