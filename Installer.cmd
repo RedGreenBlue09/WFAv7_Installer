@@ -147,6 +147,7 @@ if /i "%Disclaimer%" NEQ "Y" goto Disclaimer
 ::---------------------------------------------------------------
 :ChooseDev
 set "Model="
+set "Generic="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device model below:
@@ -160,6 +161,7 @@ echo  %ESC%[36m7) %ESC%[97mLumia 640 / 640 XL
 echo  %ESC%[36m8) %ESC%[97mLumia 1020
 echo  %ESC%[36m9) %ESC%[97mLumia 920
 echo  %ESC%[36mA) %ESC%[97mLumia 520
+echo  %ESC%[36mZ) %ESC%[97mGeneric INF
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -174,6 +176,7 @@ if "%Model%" EQU "7" (goto ChooseDev640)
 if "%Model%" EQU "8" (goto ChooseDev1020)
 if "%Model%" EQU "9" (set "Model=Lumia920"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
 if /i "%Model%" EQU "A" (set "Model=Lumia520" & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if /i "%Model%" EQU "Z" (goto ChooseDevGenericInf)
 goto ChooseDev
 
 :ChooseDev1520
@@ -228,6 +231,20 @@ if "%Model%" EQU "1" (set "Model=Lumia1020"      & set "DevSpec=A" & set "HasCam
 if "%Model%" EQU "2" (set "Model=Lumia1020-AT&T" & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
 goto ChooseDev1020
 
+:ChooseDevGenericInf
+set "Model="
+cls
+call :PrintLabel
+echo %ESC%[92mChoose your device variant below:
+echo  %ESC%[36m1) %ESC%[97mMSM8974
+set /p "Model=%ESC%[92mDevice:%ESC%[0m "
+if not defined Model goto ChooseDevGenericInf
+set "Model=%Model:"=%"
+
+set "Generic=1"
+if "%Model%" EQU "1" (set "Model=Generic8974" & set "DevSpec=B" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+goto ChooseDevGenericInf
+
 ::---------------------------------------------------------------
 :Preparation
 cls
@@ -260,8 +277,13 @@ call :CustomPause " Press any key to go back ... "
 goto ChooseDev
 
 :RegistryCheck
-reg query HKLM\RTSYSTEM /ve >nul 2>&1 && (
+reg query "HKLM\RTSYSTEM" /ve >nul 2>&1 && (
 	echo %ESC%[91m Please unload registry hive HKLM\RTSYSTEM.%ESC%[0m
+	call :CustomPause " Press any key to go back ... "
+	goto ChooseDev
+)
+reg query "HKLM\RTSOFTWARE" /ve >nul 2>&1 && (
+	echo %ESC%[91m Please unload registry hive HKLM\RTSOFTWARE.%ESC%[0m
 	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
 )
@@ -508,6 +530,46 @@ if /i "%Dualboot%" EQU "Y" echo ## Win10SizeMB is %Win10SizeMB% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "N" echo ## ChargeThreshold is %ChargeThreshold% ## >>"%LogName%"
 if /i "%Dualboot%" EQU "N" echo ## DebugEnabled is %DebugEnabled% ## >>"%LogName%"
 
+:: Copy hardware-specific files
+if not defined Generic goto CheckPartitions
+
+echo %ESC%[97m[INFO] Copying hardware-specific files ...%ESC%[91m
+rd /s /q "Temp\%Model%" %Logger%
+if "%Model%" EQU "Generic8974" (
+	xcopy "%MainOS%\Windows\System32\Bluetooth_cal_8974.acdb" "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Codec_cal_8974.acdb"     "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\General_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Global_cal_8974.acdb"    "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Handset_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Hdmi_cal_8974.acdb"      "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Headset_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Speaker_cal_8974.acdb"   "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	
+	xcopy "%MainOS%\Windows\System32\qcvss8974.mbn"           "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\Drivers\ColorData.bin"   "Temp\%Model%\Files\Drivers\*" /H /I /Y %Logger%
+	
+	xcopy "%MainOS%\Windows\System32\qcadsp8974.mbn"          "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\qcdsp1v28974.mbn"        "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\qcdsp28974.mbn"          "Temp\%Model%\Files\*" /H /I /Y %Logger%
+	xcopy "%MainOS%\Windows\System32\qcwcnss8974.mbn"         "Temp\%Model%\Files\*" /H /I /Y %Logger%
+)
+
+reg load "HKLM\RTSYSTEM" "%MainOS%\Windows\System32\config\SYSTEM" %Logger%
+reg load "HKLM\RTSOFTWARE" "%MainOS%\Windows\System32\config\SOFTWARE" %Logger%
+
+md "Temp\%Model%\Registry" %Logger%
+reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                    "Temp\%Model%\Registry\0.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"              "Temp\%Model%\Registry\1.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                          "Temp\%Model%\Registry\2.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"               "Temp\%Model%\Registry\3.reg" %Logger%
+reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                           "Temp\%Model%\Registry\4.reg" %Logger%
+reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters" "Temp\%Model%\Registry\5.reg" %Logger%
+reg export "HKLM\RTSYSTEM\TOUCH"                                         "Temp\%Model%\Registry\6.reg" %Logger%
+
+reg unload "HKLM\RTSYSTEM" %Logger%
+reg unload "HKLM\RTSOFTWARE" %Logger%
+
+:CheckPartitions
 echo %ESC%[97m[INFO] Checking partition for errors ...%ESC%[91m
 chkdsk /f /x %MainOS%\Data %Logger%
 chkdsk /f /x %MainOS% %Logger%
@@ -573,11 +635,17 @@ if %WinBuild% LSS 10240 (
 echo %ESC%[97m[INFO] Installing Drivers ...%ESC%[91m
 echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\%Model%" /Recurse %Logger%
+if defined Generic (xcopy "Temp\%Model%\Files" "%Win10Drive%\Windows\System32" /E /H /I /Y %Logger%)
 
-echo %ESC%[97m[INFO] Enabling page file ...%ESC%[91m
+echo %ESC%[97m[INFO] Importing registry configuration ...%ESC%[91m
 reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\SYSTEM" %Logger%
+reg load "HKLM\RTSOFTWARE" "%Win10Drive%\Windows\System32\config\SOFTWARE" %Logger%
+
 reg add "HKLM\RTSYSTEM\ControlSet001\Control\Session Manager\Memory Management" /v "PagingFiles" /t REG_MULTI_SZ /d "C:\pagefile.sys 512 768" /f %Logger%
+if defined Generic (for %%A in (Temp\%Model%\Registry\*) do reg import "%%A" %Logger%)
+
 reg unload "HKLM\RTSYSTEM" %Logger%
+reg unload "HKLM\RTSOFTWARE" %Logger%
 
 ::---------------------------------------------------------------
 echo ========================================================= >>"%LogName%"
@@ -601,25 +669,25 @@ set "BcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
 echo ## BCD Path is %BcdLoc% ## >>"%LogName%" 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
 
-Files\bcdedit /store "%BcdLoc%" /create %id% /d "Windows 10 ARM" /application osloader %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /create %id% /d "Windows 10 ARM" /application osloader %Logger%
 
 if "%DevSpec%" EQU "A" (
 	if /i "%Dualboot%" EQU "Y" (
-		Files\bcdedit /store "%BcdLoc%" /set %id% device "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
-		Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "vhd=[%MainOS%\Data]\Windows10.vhdx" %SevLogger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% device "vhd=[%MainOS%\Data]\Windows10.vhdx" %Logger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "vhd=[%MainOS%\Data]\Windows10.vhdx" %Logger%
 	) else (
-		Files\bcdedit /store "%BcdLoc%" /set %id% device "partition=%Win10Drive%" %SevLogger%
-		Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "partition=%Win10Drive%" %SevLogger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% device "partition=%Win10Drive%" %Logger%
+		Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "partition=%Win10Drive%" %Logger%
 	)
 ) else (
-	Files\bcdedit /store "%BcdLoc%" /set %id% device "partition=%Win10Drive%" %SevLogger%
-	Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "partition=%Win10Drive%" %SevLogger%
+	Files\bcdedit /store "%BcdLoc%" /set %id% device "partition=%Win10Drive%" %Logger%
+	Files\bcdedit /store "%BcdLoc%" /set %id% osdevice "partition=%Win10Drive%" %Logger%
 )
 
-Files\bcdedit /store "%BcdLoc%" /set %id% path "\Windows\System32\winload.efi" %SevLogger%
-Files\bcdedit /store "%BcdLoc%" /set %id% systemroot "\Windows" %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set %id% path "\Windows\System32\winload.efi" %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% systemroot "\Windows" %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% locale en-US %Logger%
-Files\bcdedit /store "%BcdLoc%" /set %id% testsigning Yes %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set %id% testsigning Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% nointegritychecks Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% inherit {bootloadersettings} %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% bootmenupolicy Standard %Logger%
@@ -656,7 +724,7 @@ if /i "%Dualboot%" EQU "N" (
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} nointegritychecks Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} testsigning Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} booterrorux Standard %Logger%
-Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displaybootmenu Yes %SevLogger%
+Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displaybootmenu Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} timeout 5 %Logger%
 
 :: Charge threshold
@@ -666,7 +734,7 @@ if /i "%Dualboot%" EQU "N" Files\bcdedit /store "%BcdLoc%" /set {globalsettings}
 echo ========================================================= >>"%LogName%"
 echo %ESC%[97m[INFO] Setting up ESP ...%ESC%[91m
 md %MainOS%\EFIESP\EFI\Microsoft\Recovery\ %Logger%
-Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %SevLogger%
+Files\bcdedit /createstore %MainOS%\EFIESP\EFI\Microsoft\Recovery\BCD %Logger%
 
 echo>Temp\diskpart.txt sel dis %DiskNumber%
 echo>>Temp\diskpart.txt sel par %PartitionNumberEFIESP%
