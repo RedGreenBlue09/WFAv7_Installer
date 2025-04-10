@@ -239,7 +239,7 @@ echo %ESC%[92mChoose your device variant below (you need at least 8 GB of intern
 echo  %ESC%[36m1) %ESC%[97mLumia 630, 730
 echo  %ESC%[36m2) %ESC%[97mLumia 430, 435, 540
 echo  %ESC%[36m3) %ESC%[97mLumia 820, 925
-echo  %ESC%[36m4) %ESC%[97mLumia 525, 620, 625, 720
+echo  %ESC%[36m4) %ESC%[97mLumia 525, 620, 625, 720, 1320
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDevGenericInf
 set "Model=%Model:"=%"
