@@ -123,7 +123,7 @@ set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below (you need at least 8 GB of internal storage):
-echo  %ESC%[36m1) %ESC%[97mLumia 630
+echo  %ESC%[36m1) %ESC%[97mLumia 630, 730
 echo  %ESC%[36m2) %ESC%[97mLumia 430, 435, 540
 echo  %ESC%[36m3) %ESC%[97mLumia 820, 925
 echo  %ESC%[36m4) %ESC%[97mLumia 525, 620, 625, 720
