@@ -45,10 +45,11 @@ echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
 echo  %ESC%[36m6) %ESC%[97mLumia 650
 echo  %ESC%[36m7) %ESC%[97mLumia 640 / 640 XL
-echo  %ESC%[36m8) %ESC%[97mLumia 1020
-echo  %ESC%[36m9) %ESC%[97mLumia 920
-echo  %ESC%[36mA) %ESC%[97mLumia 520
-echo  %ESC%[36mB) %ESC%[97mGeneric INF
+echo  %ESC%[36m8) %ESC%[97mLumia 550
+echo  %ESC%[36m9) %ESC%[97mLumia 1020
+echo  %ESC%[36mA) %ESC%[97mLumia 920
+echo  %ESC%[36mB) %ESC%[97mLumia 520
+echo  %ESC%[36mC) %ESC%[97mGeneric INF
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -60,10 +61,11 @@ if "%Model%" EQU "4" (set "ModelDir=Lumia830"  & set "DefName=830.xml"  & goto D
 if "%Model%" EQU "5" (set "ModelDir=Lumia735"  & set "DefName=735.xml"  & goto DoDownload)
 if "%Model%" EQU "6" (set "ModelDir=Lumia650"  & set "DefName=650.xml"  & goto DoDownload)
 if "%Model%" EQU "7" (goto ChooseDev640)
-if "%Model%" EQU "8" (goto ChooseDev1020)
-if "%Model%" EQU "9" (set "ModelDir=Lumia920"  & set "DefName=920.xml"  & goto DoDownload)
-if /i "%Model%" EQU "A" (set "ModelDir=Lumia520" & set "DefName=520.xml" & goto DoDownload)
-if /i "%Model%" EQU "B" (goto ChooseDevGenericINF)
+if "%Model%" EQU "8" (set "ModelDir=Lumia550"  & set "DefName=550.xml"  & goto DoDownload)
+if "%Model%" EQU "9" (goto ChooseDev1020)
+if /i "%Model%" EQU "A" (set "ModelDir=Lumia920"  & set "DefName=920.xml"  & goto DoDownload)
+if /i "%Model%" EQU "B" (set "ModelDir=Lumia520" & set "DefName=520.xml" & goto DoDownload)
+if /i "%Model%" EQU "C" (goto ChooseDevGenericINF)
 goto ChooseDev
 
 :ChooseDev1520

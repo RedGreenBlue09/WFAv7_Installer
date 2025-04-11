@@ -158,10 +158,11 @@ echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
 echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
 echo  %ESC%[36m6) %ESC%[97mLumia 650
 echo  %ESC%[36m7) %ESC%[97mLumia 640, 640 XL
-echo  %ESC%[36m8) %ESC%[97mLumia 1020
-echo  %ESC%[36m9) %ESC%[97mLumia 920
-echo  %ESC%[36mA) %ESC%[97mLumia 520
-echo  %ESC%[36mB) %ESC%[97mGeneric INF
+echo  %ESC%[36m8) %ESC%[97mLumia 550
+echo  %ESC%[36m9) %ESC%[97mLumia 1020
+echo  %ESC%[36mA) %ESC%[97mLumia 920
+echo  %ESC%[36mB) %ESC%[97mLumia 520
+echo  %ESC%[36mC) %ESC%[97mGeneric INF
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -173,10 +174,11 @@ if "%Model%" EQU "4" (set "Model=Lumia830"  & set "DevSpec=B" & set "HasCameraBt
 if "%Model%" EQU "5" (set "Model=Lumia735"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
 if "%Model%" EQU "6" (set "Model=Lumia650"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=1" & goto Preparation)
 if "%Model%" EQU "7" (goto ChooseDev640)
-if "%Model%" EQU "8" (goto ChooseDev1020)
-if "%Model%" EQU "9" (set "Model=Lumia920"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
-if /i "%Model%" EQU "A" (set "Model=Lumia520" & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
-if /i "%Model%" EQU "B" (goto ChooseDevGenericInf)
+if "%Model%" EQU "8" (set "Model=Lumia550"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if "%Model%" EQU "9" (goto ChooseDev1020)
+if /i "%Model%" EQU "A" (set "Model=Lumia920"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if /i "%Model%" EQU "B" (set "Model=Lumia520" & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
+if /i "%Model%" EQU "C" (goto ChooseDevGenericInf)
 goto ChooseDev
 
 :ChooseDev1520
