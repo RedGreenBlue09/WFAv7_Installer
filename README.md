@@ -24,8 +24,19 @@
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
 - ~~Nokia Lumia 520~~ (Have a major issue at the moment)
-<br><br>
-- **Windows 10 Mobile**: Builds newer than `14393.x` are not supported.
+- Experimental support for other devices has been added in [3.3 Beta 1](https://github.com/RedGreenBlue09/WFAv7_Installer/releases/tag/3.3-beta1)
+
+### Unsupported devices
+
+- Nokia Lumia 2520 (can't unlock the bootloader)
+- Nokia Lumia 928 (can't boot to mass storage mode)
+- Nokia Lumia 810 (can't unlock the bootloader)
+- Nokia Lumia 550 (no drivers)
+- Nokia Lumia 530 (4 GB of internal storage is too small)
+- Microsoft Lumia 535 (boots but touch driver doesn't work)
+- Windows Phone 7 devices (incompatible bootloader)
+
+**Windows 10 Mobile**: Builds newer than `14393.x` are not supported.
 
 ## Prerequisite (on your PC)
 
