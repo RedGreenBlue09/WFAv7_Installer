@@ -123,19 +123,21 @@ set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below (you need at least 8 GB of internal storage):
-echo  %ESC%[36m1) %ESC%[97mLumia 630, 730
-echo  %ESC%[36m2) %ESC%[97mLumia 430, 435, 540
-echo  %ESC%[36m3) %ESC%[97mLumia 820, 925
-echo  %ESC%[36m4) %ESC%[97mLumia 525, 620, 625, 720, 1320
+echo  %ESC%[36m1) %ESC%[97mLumia 635, 636, 638
+echo  %ESC%[36m2) %ESC%[97mLumia 630, 730
+echo  %ESC%[36m3) %ESC%[97mLumia 430, 435, 532, 540
+echo  %ESC%[36m4) %ESC%[97mLumia 820, 925
+echo  %ESC%[36m5) %ESC%[97mLumia 525, 620, 625, 720, 1320
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDevGenericInf
 set "Model=%Model:"=%"
 
 set "Generic=1"
-if "%Model%" EQU "1" (set "ModelDir=Generic8226" & set "DefName=generic8226.xml" & goto DoDownload)
-if "%Model%" EQU "2" (set "ModelDir=Generic8212" & set "DefName=generic8212.xml" & goto DoDownload)
-if "%Model%" EQU "3" (set "ModelDir=Generic8960" & set "DefName=generic8960.xml" & goto DoDownload)
-if "%Model%" EQU "4" (set "ModelDir=Generic8930" & set "DefName=generic8930.xml" & goto DoDownload)
+if "%Model%" EQU "1" (set "ModelDir=Generic8926" & set "DefName=generic8926.xml" & goto DoDownload)
+if "%Model%" EQU "2" (set "ModelDir=Generic8226" & set "DefName=generic8226.xml" & goto DoDownload)
+if "%Model%" EQU "3" (set "ModelDir=Generic8212" & set "DefName=generic8212.xml" & goto DoDownload)
+if "%Model%" EQU "4" (set "ModelDir=Generic8960" & set "DefName=generic8960.xml" & goto DoDownload)
+if "%Model%" EQU "5" (set "ModelDir=Generic8930" & set "DefName=generic8930.xml" & goto DoDownload)
 goto ChooseDevGenericInf
 
 ::------------------------------------------------------------------
