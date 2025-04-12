@@ -21,11 +21,11 @@
 - Nokia Lumia 735 Global
 - Microsoft Lumia 650
 - Microsoft Lumia 640 & 640 XL
-- Microsoft Lumia 550
+- Microsoft Lumia 550 - [3.3 Beta 2](https://github.com/RedGreenBlue09/WFAv7_Installer/releases/tag/3.3-beta2)
 - Nokia Lumia 1020 (Global, AT&T)
 - Nokia Lumia 920
 - ~~Nokia Lumia 520~~ (Have a major issue at the moment)
-- Experimental support for other devices has been added in [3.3 Beta 1](https://github.com/RedGreenBlue09/WFAv7_Installer/releases)
+- Experimental support for other devices has been added in [3.3 Beta 1](https://github.com/RedGreenBlue09/WFAv7_Installer/releases/tag/3.3-beta1)
 
 ### Unsupported devices
 
