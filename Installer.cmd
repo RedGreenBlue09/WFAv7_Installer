@@ -648,10 +648,8 @@ Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\%Model%" /Re
 
 if defined Generic (
 	if %DevSpec% EQU A (
-		if "%Model%" EQU "Generic8930" set "QCACDB=qcacdb8930.sys"
-		if "%Model%" EQU "Generic8960" set "QCACDB=qcacdb8960.sys"
-		takeown /F  "%MainOS%\Windows\System32\Drivers\!QCACDB!" %Logger%
-		icacls "%MainOS%\Windows\System32\Drivers\!QCACDB!" /grant Administrators:F %Logger%
+		takeown /F  "%MainOS%\Windows\System32\Drivers\%QCACDB%" %Logger%
+		icacls "%MainOS%\Windows\System32\Drivers\%QCACDB%" /grant Administrators:F %Logger%
 	)
 	xcopy "Temp\%Model%\Files" "%Win10Drive%\Windows\System32" /E /H /I /Y %Logger%
 )
