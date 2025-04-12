@@ -99,7 +99,7 @@ goto Disclaimer
 ::---------------------------------------------------------------
 :PrintLabel
 echo  %ESC%[93m//////////////////////////////////////////////////////////////////////////////////////////////
-echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.2%ESC%[93m                             //
+echo  //                           %ESC%[97mWindows 10 for ARMv7 Installer 3.3%ESC%[93m                             //
 echo  //                                   %ESC%[97mby RedGreenBlue123%ESC%[93m                                     //
 echo  //                    %ESC%[97mThanks to: @Gus33000, @FadilFadz01, @Heathcliff74%ESC%[93m                     //
 echo  //////////////////////////////////////////////////////////////////////////////////////////////%ESC%[0m
@@ -110,7 +110,7 @@ goto :EOF
 :Disclaimer
 cls
 color 07
-title Windows 10 for ARMv7 Installer 3.2.1
+title Windows 10 for ARMv7 Installer 3.3
 echo.
 echo.
 echo                            %ESC%[97mWelcome to Windows 10 for ARMv7 Installer%ESC%[0m
@@ -176,7 +176,7 @@ if "%Model%" EQU "6" (set "Model=Lumia650"  & set "DevSpec=B" & set "HasCameraBt
 if "%Model%" EQU "7" (goto ChooseDev640)
 if "%Model%" EQU "8" (set "Model=Lumia550"  & set "DevSpec=B" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
 if "%Model%" EQU "9" (goto ChooseDev1020)
-if /i "%Model%" EQU "A" (set "Model=Lumia920"  & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
+if /i "%Model%" EQU "A" (set "Model=Lumia920" & set "DevSpec=A" & set "HasCameraBtn=1" & set "LargeStorage=1" & goto Preparation)
 if /i "%Model%" EQU "B" (set "Model=Lumia520" & set "DevSpec=A" & set "HasCameraBtn=0" & set "LargeStorage=0" & goto Preparation)
 if /i "%Model%" EQU "C" (goto ChooseDevGenericInf)
 goto ChooseDev
@@ -528,7 +528,7 @@ start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n +1 "%LogName%"
 set "StartTime=%Time%"
 echo.
 echo %ESC%[97m[INFO] Installation was started at %StartTime%
-echo #### Windows 10 for ARMv7 Installer 3.2.1 #### >>"%LogName%"
+echo #### Windows 10 for ARMv7 Installer 3.3 #### >>"%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >>"%LogName%"
 echo ========================================================= >>"%LogName%"
 echo ## Device is "%Model%"  ## >>"%LogName%"
