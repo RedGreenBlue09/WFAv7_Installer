@@ -160,7 +160,7 @@ set "Tag=generic_inf"
 goto DoDownload2
 
 echo Fetching latest release tag ...
-"%GitPath%" ls-remote --tags "%RepoLink%" >Temp\Tags.txt || (
+"%GitPath%" ls-remote --tags "%RepoLink%" > Temp\Tags.txt || (
 	del Temp\Tags.txt
 	goto DownloadFailed
 )
@@ -198,20 +198,20 @@ md "%RepoDir%"
 echo.
 echo Downloading definition file ...
 echo.
-echo>"%RepoDir%\.git\info\sparse-checkout" definitions/%DefName% || goto DownloadFailed
+echo definitions/%DefName% > "%RepoDir%\.git\info\sparse-checkout" || goto DownloadFailed
 "%GitPath%" -C "%RepoDir%" checkout || goto DownloadFailed
 
 echo.
 echo Enumerating INF files ...
 echo.
-Files\DriverDownloader\DriverDefPaths "%RepoDir%\definitions\%DefName%" >Temp\InfList.txt || (
+Files\DriverDownloader\DriverDefPaths "%RepoDir%\definitions\%DefName%" > Temp\InfList.txt || (
 	del Temp\InfList.txt
 	goto DownloadFailed
 )
 for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	set "InfPath=%%A"
 	set "InfPath=!InfPath:\=/!"
-	echo>>"%RepoDir%\.git\info\sparse-checkout" !InfPath!
+	echo !InfPath! >> "%RepoDir%\.git\info\sparse-checkout"
 )
 
 echo.
@@ -228,7 +228,7 @@ for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	call :FilePathOnly
 	set "InfPathOnly=!Output!"
 	
-	Files\DriverDownloader\GetDriverFiles ".\Drivers\%ModelDir%\%%A" >"Temp\DriverSourceList.txt" || (
+	Files\DriverDownloader\GetDriverFiles ".\Drivers\%ModelDir%\%%A" > "Temp\DriverSourceList.txt" || (
 		del Temp\DriverSourceList.txt
 		del Temp\InfList.txt
 		goto DownloadFailed
@@ -236,7 +236,7 @@ for /f "usebackq delims=" %%A in ("Temp\InfList.txt") do (
 	for /f "usebackq delims=" %%B in ("Temp\DriverSourceList.txt") do (
 		set "SourcePath=!InfPathOnly!%%B"
 		set "SourcePath=!SourcePath:\=/!"
-		echo>>"%RepoDir%\.git\info\sparse-checkout" !SourcePath!
+		echo !SourcePath! >> "%RepoDir%\.git\info\sparse-checkout"
 	)
 )
 
