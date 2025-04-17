@@ -581,8 +581,8 @@ if exist "%Date1%-%LogNum%.log" (
 
 cd ..
 set "ErrNum=0"
-set "Logger= >> "%LogName%" 2>&1 || set /a "ErrNum+=1" & echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m"
-set "SevLogger= >> "%LogName%" 2>&1 || set /a "ErrNum+=1" > nul & goto SevErrFound"
+set "Logger= >> "%LogName%" 2>&1 || (set /a "ErrNum+=1" & echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)"
+set "SevLogger= >> "%LogName%" 2>&1 || (set /a "ErrNum+=1" > nul & goto SevErrFound)"
 
 start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n +1 "%LogName%"
 
