@@ -87,6 +87,7 @@ del Temp\Commands.txt
 goto EnableAnsicon
 
 :MissingCommand
+
 echo Required powershell cmdlets are not found.
 echo Please use Official Windows 8.1 or Windows 10.
 echo.
@@ -145,7 +146,7 @@ set "Disclaimer=%Disclaimer:"=%"
 if /i "%Disclaimer%" EQU "N" (
 	cls
 	call :PrintLabel
-	echo  %ESC%[91mYou MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
+	echo %ESC%[91m You MUST agree with the DISCLAIMER to use WFAv7 Installer.%ESC%[0m
 	echo.
 	call :CustomPause " Press any key to exit ... "
 	exit /B
@@ -161,18 +162,18 @@ set "Generic="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device model below:
-echo  %ESC%[36m1) %ESC%[97mLumia 1520
-echo  %ESC%[36m2) %ESC%[97mLumia 930
-echo  %ESC%[36m3) %ESC%[97mLumia 929 (Icon)
-echo  %ESC%[36m4) %ESC%[97mLumia 830 Global
-echo  %ESC%[36m5) %ESC%[97mLumia 735 Global
-echo  %ESC%[36m6) %ESC%[97mLumia 650
-echo  %ESC%[36m7) %ESC%[97mLumia 640, 640 XL
-echo  %ESC%[36m8) %ESC%[97mLumia 550
-echo  %ESC%[36m9) %ESC%[97mLumia 1020
-echo  %ESC%[36mA) %ESC%[97mLumia 920
-echo  %ESC%[36mB) %ESC%[97mLumia 520
-echo  %ESC%[36mC) %ESC%[97mGeneric INF
+echo %ESC%[36m 1) %ESC%[97mLumia 1520
+echo %ESC%[36m 2) %ESC%[97mLumia 930
+echo %ESC%[36m 3) %ESC%[97mLumia 929 (Icon)
+echo %ESC%[36m 4) %ESC%[97mLumia 830 Global
+echo %ESC%[36m 5) %ESC%[97mLumia 735 Global
+echo %ESC%[36m 6) %ESC%[97mLumia 650
+echo %ESC%[36m 7) %ESC%[97mLumia 640, 640 XL
+echo %ESC%[36m 8) %ESC%[97mLumia 550
+echo %ESC%[36m 9) %ESC%[97mLumia 1020
+echo %ESC%[36m A) %ESC%[97mLumia 920
+echo %ESC%[36m B) %ESC%[97mLumia 520
+echo %ESC%[36m C) %ESC%[97mGeneric INF
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"
@@ -197,8 +198,8 @@ set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below:
-echo  %ESC%[36m1) %ESC%[97mLumia 1520 Global
-echo  %ESC%[36m2) %ESC%[97mLumia 1520 AT^&T
+echo %ESC%[36m 1) %ESC%[97mLumia 1520 Global
+echo %ESC%[36m 2) %ESC%[97mLumia 1520 AT^&T
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev1520
 set "Model=%Model:"=%"
@@ -213,11 +214,11 @@ set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below:
-echo  %ESC%[36m1) %ESC%[97mLumia 640 3G
-echo  %ESC%[36m2) %ESC%[97mLumia 640 LTE
-echo  %ESC%[36m3) %ESC%[97mLumia 640 XL 3G
-echo  %ESC%[36m4) %ESC%[97mLumia 640 XL LTE Global
-echo  %ESC%[36m5) %ESC%[97mLumia 640 XL LTE AT^&T
+echo %ESC%[36m 1) %ESC%[97mLumia 640 3G
+echo %ESC%[36m 2) %ESC%[97mLumia 640 LTE
+echo %ESC%[36m 3) %ESC%[97mLumia 640 XL 3G
+echo %ESC%[36m 4) %ESC%[97mLumia 640 XL LTE Global
+echo %ESC%[36m 5) %ESC%[97mLumia 640 XL LTE AT^&T
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev640
 set "Model=%Model:"=%"
@@ -235,8 +236,8 @@ set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below:
-echo  %ESC%[36m1) %ESC%[97mLumia 1020 Global
-echo  %ESC%[36m2) %ESC%[97mLumia 1020 AT^&T
+echo %ESC%[36m 1) %ESC%[97mLumia 1020 Global
+echo %ESC%[36m 2) %ESC%[97mLumia 1020 AT^&T
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev1020
 set "Model=%Model:"=%"
@@ -246,16 +247,17 @@ if "%Model%" EQU "2" (set "Model=Lumia1020-AT&T" & set "DevSpec=A" & set "HasCam
 goto ChooseDev1020
 
 :ChooseDevGenericInf
+
 set "Model="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below (you need at least 8 GB of internal storage):
-echo  %ESC%[36m1) %ESC%[97mLumia 635, 636, 638
-echo  %ESC%[36m2) %ESC%[97mLumia 630, 730
-echo  %ESC%[36m3) %ESC%[97mLumia 430, 435, 532, 540
-echo  %ESC%[36m4) %ESC%[97mLumia 820
-echo  %ESC%[36m5) %ESC%[97mLumia 822, 925
-echo  %ESC%[36m6) %ESC%[97mLumia 521, 525, 526, 620, 625, 720, 1320
+echo %ESC%[36m 1) %ESC%[97mLumia 635, 636, 638
+echo %ESC%[36m 2) %ESC%[97mLumia 630, 730
+echo %ESC%[36m 3) %ESC%[97mLumia 430, 435, 532, 540
+echo %ESC%[36m 4) %ESC%[97mLumia 820
+echo %ESC%[36m 5) %ESC%[97mLumia 822, 925
+echo %ESC%[36m 6) %ESC%[97mLumia 521, 525, 526, 620, 625, 720, 1320
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDevGenericInf
 set "Model=%Model:"=%"
@@ -270,7 +272,9 @@ if "%Model%" EQU "6" (set "Model=Generic8930" & set "DevSpec=A" & set "HasCamera
 goto ChooseDevGenericInf
 
 ::---------------------------------------------------------------
+
 :Preparation
+
 cls
 call :PrintLabel
 echo %ESC%[97m PREPARATION:
@@ -284,12 +288,14 @@ call :CustomPause " Press any key to continue ... "
 set "RunPsCommandSilent=Powershell -C "try {!PsCommand! 2> $null} catch {}""
 
 ::---------------------------------------------------------------
+
 :CheckReqFiles
+
 cls
 call :PrintLabel
 if not exist "Drivers\%Model%" goto MissingDrivers
 if not exist "%~dp0\install.wim" (
-	echo  %ESC%[91minstall.wim not found.
+	echo %ESC%[91m install.wim not found.
 	echo  Please place install.wim in the current folder.%ESC%[0m
 	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
@@ -297,12 +303,14 @@ if not exist "%~dp0\install.wim" (
 goto RegistryCheck
 
 :MissingDrivers
-echo  %ESC%[91mDrivers not found.
+
+echo %ESC%[91m Drivers not found.
 echo  Please download drivers for your device using Driver Downloader.%ESC%[0m
 call :CustomPause " Press any key to go back ... "
 goto ChooseDev
 
 :RegistryCheck
+
 reg query "HKLM\RTSYSTEM" /ve > nul 2>&1 && (
 	echo %ESC%[91m Please unload registry hive HKLM\RTSYSTEM.%ESC%[0m
 	call :CustomPause " Press any key to go back ... "
@@ -419,6 +427,7 @@ goto MOSPath
 ::---------------------------------------------------------------
 
 :Win10MountCheck
+
 if exist "%MainOS%\Windows10\" (
 	echo %ESC%[91m Please remove/rename %MainOS%\Windows10.%ESC%[0m
 	call :CustomPause " Press any key to retry ... "
@@ -481,6 +490,7 @@ goto BeginInstall
 ::---------------------------------------------------------------
 
 :DualbootPrompt
+
 set "Dualboot="
 echo.
 set /p "Dualboot=%ESC%[97m Use dual-boot? [Y/N]%ESC%[0m "
@@ -492,6 +502,7 @@ goto :EOF
 ::---------------------------------------------------------------
 
 :StorageSpacePrompt
+
 set "Win10SizeMB="
 echo.
 set /p "Win10SizeMB=%ESC%[97m Storage space for Windows 10 ARM in MBs: %ESC%[0m"
@@ -499,12 +510,12 @@ if not defined Win10SizeMB goto StorageSpacePrompt
 set "Win10SizeMB=%Win10SizeMB:"=%"
 
 echo "%Win10SizeMB%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" > nul || (
-	echo  %ESC%[91mPlease enter a natural number.%ESC%[0m
+	echo %ESC%[91m Please enter a natural number.%ESC%[0m
 	goto StorageSpacePrompt
 )
 
 if %Win10SizeMB% LSS 6144 (
-	echo  %ESC%[91mYou need at least 6144 MB for Windows 10 ARM.%ESC%[0m
+	echo %ESC%[91m You need at least 6144 MB for Windows 10 ARM.%ESC%[0m
 	goto StorageSpacePrompt
 )
 
@@ -528,8 +539,8 @@ if not defined FreeSpace (
 )
 
 if %Win10SizeMB% GTR %FreeSpace% (
-	echo  %ESC%[91mNot enough storage space is available.
-	echo  %ESC%[91mYou only have %FreeSpace% MB of storage space.%ESC%[0m
+	echo %ESC%[91m Not enough storage space is available.
+	echo %ESC%[91m You only have %FreeSpace% MB of storage space.%ESC%[0m
 	goto StorageSpacePrompt
 )
 goto :EOF
@@ -537,6 +548,7 @@ goto :EOF
 ::---------------------------------------------------------------
 
 :KernelDebugPrompt
+
 set "DebugEnabled="
 echo.
 set /p "DebugEnabled=%ESC%[97m Enable kernel debug? [Y/%ESC%[4mN%ESC%[0m%ESC%[97m]%ESC%[0m "
@@ -554,6 +566,7 @@ goto :EOF
 ::---------------------------------------------------------------
 
 :ChargeThresholdPrompt
+
 set "ChargeThreshold="
 echo.
 set /p "ChargeThreshold=%ESC%[97m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
@@ -561,7 +574,7 @@ if not defined ChargeThreshold goto ChargeThresholdPrompt
 set "ChargeThreshold=%ChargeThreshold:"=%"
 
 echo "%ChargeThreshold%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" > nul || (
-	echo  %ESC%[91mPlease enter a natural number.%ESC%[0m
+	echo %ESC%[91m Please enter a natural number.%ESC%[0m
 	goto ChargeThresholdPrompt
 )
 
@@ -898,21 +911,21 @@ call :CustomPause
 
 cls
 call :PrintLabel
-echo  %ESC%[92mWindows 10 ARM has been installed on your phone.%ESC%[0m
-echo  %ESC%[97m- Now, reboot your phone.%ESC%[0m
+echo %ESC%[92m Windows 10 ARM has been installed on your phone.%ESC%[0m
+echo %ESC%[97m - Now, reboot your phone.%ESC%[0m
 
 if /i "%Dualboot%" EQU "Y" (
 	if %HasCameraBtn% EQU 1 (
-		echo  %ESC%[97m- At the boot menu, press volume up / down to move selection %ESC%[0m
-		echo  %ESC%[97m  then press the camera key to select.%ESC%[0m
+		echo %ESC%[97m - At the boot menu, press volume up / down to move selection %ESC%[0m
+		echo %ESC%[97m   then press the camera key to select.%ESC%[0m
 	) else (
-		echo  %ESC%[97m- At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
+		echo %ESC%[97m - At the boot menu, press volume up to boot into Windows 10 ARM. %ESC%[0m
 	)
 )
 
-echo  %ESC%[97m- Boot and setup Windows 10 (may reboot several times).%ESC%[0m
-echo  %ESC%[97m- After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
-echo  %ESC%[97m  as administrator to finish installation.%ESC%[0m
+echo %ESC%[97m - Boot and setup Windows 10 (may reboot several times).%ESC%[0m
+echo %ESC%[97m - After getting to the desktop, run "PostInstall.cmd" in the system drive%ESC%[0m
+echo %ESC%[97m   as administrator to finish installation.%ESC%[0m
 echo.
 call :CustomPause " Press any key to exit ... "
 exit /B
