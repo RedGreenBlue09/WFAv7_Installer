@@ -281,6 +281,8 @@ echo   * Highly recommend you to flash the original FFU before installation.
 echo %ESC%[0m
 call :CustomPause " Press any key to continue ... "
 
+set "RunPsCommandSilent=Powershell -C "try {!PsCommand! 2> $null} catch {}""
+
 ::---------------------------------------------------------------
 :CheckReqFiles
 cls
@@ -320,13 +322,14 @@ echo %ESC%[97m Trying to detect MainOS ...%ESC%[91m
 
 :: DiskNumber
 
+set "DiskNumber="
 set "PsCommand=(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_MSFT&PROD_PHONE_MMC_STOR'}).Index"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "DiskNumber=%%A"
-if "%DiskNumber%" EQU "" (
+for /f %%A in ('%RunPsCommandSilent%') do set "DiskNumber=%%A"
+if not defined DiskNumber (
 	set "PsCommand=(Get-CimInstance Win32_DiskDrive | ? {$_.PNPDeviceID -Match 'VEN_QUALCOMM&PROD_MMC_STORAGE'}).Index"
-	for /f %%A in ('Powershell -C "try {!PsCommand! 2>$null} catch {}"') do set "DiskNumber=%%A"
+	for /f %%A in ('%RunPsCommandSilent%') do set "DiskNumber=%%A"
+	if not defined DiskNumber goto MOSAutoDetectFail
 )
-if "%DiskNumber%" EQU "" goto MOSAutoDetectFail
 
 :: Search for MainOS in the GPT
 
@@ -352,17 +355,21 @@ goto MOSPath
 :PartitionNumber
 
 Files\dsfo Temp\GPT-PartEntry 16 16 Temp\GPT-PartUUID > nul
+set "UuidHex="
 set "PsCommand=([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "UuidHex=%%A"
+for /f %%A in ('%RunPsCommandSilent%') do set "UuidHex=%%A"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%A in ("%UuidHex%") do (
 	set "Uuid=%%D%%C%%B%%A-%%F%%E-%%H%%G-%%I%%J-%%K%%L%%M%%N%%O%%P"
 )
+if not defined UuidHex goto MOSAutoDetectFail
 
+set "PartitionNumberMainOS="
 set "PsCommand=(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "PartitionNumberMainOS=%%A"
+for /f %%A in ('%RunPsCommandSilent%') do set "PartitionNumberMainOS=%%A"
 
+set "DriveLetter="
 set "PsCommand=(Get-Partition -PartitionNumner %PartitionNumberMainOS%).DriveLetter"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "DriveLetter=%%A"
+for /f %%A in ('%RunPsCommandSilent%') do set "DriveLetter=%%A"
 
 if not exist "%DriveLetter%:\EFIESP" goto MOSAutoDetectFail
 if not exist "%DriveLetter%:\Data" goto MOSAutoDetectFail
@@ -392,13 +399,15 @@ if not exist "%MainOS%\DPP" goto MOSPathFail
 set "DriveLetterMainOS=%MainOS:~0,-1%"
 
 echo %ESC%[97m Getting MainOS infos ...%ESC%[91m
+set "DiskNumber="
 set "PsCommand=(Get-Partition -DriveLetter %DriveLetterMainOS%).DiskNumber"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "DiskNumber=%%A"
-if "%DiskNumber%" EQU "" goto MOSPathFail
+for /f %%A in ('%RunPsCommandSilent%') do set "DiskNumber=%%A"
+if not defined DiskNumber goto MOSPathFail
 
+set "PartitionNumberMainOS="
 set "PsCommand=(Get-Partition -DriveLetter %DriveLetterMainOS%).PartitionNumber"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "PartitionNumberMainOS=%%A"
-if "%PartitionNumberMainOS%" EQU "" goto MOSPathFail
+for /f %%A in ('%RunPsCommandSilent%') do set "PartitionNumberMainOS=%%A"
+if not defined PartitionNumberMainOS goto MOSPathFail
 
 goto Win10MountCheck
 
@@ -419,25 +428,28 @@ if exist "%MainOS%\Windows10\" (
 ::PartitionInfo
 
 echo %ESC%[97m Getting partitions' infos ...%ESC%[91m
+set "PartitionNumberDPP="
 set "PsCommand=(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\DPP\' }).PartitionNumber"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "PartitionNumberDPP=%%A"
-if "%PartitionNumberDPP%" EQU "" (
+for /f %%A in ('%RunPsCommandSilent%') do set "PartitionNumberDPP=%%A"
+if not defined PartitionNumberDPP (
 	echo %ESC%[91m Unable to get DPP partition number.%ESC%[0m
 	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
 )
 
+set "PartitionNumberEFIESP="
 set "PsCommand=(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\EFIESP\' }).PartitionNumber"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "PartitionNumberEFIESP=%%A"
-if "%PartitionNumberEFIESP%" EQU "" (
+for /f %%A in ('%RunPsCommandSilent%') do set "PartitionNumberEFIESP=%%A"
+if not defined PartitionNumberEFIESP (
 	echo %ESC%[91m Unable to get EFIESP partition number.%ESC%[0m
 	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
 )
 
+set "PartitionNumberData="
 set "PsCommand=(Get-Partition | ? { $_.AccessPaths -eq '%MainOS%\Data\' }).PartitionNumber"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "PartitionNumberData=%%A"
-if "%PartitionNumberData%" EQU "" (
+for /f %%A in ('%RunPsCommandSilent%') do set "PartitionNumberData=%%A"
+if not defined PartitionNumberData (
 	echo %ESC%[91m Unable to get Data partition number.%ESC%[0m
 	call :CustomPause " Press any key to go back ... "
 	goto ChooseDev
@@ -499,14 +511,20 @@ if %Win10SizeMB% LSS 6144 (
 :: For spec A, get volume remaining space.
 :: For spec B, get volume shinkable space.
 
+set "FreeSpace="
 if "%DevSpec%" EQU "A" (
 	set "PsCommand=Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%"
 	set "PsCommand=[Math]::Truncate((!PsCommand! | Get-Volume).SizeRemaining / 1MB)"
-	for /f %%A in ('Powershell -C "try {!PsCommand! 2>$null} catch {}"') do set "FreeSpace=%%A"
+	for /f %%A in ('%RunPsCommandSilent%') do set "FreeSpace=%%A"
 ) else (
 	set "PsCommand=$Partition = Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%"
 	set "PsCommand=!PsCommand!; [Math]::Truncate((($Partition | Get-Volume).Size - ($Partition | Get-PartitionSupportedSize).SizeMin) / 1MB)"
-	for /f %%A in ('Powershell -C "try {!PsCommand! 2>$null} catch {}"') do set "FreeSpace=%%A"
+	for /f %%A in ('%RunPsCommandSilent%') do set "FreeSpace=%%A"
+)
+if not defined FreeSpace (
+	echo %ESC%[91m Unable to get available storage space.%ESC%[0m
+	call :CustomPause " Press any key to go back ... "
+	goto ChooseDev
 )
 
 if %Win10SizeMB% GTR %FreeSpace% (
@@ -563,8 +581,9 @@ call :PrintLabel
 if not exist Logs\NUL del Logs /Q 2> nul
 if not exist Logs\ md Logs
 cd Logs
+set "Date1="
 set "PsCommand=Get-Date -format 'yyyy-MM-dd'"
-for /f %%A in ('Powershell -C "try {%PsCommand% 2>$null} catch {}"') do set "Date1=%%A"
+for /f %%A in ('%RunPsCommandSilent%') do set "Date1=%%A"
 if not exist "%Date1%.log" set "LogName=Logs\%Date1%.log" & goto LoggerInit
 set "LogNum=1"
 
@@ -583,6 +602,8 @@ cd ..
 set "ErrNum=0"
 set "Logger= >> "%LogName%" 2>&1 || (set /a "ErrNum+=1" & echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)"
 set "SevLogger= >> "%LogName%" 2>&1 || (set /a "ErrNum+=1" > nul & goto SevErrFound)"
+
+set "RunPsCommandLogged=Powershell -C "try {!PsCommand! 2>> '%LogName%'} catch {$_ >> '%LogName%'}""
 
 start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n +1 "%LogName%"
 
@@ -673,8 +694,11 @@ if /i "%Dualboot%" EQU "Y" (
 		
 		echo %ESC%[97m[INFO] Creating Windows 10 ARM Partition ...%ESC%[91m
 		
-		set "PsCommand=[Math]::Truncate((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB% 2>>'%LogName%'"
-		for /f %%A in ('Powershell -C "try {!PsCommand! 2>$null} catch {}"') do set "DataPartSizeMB=%%A"
+		echo ## DataPartSizeMB ## >> "%LogName%"
+		set "DataPartSizeMB="
+		set "PsCommand=[Math]::Truncate((Get-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData%).Size / 1MB) - %Win10SizeMB%"
+		for /f %%A in ('%RunPsCommandLogged%') do set "DataPartSizeMB=%%A"
+		if not defined DataPartSizeMB color 00 %SevLogger%
 
 		echo ## Resize-Partition ## >> "%LogName%"
 		Powershell -C "Resize-Partition -DiskNumber %DiskNumber% -PartitionNumber %PartitionNumberData% -Size !DataPartSizeMB!MB; exit $Error.count" %SevLogger%
