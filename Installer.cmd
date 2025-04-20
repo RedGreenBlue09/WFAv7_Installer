@@ -645,11 +645,7 @@ if not defined Generic goto CheckPartitions
 
 echo %ESC%[97m[INFO] Copying hardware-specific files ...%ESC%[91m
 rd /s /q "Temp\%Model%" %Logger%
-if %DevSpec% EQU A (
-	if "%Model%" EQU "Generic8930" set "QCACDB=qcacdb8930.sys"
-	if "%Model%" EQU "Generic8960" set "QCACDB=qcacdb8960.sys"
-	xcopy "%MainOS%\Windows\System32\Drivers\!QCACDB!" "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
-) else (
+if %DevSpec% EQU B (
 	xcopy "%MainOS%\Windows\System32\*.acdb" "Temp\%Model%\Files\*" /H /I %Logger%
 )
 xcopy "%MainOS%\Windows\System32\*.mbn"                 "Temp\%Model%\Files\*" /H /I %Logger%
@@ -753,10 +749,6 @@ echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\%Model%" /Recurse %Logger%
 
 if defined Generic (
-	if %DevSpec% EQU A (
-		takeown /F  "%MainOS%\Windows\System32\Drivers\%QCACDB%" %Logger%
-		icacls "%MainOS%\Windows\System32\Drivers\%QCACDB%" /grant Administrators:F %Logger%
-	)
 	xcopy "Temp\%Model%\Files" "%Win10Drive%\Windows\System32" /E /H /I /Y %Logger%
 )
 
