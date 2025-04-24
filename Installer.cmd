@@ -285,11 +285,11 @@ echo   * Highly recommend you to flash the original FFU before installation.
 echo %ESC%[0m
 call :CustomPause " Press any key to continue ... "
 
-set "RunPsCommandSilent=Powershell -C "try {!PsCommand! 2> $null} catch {}""
+set RunPsCommandSilent=Powershell -C "try {^!PsCommand^! 2> $null} catch {}"
 
 ::---------------------------------------------------------------
 
-:CheckReqFiles
+:CheckReqFile
 
 cls
 call :PrintLabel
@@ -613,10 +613,10 @@ if exist "%Date1%-%LogNum%.log" (
 
 cd ..
 set "ErrNum=0"
-set "Logger= >> "%LogName%" 2>&1 || (set /a "ErrNum+=1" & echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)"
-set "SevLogger= >> "%LogName%" 2>&1 || (set /a "ErrNum+=1" > nul & goto SevErrFound)"
+set "Logger= >> "%LogName%" 2>&1 || (set /a ErrNum+=1 & echo %ESC%[93m[WARN] An error has occurred, installation will continue.%ESC%[91m)"
+set "SevLogger= >> "%LogName%" 2>&1 || (set /a ErrNum+=1 > nul & goto SevErrFound)"
 
-set "RunPsCommandLogged=Powershell -C "try {!PsCommand! 2>> '%LogName%'} catch {$_ >> '%LogName%'}""
+set RunPsCommandLogged=Powershell -C "try {^!PsCommand^! 2>> '%LogName%'} catch {$_ >> '%LogName%'}"
 
 start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n +1 "%LogName%"
 
@@ -644,7 +644,7 @@ if /i "%Dualboot%" EQU "N" echo ## DebugEnabled is %DebugEnabled% ## >> "%LogNam
 if not defined Generic goto CheckPartitions
 
 echo %ESC%[97m[INFO] Copying hardware-specific files ...%ESC%[91m
-rd /s /q "Temp\%Model%" %Logger%
+if exist "Temp\%Model%" rd /s /q "Temp\%Model%" %Logger%
 if %DevSpec% EQU B (
 	xcopy "%MainOS%\Windows\System32\*.acdb" "Temp\%Model%\Files\*" /H /I %Logger%
 )
