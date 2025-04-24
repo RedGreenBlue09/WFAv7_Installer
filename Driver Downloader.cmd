@@ -70,6 +70,7 @@ goto ChooseDev
 
 :ChooseDev1520
 set "Model="
+set "Generic="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below:
@@ -146,18 +147,17 @@ goto ChooseDevGenericInf
 :DoDownload
 
 :: set "RepoLink=https://github.com/WOA-Project/Lumia-Drivers.git"
-:: set "RepoLink=https://github.com/bibarub/Lumia-Drivers.git"
-set "RepoLink=https://github.com/RedGreenBlue09/Lumia-Drivers.git"
+if defined Generic (
+	set "RepoLink=https://github.com/RedGreenBlue09/LumiaGenericDrivers.git"
+) else (
+	set "RepoLink=https://github.com/bibarub/Lumia-Drivers.git"
+)
 
 set "GitPath=%~dp0\Files\DriverDownloader\Git\cmd\git"
 
 cls
 if not exist Drivers\ md Drivers\
 if not exist Temp\ md Temp\
-
-:: TEMP
-set "Tag=generic_inf"
-goto DoDownload2
 
 echo Fetching latest release tag ...
 "%GitPath%" ls-remote --tags "%RepoLink%" > Temp\Tags.txt || (
