@@ -365,7 +365,7 @@ goto MOSPath
 Files\dsfo Temp\GPT-PartEntry 16 16 Temp\GPT-PartUUID > nul
 set "UuidHex="
 set "PsCommand=([System.IO.File]::ReadAllBytes('Temp\GPT-PartUUID') | ForEach-Object { '{0:x2}' -f $_ }) -join ' '"
-for /f %%A in ('%RunPsCommandSilent%') do set "UuidHex=%%A"
+for /f "delims=" %%A in ('%RunPsCommandSilent%') do set "UuidHex=%%A"
 for /f "tokens=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" %%A in ("%UuidHex%") do (
 	set "Uuid=%%D%%C%%B%%A-%%F%%E-%%H%%G-%%I%%J-%%K%%L%%M%%N%%O%%P"
 )
@@ -376,7 +376,7 @@ set "PsCommand=(Get-Partition | ? { $_.Guid -eq '{%Uuid%}'}).PartitionNumber"
 for /f %%A in ('%RunPsCommandSilent%') do set "PartitionNumberMainOS=%%A"
 
 set "DriveLetter="
-set "PsCommand=(Get-Partition -PartitionNumner %PartitionNumberMainOS%).DriveLetter"
+set "PsCommand=(Get-Partition -PartitionNumber %PartitionNumberMainOS%).DriveLetter"
 for /f %%A in ('%RunPsCommandSilent%') do set "DriveLetter=%%A"
 
 if not exist "%DriveLetter%:\EFIESP" goto MOSAutoDetectFail
