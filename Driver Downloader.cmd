@@ -35,6 +35,7 @@ goto :EOF
 ::------------------------------------------------------------------
 :ChooseDev
 set "Model="
+set "Generic="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device model below:
@@ -70,7 +71,6 @@ goto ChooseDev
 
 :ChooseDev1520
 set "Model="
-set "Generic="
 cls
 call :PrintLabel
 echo %ESC%[92mChoose your device variant below:
@@ -158,6 +158,12 @@ set "GitPath=%~dp0\Files\DriverDownloader\Git\cmd\git"
 cls
 if not exist Drivers\ md Drivers\
 if not exist Temp\ md Temp\
+
+:: TEMP
+if not defined Generic (
+	set "Tag=test"
+	goto DoDownload2
+)
 
 echo Fetching latest release tag ...
 "%GitPath%" ls-remote --tags "%RepoLink%" > Temp\Tags.txt || (
