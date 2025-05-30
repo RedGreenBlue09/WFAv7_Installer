@@ -34,6 +34,7 @@
 - Nokia Lumia 810 (can't unlock the bootloader)
 - Microsoft Lumia 535 (boots but touch driver doesn't work)
 - Nokia Lumia 530 (4 GB of internal storage is too small)
+- Nokia Lumia 430 (boots but touch driver doesn't work)
 - Windows Phone 7 devices (incompatible bootloader)
 
 **Windows 10 Mobile**: Builds newer than `14393.x` are not supported.
