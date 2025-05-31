@@ -254,7 +254,7 @@ call :PrintLabel
 echo %ESC%[92mChoose your device variant below (you need at least 8 GB of internal storage):
 echo %ESC%[36m 1) %ESC%[97mLumia 635, 636, 638
 echo %ESC%[36m 2) %ESC%[97mLumia 630, 730
-echo %ESC%[36m 3) %ESC%[97mLumia 430, 435, 532, 540
+echo %ESC%[36m 3) %ESC%[97mLumia 435, 532, 540
 echo %ESC%[36m 4) %ESC%[97mLumia 820
 echo %ESC%[36m 5) %ESC%[97mLumia 822, 925
 echo %ESC%[36m 6) %ESC%[97mLumia 521, 525, 526, 620, 625, 720, 1320
