@@ -811,6 +811,7 @@ Files\bcdedit /store "%BcdLoc%" /set %id% detecthal Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% winpe No %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% ems No %Logger%
 Files\bcdedit /store "%BcdLoc%" /set %id% bootdebug No %Logger%
+Files\bcdedit /store "%BcdLoc%" /set %id% booterrorux Legacy %Logger%
 
 if /i "%DebugEnabled%" EQU "N" (
 	Files\bcdedit /store "%BcdLoc%" /set %id% debug No %Logger%
@@ -839,7 +840,6 @@ if /i "%Dualboot%" EQU "N" (
 
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} nointegritychecks Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} testsigning Yes %Logger%
-Files\bcdedit /store "%BcdLoc%" /set {bootmgr} booterrorux Standard %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} displaybootmenu Yes %Logger%
 Files\bcdedit /store "%BcdLoc%" /set {bootmgr} timeout 5 %Logger%
 
