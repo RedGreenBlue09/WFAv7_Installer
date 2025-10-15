@@ -663,17 +663,17 @@ md "Temp\%Model%\Registry" %Logger%
 reg export "HKLM\RTSYSTEM\ControlSet001\Services\qcSubsystemLoad" "Temp\%Model%\Registry\qcSubsystemLoad.reg" %Logger%
 
 if defined Generic (
-	reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                     "Temp\%Model%\Registry\Autobrightness.reg"      %Logger%
-	reg export "HKLM\RTSOFTWARE\Microsoft\CaptureService\OEMCustomProperties" "Temp\%Model%\Registry\CaptureService.reg"      %Logger%
+	reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                     "Temp\%Model%\Registry\0.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\Microsoft\CaptureService\OEMCustomProperties" "Temp\%Model%\Registry\1.reg" %Logger%
 	:: HACKY because only MaxEnumerablePhotoSize value is needed
-	reg export "HKLM\RTSOFTWARE\Microsoft\Photos\OEM"                         "Temp\%Model%\Registry\Photos.reg"              %Logger%
-	reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"               "Temp\%Model%\Registry\Brightness.reg"          %Logger%
-	reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                           "Temp\%Model%\Registry\Autobrightness.reg"      %Logger%
-	reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"                "Temp\%Model%\Registry\BrightnessInterface.reg" %Logger%
-	reg export "HKLM\RTSOFTWARE\OEM\Nokia\Camera"                             "Temp\%Model%\Registry\Camera.reg"              %Logger%
-	reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                            "Temp\%Model%\Registry\Display.reg"             %Logger%
-	reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters"  "Temp\%Model%\Registry\NOKIA_PANEL.reg"         %Logger%
-	reg export "HKLM\RTSYSTEM\TOUCH"                                          "Temp\%Model%\Registry\TOUCH.reg"               %Logger%
+	reg export "HKLM\RTSOFTWARE\Microsoft\Photos\OEM"                         "Temp\%Model%\Registry\2.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"               "Temp\%Model%\Registry\3.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                           "Temp\%Model%\Registry\4.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"                "Temp\%Model%\Registry\5.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Nokia\Camera"                             "Temp\%Model%\Registry\6.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                            "Temp\%Model%\Registry\7.reg" %Logger%
+	reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters"  "Temp\%Model%\Registry\8.reg" %Logger%
+	reg export "HKLM\RTSYSTEM\TOUCH"                                          "Temp\%Model%\Registry\9.reg" %Logger%
 )
 
 reg unload "HKLM\RTSYSTEM" %Logger%
