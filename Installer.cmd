@@ -641,33 +641,40 @@ if /i "%Dualboot%" EQU "N" echo ## DebugEnabled is %DebugEnabled% ## >> "%LogNam
 
 :: Copy hardware-specific files
 
-if not defined Generic goto CheckPartitions
-
 echo %ESC%[97m[INFO] Copying hardware-specific files ...%ESC%[91m
 if exist "Temp\%Model%" rd /s /q "Temp\%Model%" %Logger%
-if %DevSpec% EQU B (
-	xcopy "%MainOS%\Windows\System32\*.acdb" "Temp\%Model%\Files\*" /H /I %Logger%
-)
-xcopy "%MainOS%\Windows\System32\*.mbn"                 "Temp\%Model%\Files\*" /H /I %Logger%
-xcopy "%MainOS%\Windows\System32\Drivers\*.dcc"         "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
-xcopy "%MainOS%\Windows\System32\Drivers\*.dfc"         "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
-xcopy "%MainOS%\Windows\System32\Drivers\ColorData.bin" "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
 
+:: Files
+if defined Generic (
+	if %DevSpec% EQU B (xcopy "%MainOS%\Windows\System32\*.acdb" "Temp\%Model%\Files\*" /H /I %Logger%)
+	xcopy "%MainOS%\Windows\System32\*.mbn"                 "Temp\%Model%\Files\*" /H /I %Logger%
+	xcopy "%MainOS%\Windows\System32\Drivers\*.dcc"         "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
+	xcopy "%MainOS%\Windows\System32\Drivers\*.dfc"         "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
+	xcopy "%MainOS%\Windows\System32\Drivers\ColorData.bin" "Temp\%Model%\Files\Drivers\*" /H /I %Logger%
+)
+
+:: Registry
 reg load "HKLM\RTSYSTEM" "%MainOS%\Windows\System32\config\SYSTEM" %Logger%
 reg load "HKLM\RTSOFTWARE" "%MainOS%\Windows\System32\config\SOFTWARE" %Logger%
-
 md "Temp\%Model%\Registry" %Logger%
-reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                     "Temp\%Model%\Registry\0.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\Microsoft\CaptureService\OEMCustomProperties" "Temp\%Model%\Registry\1.reg" %Logger%
-:: HACKY because only MaxEnumerablePhotoSize value is needed
-reg export "HKLM\RTSOFTWARE\Microsoft\Photos\OEM"                         "Temp\%Model%\Registry\2.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"               "Temp\%Model%\Registry\3.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                           "Temp\%Model%\Registry\4.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"                "Temp\%Model%\Registry\5.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Nokia\Camera"                             "Temp\%Model%\Registry\6.reg" %Logger%
-reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                            "Temp\%Model%\Registry\7.reg" %Logger%
-reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters"  "Temp\%Model%\Registry\8.reg" %Logger%
-reg export "HKLM\RTSYSTEM\TOUCH"                                          "Temp\%Model%\Registry\9.reg" %Logger%
+
+:: HACK: Avoid SOC_SUBSYSTEM_ERROR on some devices with different memory alignment values.
+:: This even true for devices with the same model number, so it's unknown how to detect that in the inf.
+reg export "HKLM\RTSYSTEM\ControlSet001\Services\qcSubsystemLoad" "Temp\%Model%\Registry\qcSubsystemLoad.reg" %Logger%
+
+if defined Generic (
+	reg export "HKLM\RTSOFTWARE\Microsoft\Autobrightness"                     "Temp\%Model%\Registry\Autobrightness.reg"      %Logger%
+	reg export "HKLM\RTSOFTWARE\Microsoft\CaptureService\OEMCustomProperties" "Temp\%Model%\Registry\CaptureService.reg"      %Logger%
+	:: HACKY because only MaxEnumerablePhotoSize value is needed
+	reg export "HKLM\RTSOFTWARE\Microsoft\Photos\OEM"                         "Temp\%Model%\Registry\Photos.reg"              %Logger%
+	reg export "HKLM\RTSOFTWARE\Microsoft\Shell\OEM\Brightness"               "Temp\%Model%\Registry\Brightness.reg"          %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Autobrightness"                           "Temp\%Model%\Registry\Autobrightness.reg"      %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Nokia\BrightnessInterface"                "Temp\%Model%\Registry\BrightnessInterface.reg" %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Nokia\Camera"                             "Temp\%Model%\Registry\Camera.reg"              %Logger%
+	reg export "HKLM\RTSOFTWARE\OEM\Nokia\Display"                            "Temp\%Model%\Registry\Display.reg"             %Logger%
+	reg export "HKLM\RTSYSTEM\ControlSet001\Services\NOKIA_PANEL\Parameters"  "Temp\%Model%\Registry\NOKIA_PANEL.reg"         %Logger%
+	reg export "HKLM\RTSYSTEM\TOUCH"                                          "Temp\%Model%\Registry\TOUCH.reg"               %Logger%
+)
 
 reg unload "HKLM\RTSYSTEM" %Logger%
 reg unload "HKLM\RTSOFTWARE" %Logger%
@@ -757,7 +764,7 @@ reg load "HKLM\RTSYSTEM" "%Win10Drive%\Windows\System32\config\SYSTEM" %Logger%
 reg load "HKLM\RTSOFTWARE" "%Win10Drive%\Windows\System32\config\SOFTWARE" %Logger%
 
 reg add "HKLM\RTSYSTEM\ControlSet001\Control\Session Manager\Memory Management" /v "PagingFiles" /t REG_MULTI_SZ /d "C:\pagefile.sys 512 768" /f %Logger%
-if defined Generic (for %%A in ("Temp\%Model%\Registry\*") do reg import "%%A" %Logger%)
+for %%A in ("Temp\%Model%\Registry\*") do reg import "%%A" %Logger%
 
 reg unload "HKLM\RTSYSTEM" %Logger%
 reg unload "HKLM\RTSOFTWARE" %Logger%
