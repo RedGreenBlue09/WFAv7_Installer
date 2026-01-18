@@ -63,7 +63,7 @@ If you wish to redistribute such files without `LICENSE-SCRIPTS.txt`, you should
 	
 	RedGreenBlue09 (Me)          : Author of this script
 	gus33000 (Gustave Monce)     : The main contributor to WOA-Project
-    WOA-Project                  : Inf drivers
+	WOA-Project                  : Inf drivers
 	Windows ARM32 Telegram group : Testing my script
 	bibarub                      : Downstream driver repository
 	fadilfadz01 (Fadil Fadz)     : Helping me write the script

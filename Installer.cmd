@@ -278,7 +278,7 @@ goto ChooseDevGenericInf
 cls
 call :PrintLabel
 echo %ESC%[97m PREPARATION:
-echo   - Read README.md and instruction before using this Installer.
+echo   - Read everything in README.md before using this Installer.
 echo   - Make sure your phone have enough battery for this installation.
 echo   - Windows Phone 8.1 or Windows 10 Mobile (1607 or older) installed.
 echo   * Highly recommend you to flash the original FFU before installation.
@@ -569,7 +569,7 @@ goto :EOF
 
 set "ChargeThreshold="
 echo.
-set /p "ChargeThreshold=%ESC%[97m Specify minimum battery percentage to boot (0 to 99): %ESC%[0m"
+set /p "ChargeThreshold=%ESC%[97m Specify minimum battery percentage to boot (5 to 95): %ESC%[0m"
 if not defined ChargeThreshold goto ChargeThresholdPrompt
 set "ChargeThreshold=%ChargeThreshold:"=%"
 
@@ -578,7 +578,10 @@ echo "%ChargeThreshold%"| findstr "^\"[1-9][0-9]*\"$ ^\"0\"$" > nul || (
 	goto ChargeThresholdPrompt
 )
 
-if %ChargeThreshold% GTR 99 (
+if %ChargeThreshold% GTR 95 (
+	goto ChargeThresholdPrompt
+)
+if %ChargeThreshold% LSS 5 (
 	goto ChargeThresholdPrompt
 )
 goto :EOF
