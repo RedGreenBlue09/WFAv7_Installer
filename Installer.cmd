@@ -755,7 +755,6 @@ if %WinBuild% LSS 10240 (
 ::---------------------------------------------------------------
 
 echo %ESC%[97m[INFO] Installing Drivers ...%ESC%[91m
-echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 Files\DISM\dism /Image:%Win10Drive%\ /Add-Driver /Driver:".\Drivers\%Model%" /Recurse %Logger%
 
 if defined Generic (
@@ -790,7 +789,6 @@ echo %ESC%[97m[INFO] Installing Mass Storage Mode UI ...%ESC%[91m
 xcopy .\Files\MassStorage %MainOS%\EFIESP\Windows\System32\Boot\ui /E /H /I /Y %Logger%
 
 echo %ESC%[97m[INFO] Adding BCD Entry ...
-echo %ESC%[93m[WARN] Error outputs will not be showed here.%ESC%[91m
 set "BcdLoc=%MainOS%\EFIESP\EFI\Microsoft\Boot\BCD"
 echo ## BCD Path is %BcdLoc% ## >> "%LogName%" 
 set "id={703c511b-98f3-4630-b752-6d177cbfb89c}"
