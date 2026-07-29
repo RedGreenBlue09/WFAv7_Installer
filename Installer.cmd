@@ -632,7 +632,7 @@ start "WFAv7 Installer log: %LogName%" Files\busybox tail -f -n +1 "%LogName%"
 set "StartTime=%Time%"
 echo.
 echo %ESC%[97m[INFO] Installation was started at %StartTime%
-echo #### Windows 10 for ARMv7 Installer 4.0. #### >> "%LogName%"
+echo #### Windows 10 for ARMv7 Installer 4.0.2 #### >> "%LogName%"
 echo #### INSTALLATION WAS STARTED AT %StartTime% #### >> "%LogName%"
 echo ========================================================= >> "%LogName%"
 echo ## Device is "%Model%"  ## >> "%LogName%"
