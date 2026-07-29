@@ -50,7 +50,7 @@ echo  %ESC%[36m8) %ESC%[97mLumia 550
 echo  %ESC%[36m9) %ESC%[97mLumia 1020
 echo  %ESC%[36mA) %ESC%[97mLumia 920
 echo  %ESC%[36mB) %ESC%[97mLumia 520
-echo  %ESC%[36mC) %ESC%[97mGeneric INF
+echo  %ESC%[36mC) %ESC%[97mGeneric INF (other devices)
 set /p "Model=%ESC%[92mDevice:%ESC%[0m "
 if not defined Model goto ChooseDev
 set "Model=%Model:"=%"

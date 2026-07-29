@@ -25,7 +25,7 @@ To improve/correct this table, please open an [issue](https://github.com/RedGree
 - WPinternals 2.9 or newer - [Download](https://github.com/ReneLergner/WPinternals/releases/latest)
 - Win32 Disk Imager - [Download](https://sourceforge.net/projects/win32diskimager/)
 - Microsoft Visual C++ Redistributable 2022 (x86) installed - [Download](https://aka.ms/vs/17/release/vc_redist.x86.exe)
-- Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq)
+- Windows 10 ARM build 15035 - [Download](https://bit.ly/33ap8dq) / [Mirror](http://bit.ly/4fAdjmA)
 
 ## Download
 
