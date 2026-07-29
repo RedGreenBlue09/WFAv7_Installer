@@ -569,6 +569,10 @@ goto :EOF
 
 set "ChargeThreshold="
 echo.
+echo  Charging might not work from Windows 10 ARM.
+echo  The below setting changes how much of battery is charged
+echo  in the low battery screen before the phone boots.
+echo.
 set /p "ChargeThreshold=%ESC%[97m Specify minimum battery percentage to boot (5 to 95): %ESC%[0m"
 if not defined ChargeThreshold goto ChargeThresholdPrompt
 set "ChargeThreshold=%ChargeThreshold:"=%"
